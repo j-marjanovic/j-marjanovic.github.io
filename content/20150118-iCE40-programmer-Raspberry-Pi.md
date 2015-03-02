@@ -43,7 +43,7 @@ in iCEcube2.
 <script src="https://gist.github.com/j-marjanovic/cb271e861d279a31775d.js"></script>
 
 
-This is the output (well, the real output it the board which blinks the LEDs while
+This is the output (well, the real output it is the configured board which blinks the LEDs while
 the DONE led is lit):
 
 	:::shell-session

@@ -34,33 +34,20 @@
   <!--               <h1><a href="{{ SITEURL }}/"><img src="http://www.launchyard.com/images/logo.png" />{% if SITESUBTITLE %}<strong>{{ SITESUBTITLE }}</strong>{% endif %}</a></h1> -->
   <!--       </header> --> 
 
-  <div class="LaunchyardDetail">
+  <div class="LaunchyardDetail" style="align:right;">
     <!-- <p> -->
     <!-- <img src="{{ SITEURL }}/theme/images/blue-pin.png" width="100" height="100" alt="Graph icon"> -->
     <!-- </p> -->
     <p><a id="sitesubtitle" href="{{ SITEURL }}/">{% if SITENAME %}{{ SITENAME }}{% endif %}</a></p>
     {% if SITETAGLINE %}<p id="sitetagline">{{ SITETAGLINE }}</p>{% endif %}
-    <p><a id="aboutlink" href="{{ SITEURL }}/pages/about.html">about</a></p>
 
-    <!-- <ul> -->
-    <!--   <li><a href="{{ SITEURL }}/pages/about.html">about</a></li> -->
-      <!-- <li><a href="{{ SITEURL }}/pages/about.html">articles</a></li> -->
-<!-- {% if articles %} -->
-<!--         <br/> -->
-<!--         <br/> -->
-<!--     {% for article in articles %} -->        
-<!--       <li><a href="">{{ article.title }}</a></li> -->
-<!--     {% endfor %} -->
-<!-- {% endif %} -->
-    <!-- </ul> -->
+	<br>
+    <p style="float: right; margin-right: 50px;"><a id="aboutlink" href="{{ SITEURL }}/pages/about.html">About</a></p>
 
-    <!-- This belongs in the about page -->
-      <!-- {% for name, link in SOCIAL %} -->
-      <!-- <a href="{{ link }}">{{ name }}</a> -->
-      <!-- <br/> -->
-      <!-- {% endfor %} -->
+    <br>
+	<p style="float: right; margin-right: 50px;"><img src="{{ SITEURL }}/theme/images/icons/rss.png"> <a id="aboutlink" href="{{ SITEURL }}/feeds/jan-marjanovic.atom.xml">Atom feed</a></p>
+    <br>
 
-<!-- {% include 'categories.html' %} -->
   </div>
 
         {% block content %}
