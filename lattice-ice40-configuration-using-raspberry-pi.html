@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Lattice iCE40 configuration using Raspberry Pi</title>
+        <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="shortcut icon" href="./theme/images/favicon.ico"/>
+        <link rel="stylesheet" href="./theme/css/main.css" type="text/css" />
+        <link href="www.j-marjanovic.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="marjanovic.pro Atom Feed" />
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie.css"/>
+                <script src="./js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie6.css"/><![endif]-->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="theme/jquery.cookiesdirective.js"></script>
+
+</head>
+
+<body id="index" class="home">
+<script type="text/javascript">
+	// Using $(document).ready never hurts
+	$(document).ready(function(){
+
+		// Cookie setting script wrapper
+		var cookieScripts = function () {
+			// Internal javascript called
+			console.log("Running");
+		
+			// Loading external javascript file
+			$.cookiesDirective.loadScript({
+				uri:'external.js',
+				appendTo: 'eantics'
+			});
+		}
+	
+		/* Call cookiesDirective, overriding any default params
+		
+			*** These are the defaults ***
+				explicitConsent: true,
+				position: 'top',
+				duration: 10,
+				limit: 0,
+				message: null,				
+				cookieScripts: null,
+				privacyPolicyUri: 'privacy.html',
+				scriptWrapper: function(){},	
+				fontFamily: 'helvetica',
+				fontColor: '#FFFFFF',
+				fontSize: '13px',
+				backgroundColor: '#000000',
+				backgroundOpacity: '80',
+				linkColor: '#CA0000'
+				
+		*/
+		
+		$.cookiesDirective({
+			privacyPolicyUri: 'myprivacypolicy.html',
+			explicitConsent: false,
+			position : 'bottom',
+			scriptWrapper: cookieScripts, 
+			cookieScripts: 'Google Analytics', 
+			backgroundColor: '#52B54A',
+			linkColor: '#ffffff'
+		});
+	});
+</script>
+
+	
+  <!-- <header id="banner" class="body"> -->
+  <!--               <h1><a href="./"><img src="http://www.launchyard.com/images/logo.png" /></a></h1> -->
+  <!--       </header> --> 
+
+  <div class="LaunchyardDetail" style="align:right;">
+    <!-- <p> -->
+    <!-- <img src="./theme/images/blue-pin.png" width="100" height="100" alt="Graph icon"> -->
+    <!-- </p> -->
+    <p><a id="sitesubtitle" href="./">marjanovic.pro</a></p>
+
+	<br>
+    <p style="float: right; margin-right: 50px;"><a id="aboutlink" href="./pages/about.html">About</a></p>
+
+    <br>
+	<p style="float: right; margin-right: 50px;"><img src="./theme/images/icons/rss.png"> <a id="aboutlink" href="./feeds/jan-marjanovic.atom.xml">Atom feed</a></p>
+    <br>
+
+  </div>
+
+<section id="content" >
+    <div class="body">
+      <article>
+        <header>
+          <h1 class="entry-title">
+            <a href="./lattice-ice40-configuration-using-raspberry-pi.html" rel="bookmark"
+               title="Permalink to Lattice iCE40 configuration using Raspberry Pi">Lattice iCE40 configuration using Raspberry Pi</a></h1>
+
+        </header>
+
+        <div class="entry-content">
+<div class="post-info">
+	<ul>
+        <li class="vcard author">
+                 by&nbsp;<a class="url fn" href="./author/jan-marjanovic.html">Jan Marjanovic</a>
+        </li>
+        <li class="published" title="2015-01-18T22:00:00+01:00">
+          on&nbsp;Sun 18 January 2015
+        </li>
+
+	</ul>
+<p>Category: <a href="./tag/lattice.html">Lattice</a>, <a href="./tag/ice40.html">iCE40</a>, <a href="./tag/fpga.html">FPGA</a>, <a href="./tag/raspberry-pi.html">Raspberry Pi</a>, <a href="./tag/bash.html">bash</a>, </p>
+</div><!-- /.post-info -->          <p>As I mentioned in previous post, I started playing around with Lattice iCE40 FPGA. 
+In the last post I did a quick overview of the 
+iCE40 tools. The iCEcube2 cannot compete with Xilinx ISE and Altera Quartus II, 
+not to mention the Vivado, but since this is a low-cost FPGA the current tool 
+offers all you need to do this kind of simple projects (I would definitely recommend
+the beginners to stay away from Lattice as it is not as user friendly as vendor X
+or vendor A, you need to have some experience to master the work flow). </p>
+<p>Last time I found out that iCEcube2 Programmer runs only on Windows, on GNU/Linux 
+you need to find other solutions. How the Programmer works is another interesting
+thing. One would expect that is uses JTAG port on FPGA to configure it, but that is
+not the case. The Programmer communicates with Atmel microcontroller which programs
+Serial NOR Flash memory. Then it reset the FPGA which boots in SPI Master mode, and 
+it reads configuration from Flash. </p>
+<p>A quick look at <a href="http://www.latticesemi.com/~/media/Documents/ApplicationNotes/IK/iCE40ProgrammingandConfiguration.pdf?document_id=46502">TN1248: iCE40 Programming and Configuration</a> 
+shows that it can be programmed also by writing from 
+another device (e.g. microprocessor to the SPI port). This is called SPI Slave 
+programming mode and it is enabled by holding the line CS_n low at the reset of
+the FPGA. </p>
+<p style="width:600px; display: block; margin-left: auto; margin-right: auto;"><img alt="iCE40 development board and Raspberry Pi" src="./images/ice40_rpi_conf.jpg" /></p>
+<p>So I tried programming it using Raspberry Pi. I connected:</p>
+<ul>
+<li>grounds together</li>
+<li>SI on iCE40 to MOSI on RPi</li>
+<li>SO on iCE40 to MISO on RPi (this one is actually not needed)</li>
+<li>SCK on iCE40 to CLK on RPi</li>
+<li>pin GPIO25 on RPi to SS on iCE40 (this one is needed to enter the slave mode)</li>
+</ul>
+<p>I wrote the following script and used one of the .bin files from one of the project
+in iCEcube2. </p>
+<script src="https://gist.github.com/j-marjanovic/cb271e861d279a31775d.js"></script>
+
+<p>This is the output (well, the real output it is the configured board which blinks the LEDs while
+the DONE led is lit):</p>
+<div class="highlight"><pre><span></span><span class="gp">pi@raspberrypi ~/Jan/ice40/test1 $</span> sudo bash conf_FPGA.sh proto1_top_bitmap.bin
+<span class="go">GPIO 25 not exported, trying to export...</span>
+
+<span class="go">spidev does not exist</span>
+<span class="go">SPI driver not loaded, try to load it...</span>
+<span class="go">OK: SPI driver loaded</span>
+
+<span class="go">Changing direction to out</span>
+<span class="go">out</span>
+<span class="go">Setting output to low</span>
+<span class="go">1</span>
+
+<span class="go">Please power cycle the iCE40 FPGA board</span>
+<span class="go">Press any key...</span>
+
+<span class="go">Continuing with configuration procedure</span>
+<span class="go">63+1 records in</span>
+<span class="go">63+1 records out</span>
+<span class="go">32300 bytes (32 kB) copied, 0.606931 s, 53.2 kB/s</span>
+<span class="go">Setting output to high</span>
+<span class="go">1</span>
+</pre></div>
+
+
+<p>I find this type of configuration very useful when the FPGA is not the main
+chip in the system (when there is as in the previous example an RPi). The 
+configuration file can be stored on Raspberry Pi SD card and at each start-up
+the FPGA gets programmed. The image update can be done very easily and there 
+is no way a user can brick the FPGA (which can easily happen if the FPGA writes
+the configuration image and boots from its Flash, in this case two images 
+(factory and user) are recommended).</p>
+        </div><!-- /.entry-content -->
+<a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="janmarjanovic">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script><br/><br/>
+
+      </article>
+    </div>
+</section>
+        <section id="extras" >
+        
+        </section><!-- /#extras -->
+	
+        <footer id="contentinfo" >
+                <address id="about" class="vcard ">
+                Proudly powered by <a href="http://getpelican.com/" target="_blank">Pelican</a>, which takes
+                great advantage of <a href="http://python.org" target="_blank">Python</a>.
+		
+                </address><!-- /#about -->
+		
+
+                
+        </footer><!-- /#contentinfo -->
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-56555055-1', 'auto');
+  ga('send', 'pageview');
+
+</script></body>
+</html>
