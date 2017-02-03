@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <title>j-marjanovic.io - Misc</title>
+        <title>Matplotlib from Vivado HLS</title>
         <meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="shortcut icon" href="../theme/images/favicon.ico"/>
@@ -91,95 +91,64 @@
 
   </div>
 
-        
-        
+<section id="content" >
+    <div class="body">
+      <article>
+        <header>
+          <h1 class="entry-title">
+            <a href="../drafts/matplotlib-from-vivado-hls.html" rel="bookmark"
+               title="Permalink to Matplotlib from Vivado HLS">Matplotlib from Vivado HLS</a></h1>
 
-    
-            <aside id="featured">
-                <div class="body">
-                    <article>
-                        <h1 class="entry-title"><a href="../fosdem-2017.html">FOSDEM 2017</a></h1>
+        </header>
+
+        <div class="entry-content">
 <div class="post-info">
 	<ul>
         <li class="vcard author">
                  by&nbsp;<a class="url fn" href="../author/jan-marjanovic.html">Jan Marjanovic</a>
         </li>
-        <li class="published" title="2017-02-03T18:00:00+01:00">
-          on&nbsp;Fri 03 February 2017
+        <li class="published" title="2016-12-27T22:00:00+01:00">
+          on&nbsp;Tue 27 December 2016
         </li>
 
 	</ul>
-<p>Category: <a href="../tag/conference.html">Conference</a>, </p>
-</div><!-- /.post-info --><p>I am writing this post from Brussels where I am attending <a href="https://fosdem.org/2017/">FOSDEM 2017</a>
-conference.</p>
-<p>There are a lot of interesting talks, and sometimes it is quite hard to decide
-on which one to go. Luckily there the talks are recorded and one can later
-check also the missed ones.</p>
-<p>Here ...</p>
-                    </article>
-                </div>
-            </aside><!-- /#featured -->
-            
-        
-        
+<p>Category: <a href="../tag/xilinx.html">Xilinx</a>, <a href="../tag/vivado-hls.html">Vivado HLS</a>, <a href="../tag/c.html">C++</a>, <a href="../tag/matplotlib.html">Matplotlib</a>, </p>
+</div><!-- /.post-info -->          <p>Vivado HLS is a really convenient tool when when implementing Digital Signal
+Processing algorithms in FPGA. The description of algorithm in C is much
+closer to pseudo-code than a RTL state machine, which is responsible for
+scheduling operations and keeping track of data in pipeline. This is
+especially true when the algorithm is implemented in floating-point arithmetic
+due to long pipelines to perform basic operations, such as addition and
+multiplication.</p>
+<p>Because of its usefulness in handling DSP algorithms an desirable feature
+would be the possibility to draw plots directly from C++ code. Some examples
+could be: plotting the frequency spectra of input and output signal from
+filters, plotting the original and re-sampled signal for resampling filter
+(each with different time step), plotting the input, internal signals and
+output of a PID controller... Although the plots should not replace automated
+test (e.g. by comparing the response to "golden" response), a visual
+representation is really helpful during the development and debugging.</p>
+<p>One way to obtain the plots from C++ code is to write the signals of interest
+in a text file and then parse it with Python. Plots can then be plotted with
+fantastic Matplotlib library. This approach gives the desired result, but
+requires switching from Vivado HLS to some other IDE/shell and running the
+Python script. When adding signals to plots the code must be changed in two
+points, the code responsible for printing to file and the code responsible for
+parsing the simulation output.</p>
+<p>Because of this limitations I have started searching for other options. Not a
+long time ago a curated list of C++ libraries was posted on Hacker News:
+<a href="http://fffaraz.github.io/awesome-cpp/">Awesome C++</a>. Unfortunately as of
+time of writing this blog post (December 2016) there were no appropriate
+library on that list. Looking further I have managed to find <a href="">Matplotlib-cpp</a>
+which is a C++ wrapper for a Matplotlib Python library.</p>
+<h2>Simple example</h2>
+<p>To test </p>
+        </div><!-- /.entry-content -->
+<a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="janmarjanovic">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script><br/><br/>
 
-    
-            <aside id="featured">
-                <div class="body">
-                    <article>
-                        <h1 class="entry-title"><a href="../debugging-linux-start-up-on-altera-cyclone-v-soc-with-openocd.html">Debugging Linux start-up on Altera Cyclone V SoC with OpenOCD</a></h1>
-<div class="post-info">
-	<ul>
-        <li class="vcard author">
-                 by&nbsp;<a class="url fn" href="../author/jan-marjanovic.html">Jan Marjanovic</a>
-        </li>
-        <li class="published" title="2016-07-12T22:00:00+02:00">
-          on&nbsp;Tue 12 July 2016
-        </li>
-
-	</ul>
-<p>Category: <a href="../tag/fpga.html">FPGA</a>, <a href="../tag/altera.html">Altera</a>, <a href="../tag/linux.html">Linux</a>, <a href="../tag/openocd.html">OpenOCD</a>, </p>
-</div><!-- /.post-info --><p>This blog post will show you how one can use the OpenOCD debugger with Altera
-Cyclone V SoC. Altera Cyclone V SoC is a very interesting integrated circuit,
-combining dual-core ARM processor and a decent FPGA, allowing a wide variety
-of possibilities to partition the application between the two.</p>
-<p>Xilinx ...</p>
-                    </article>
-                </div>
-            </aside><!-- /#featured -->
-            
-        
-        
-
-    
-            <aside id="featured">
-                <div class="body">
-                    <article>
-                        <h1 class="entry-title"><a href="../hello-world.html">Hello world</a></h1>
-<div class="post-info">
-	<ul>
-        <li class="vcard author">
-                 by&nbsp;<a class="url fn" href="../author/jan-marjanovic.html">Jan Marjanovic</a>
-        </li>
-        <li class="published" title="2014-11-02T13:00:00+01:00">
-          on&nbsp;Sun 02 November 2014
-        </li>
-
-	</ul>
-
-</div><!-- /.post-info --><p>Hi and welcome to my blog.</p>
-<p>This is a "hello world" style post, I am curently testing pelican static blog generator.
-Since I don't know how much time I will have to manage this blog I prefer that everything 
-is static. If I some day stop writing this blog ...</p>
-                    </article>
- 
-<div class="paginator">
-    <div class="navButton">Page 1 / 1</div>
-</div>
-                </div>
-            </aside><!-- /#featured -->
-            
-        
+      </article>
+    </div>
+</section>
         <section id="extras" >
         
         </section><!-- /#extras -->

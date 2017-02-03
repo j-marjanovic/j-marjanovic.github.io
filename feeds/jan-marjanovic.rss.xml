@@ -1,5 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>j-marjanovic.io</title><link>www.j-marjanovic.io/</link><description></description><lastBuildDate>Tue, 18 Oct 2016 23:00:00 +0200</lastBuildDate><item><title>Books read: E. Stavinov: 100 Power Tips for FPGA Designers</title><link>www.j-marjanovic.io/books-read-e-stavinov-100-power-tips-for-fpga-designers.html</link><description>&lt;p&gt;I recently found a great book explaining in details FPGA workflow for Xilinx
+<rss version="2.0"><channel><title>j-marjanovic.io</title><link>www.j-marjanovic.io/</link><description></description><lastBuildDate>Fri, 03 Feb 2017 18:00:00 +0100</lastBuildDate><item><title>FOSDEM 2017</title><link>www.j-marjanovic.io/fosdem-2017.html</link><description>&lt;p&gt;I am writing this post from Brussels where I am attending &lt;a href="https://fosdem.org/2017/"&gt;FOSDEM 2017&lt;/a&gt;
+conference.&lt;/p&gt;
+&lt;p&gt;There are a lot of interesting talks, and sometimes it is quite hard to decide
+on which one to go. Luckily there the talks are recorded and one can later
+check also the missed ones.&lt;/p&gt;
+&lt;p&gt;Here is my list of the talks I plan to attend:&lt;/p&gt;
+&lt;h2&gt;Saturday&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Time&lt;/th&gt;
+&lt;th&gt;Title&lt;/th&gt;
+&lt;th&gt;Location&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;9:00&lt;/td&gt;
+&lt;td&gt;&lt;a href="https://fosdem.org/2017/schedule/event/keynotes_welcome/"&gt;Welcome to FOSDEM 2017&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Janson&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;11:00&lt;/td&gt;
+&lt;td&gt;&lt;a href="https://fosdem.org/2017/schedule/event/open_power/"&gt;Let's talk about hardware: The POWER of open&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;H.2215 (Ferrer)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;12:00&lt;/td&gt;
+&lt;td&gt;&lt;a href="https://fosdem.org/2017/schedule/event/lorawan/"&gt;LoRaWAN for exploring the Internet of Things&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;K.1.105 (La Fontaine)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;13:00&lt;/td&gt;
+&lt;td&gt;lunch&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;14:00&lt;/td&gt;
+&lt;td&gt;&lt;a href="https://fosdem.org/2017/schedule/event/kernel_spi_subsystem/"&gt;Groking the Linux SPI Subsystem&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;UD2.120 (Chavanne)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;14:00 (alternative)&lt;/td&gt;
+&lt;td&gt;&lt;a href="https://fosdem.org/2017/schedule/event/sdr_fpga/"&gt;FPGAs in SDR -- Why, when, and how to use them (with RFNoC)&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;AW1.120&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;15:00&lt;/td&gt;
+&lt;td&gt;&lt;a href="https://fosdem.org/2017/schedule/event/hello_world/"&gt;Everything You Always Wanted to Know About "Hello, World"*&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Janson&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;16:30&lt;/td&gt;
+&lt;td&gt;&lt;a href="https://fosdem.org/2017/schedule/event/iot_micropython/"&gt;Scientific MicroPython for Microcontrollers and IoT&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;AW1.126&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;17:00&lt;/td&gt;
+&lt;td&gt;&lt;a href="https://fosdem.org/2017/schedule/event/libreboot/"&gt;Libreboot&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;K.1.105 (La Fontaine)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;18:05&lt;/td&gt;
+&lt;td&gt;&lt;a href="https://fosdem.org/2017/schedule/event/copyleft_defense/"&gt;Understanding The Complexity of Copyleft Defense&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Janson&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2&gt;Sunday&lt;/h2&gt;
+&lt;p&gt;On Sunday I plan to spend most of the time in &lt;a href="https://fosdem.org/2017/schedule/track/electronic_design_automation_eda/"&gt;Electronic Design Automation (EDA) devroom&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Here is a selfie of me with the famous &lt;a href="https://en.wikipedia.org/wiki/Manneken_Pis"&gt;Manneken Pis status&lt;/a&gt;:&lt;/p&gt;
+&lt;p style="width:50%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Selfie with Manneken Pis" src="www.j-marjanovic.io/images/fosdem_2017/IMG_4898.JPG" /&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Jan Marjanovic</dc:creator><pubDate>Fri, 03 Feb 2017 18:00:00 +0100</pubDate><guid isPermaLink="false">tag:,2017-02-03:www.j-marjanovic.io/fosdem-2017.html</guid><category>Conference</category></item><item><title>Books read: E. Stavinov: 100 Power Tips for FPGA Designers</title><link>www.j-marjanovic.io/books-read-e-stavinov-100-power-tips-for-fpga-designers.html</link><description>&lt;p&gt;I recently found a great book explaining in details FPGA workflow for Xilinx
 tools, titled 100 Power Tips for FPGA Designers. &lt;a href="http://www.outputlogic.com"&gt;Evgeni
 Stavinov&lt;/a&gt; is an experienced FPGA designer who
 previously worked for Xilinx. It is not evident from the title, but this book
