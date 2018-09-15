@@ -1,0 +1,174 @@
+Status: draft
+
+on Ubunutu: linux-headers (linux-source)
+
+
+
+pi@raspberrypi ~/rpi64/rpi64-driver $ sudo aptitude search linux-headers
+v   linux-headers                                   -                                                           
+p   linux-headers-3.10-3-all                        - All header files for Linux 3.10 (meta-package)            
+p   linux-headers-3.10-3-all-armhf                  - All header files for Linux 3.10 (meta-package)            
+p   linux-headers-3.10-3-common                     - Common header files for Linux 3.10-3                      
+p   linux-headers-3.10-3-rpi                        - Header files for Linux 3.10-3-rpi                         
+p   linux-headers-3.12-1-all                        - All header files for Linux 3.12 (meta-package)            
+p   linux-headers-3.12-1-all-armhf                  - All header files for Linux 3.12 (meta-package)            
+p   linux-headers-3.12-1-common                     - Common header files for Linux 3.12-1                      
+p   linux-headers-3.12-1-rpi                        - Header files for Linux 3.12-1-rpi                         
+p   linux-headers-3.18.0-trunk-all                  - All header files for Linux 3.18 (meta-package)            
+p   linux-headers-3.18.0-trunk-all-armhf            - All header files for Linux 3.18 (meta-package)            
+p   linux-headers-3.18.0-trunk-common               - Common header files for Linux 3.18.0-trunk                
+p   linux-headers-3.18.0-trunk-rpi                  - Header files for Linux 3.18.0-trunk-rpi                   
+p   linux-headers-3.18.0-trunk-rpi2                 - Header files for Linux 3.18.0-trunk-rpi2                  
+p   linux-headers-3.2.0-4-all                       - All header files for Linux 3.2 (meta-package)             
+p   linux-headers-3.2.0-4-all-armhf                 - All header files for Linux 3.2 (meta-package)             
+p   linux-headers-3.2.0-4-common                    - Common header files for Linux 3.2.0-4                     
+p   linux-headers-3.2.0-4-rpi                       - Header files for Linux 3.2.0-4-rpi                        
+p   linux-headers-3.6-trunk-all                     - All header files for Linux 3.6 (meta-package)             
+p   linux-headers-3.6-trunk-all-armhf               - All header files for Linux 3.6 (meta-package)             
+p   linux-headers-3.6-trunk-common                  - Common header files for Linux 3.6-trunk                   
+p   linux-headers-3.6-trunk-rpi                     - Header files for Linux 3.6-trunk-rpi                      
+p   linux-headers-rpi                               - Header files for Linux rpi configuration (meta-package)   
+p   linux-headers-rpi-rpfv                          - This metapackage will pull in the headers for the raspbian
+p   linux-headers-rpi2-rpfv                         - This metapackage will pull in the headers for the raspbian
+
+
+
+ sudo apt-get install linux-headers-rpi2-rpfv 
+
+
+pi@raspberrypi ~/rpi64/rpi64-driver $ sudo insmod pi64_dev.ko
+Error: could not insert module pi64_dev.ko: Invalid module format
+
+
+pi@raspberrypi ~/rpi64/rpi64-driver $ dmesg | tail -n 1
+[ 1199.802890] pi64_dev: disagrees about version of symbol module_layout
+
+
+http://www.raspberrypi.org/forums/viewtopic.php?&t=17666
+
+http://elinux.org/Raspberry_Pi_Kernel_Compilation
+
+
+kernel compile from 19:33 to ...
+compile in cloud
+
+
+
+
+
+
+move all to usr src sources
+create sym links in /lib/
+
+sudo ln -s /usr/src/linux-sources-3.18.8-v7+/ source
+sudo ln -s /usr/src/linux-sources-3.18.8-v7+/ build
+
+pi@raspberrypi /lib/modules/3.18.8-v7+ $ ls -l 
+total 1504
+lrwxrwxrwx 1 pi pi     41 Mar  1 07:24 build -> ../../../usr/src/linux-headers-3.18.8-v7+
+lrwxrwxrwx 1 pi pi     38 Mar  1 06:58 build_old -> /home/jan/Projekti/Pi64/raspbian/linux
+drwxrwxr-x 9 pi pi   4096 Mar  1 06:58 kernel
+-rw-r--r-- 1 pi pi 413413 Mar  1 06:58 modules.alias
+-rw-r--r-- 1 pi pi 424112 Mar  1 06:58 modules.alias.bin
+-rw-rw-r-- 1 pi pi   4115 Mar  1 06:58 modules.builtin
+-rw-r--r-- 1 pi pi   5319 Mar  1 06:58 modules.builtin.bin
+-rw-r--r-- 1 pi pi 119087 Mar  1 06:58 modules.dep
+-rw-r--r-- 1 pi pi 177377 Mar  1 06:58 modules.dep.bin
+-rw-r--r-- 1 pi pi    284 Mar  1 06:58 modules.devname
+-rw-rw-r-- 1 pi pi  52025 Mar  1 06:58 modules.order
+-rw-r--r-- 1 pi pi     55 Mar  1 06:58 modules.softdep
+-rw-r--r-- 1 pi pi 136228 Mar  1 06:58 modules.symbols
+-rw-r--r-- 1 pi pi 173513 Mar  1 06:58 modules.symbols.bin
+lrwxrwxrwx 1 pi pi     41 Mar  1 07:24 source -> ../../../usr/src/linux-headers-3.18.8-v7+
+lrwxrwxrwx 1 pi pi     38 Mar  1 06:58 source_old -> /home/jan/Projekti/Pi64/raspbian/linux
+
+
+
+
+scripts dir
+----------------
+
+
+http://stackoverflow.com/questions/17282461/scripts-recordmcount-syntax-error-when-i-try-to-build-a-linux-kernel-module-o
+
+pi@raspberrypi /usr/src/linux-headers-3.18.0-trunk-rpi2 $ sudo cp -rv scripts/ ../linux-sources-3.18.8-v7+/
+
+
+[ 4246.164155] Unable to handle kernel paging request at virtual address fe220b30
+[ 4246.176292] pgd = b5dd8000
+[ 4246.183812] [fe220b30] *pgd=00000000
+[ 4246.192196] Internal error: Oops: 5 [#1] PREEMPT SMP ARM
+[ 4246.202324] Modules linked in: pi64_dev(O+) snd_bcm2835 snd_soc_pcm512x_i2c snd_soc_wm8804 snd_soc_pcm512x snd_soc_tas5713 regmap_spi regmap_i2c snd_soc_bcm2708_i2s regmap_mmio snd_soc_core snd_compress snd_pcm_dmaengine snd_pcm snd_seq snd_seq_device snd_timer r8712u(C) snd spi_bcm2708 i2c_bcm2708
+[ 4246.239611] CPU: 3 PID: 3468 Comm: insmod Tainted: G         C O   3.18.8-v7+ #1
+[ 4246.252306] task: b87aa840 ti: b760a000 task.ti: b760a000
+[ 4246.262985] PC is at load_module+0x1a64/0x1f0c
+[ 4246.272699] LR is at load_module+0x1a50/0x1f0c
+[ 4246.282373] pc : [<800940d4>]    lr : [<800940c0>]    psr: 90000013
+[ 4246.282373] sp : b760be88  ip : 7f110770  fp : b760bf44
+[ 4246.304401] r10: 00000000  r9 : 7f110600  r8 : 80536d44
+[ 4246.314883] r7 : b86dc8c4  r6 : fe220b1c  r5 : 7f11060c  r4 : b760bf48
+[ 4246.326685] r3 : 00000000  r2 : b760be70  r1 : b7555280  r0 : 807f2a3c
+[ 4246.338495] Flags: NzcV  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
+[ 4246.350916] Control: 10c5387d  Table: 35dd806a  DAC: 00000015
+[ 4246.361932] Process insmod (pid: 3468, stack limit = 0xb760a238)
+[ 4246.373206] Stack: (0xb760be88 to 0xb760c000)
+[ 4246.382808] be80:                   7f11060c 00007fff 8009168c ffffffff b760bee4 bd949000
+[ 4246.396352] bea0: 00000000 7f11060c 00000000 b760bedc 807e4d78 7f110648 b760a000 7f110770
+[ 4246.409938] bec0: 00001f4b 806c9bdc ba7b961c b760a000 b9330000 808ab8fc 76fd3000 00000000
+[ 4246.423538] bee0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[ 4246.437137] bf00: 00000000 00000000 00000000 00000000 00000000 00000000 00000080 00001f4b
+[ 4246.450707] bf20: 76fd3000 76f91948 00000080 8000f0a4 b760a000 00000000 b760bfa4 b760bf48
+[ 4246.464292] bf40: 80094664 8009267c bd949000 00001f4b bd949f3c bd949de3 bd94acc4 00000850
+[ 4246.477932] bf60: 00000940 00000000 00000000 00000000 0000001f 00000020 00000017 00000014
+[ 4246.491605] bf80: 00000010 00000000 00000000 7eb7861c 00000000 7768b038 00000000 b760bfa8
+[ 4246.505297] bfa0: 8000ee20 80094588 7eb7861c 00000000 76fd3000 00001f4b 76f91948 76fd3000
+[ 4246.519052] bfc0: 7eb7861c 00000000 7768b038 00000080 7768af80 00001f4b 76f91948 00000000
+[ 4246.532810] bfe0: 00000000 7eb785c4 76f88fb4 76ef3ab4 60000010 76fd3000 d466662e d5f7abd0
+[ 4246.546635] [<800940d4>] (load_module) from [<80094664>] (SyS_init_module+0xe8/0xfc)
+[ 4246.560087] [<80094664>] (SyS_init_module) from [<8000ee20>] (ret_fast_syscall+0x0/0x48)
+[ 4246.573935] Code: e51bc088 e15c0006 e2466008 0a000009 (e5963014) 
+[ 4246.604593] ---[ end trace 8e4bd0982f9f1fd0 ]---
+
+
+fuck this shit
+
+for thermal profile
+09:46 -> git clone started
+10 22    git clone done
+
+10 25    make -j5
+11:40    strange end of 
+
+  LD [M]  drivers/usb/storage/ums-realtek.o
+  LD [M]  drivers/usb/storage/ums-sddr09.o
+  LD [M]  drivers/usb/storage/ums-sddr55.o
+  CC [M]  drivers/usb/serial/wishbone-serial.o
+  CC [M]  drivers/usb/serial/whiteheat.o
+  CC [M]  drivers/usb/serial/xsens_mt.o
+  LD [M]  drivers/usb/serial/usbserial.o
+  LD      drivers/usb/storage/built-in.o
+  LD [M]  drivers/usb/storage/ums-usbat.o
+  LD      drivers/usb/built-in.o
+  LD      drivers/built-in.o
+pi@raspberrypi ~/kernel/linux $ 
+
+
+11:45    make -j5
+12:14	compile stopped again, changed adapter from iPhone one (1A) to iPad one (2.4A)
+
+12:34   compile done
+
+
+great success:
+[   38.324756] ============================================
+[   38.324786]        Pi64 driver by Jan Marjanovic        
+[   38.324796] 
+[   38.324808]   built: Mar  1 2015 11:38:10
+[   38.324818] ============================================
+
+
+compile on PC: 
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- -j5  3638,04s user 385,44s system 385% cpu 17:23,61 total
+
+
+
