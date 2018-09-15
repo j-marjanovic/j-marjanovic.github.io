@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>j-marjanovic.io - Jan Marjanovic</title><link>www.j-marjanovic.io/</link><description></description><lastBuildDate>Fri, 03 Feb 2017 18:00:00 +0100</lastBuildDate><item><title>FOSDEM 2017</title><link>www.j-marjanovic.io/fosdem-2017.html</link><description>&lt;p&gt;I am writing this post from Brussels where I am attending &lt;a href="https://fosdem.org/2017/"&gt;FOSDEM 2017&lt;/a&gt;
+<rss version="2.0"><channel><title>j-marjanovic.io - Jan Marjanovic</title><link>www.j-marjanovic.io/</link><description></description><lastBuildDate>Sat, 15 Sep 2018 19:00:00 +0200</lastBuildDate><item><title>Blog restart</title><link>www.j-marjanovic.io/blog-restart.html</link><description>&lt;p&gt;This blog was left dormant for quite some time now. From the last blog post
+in February 2017 a lot has happened. I have moved to Hamburg, Germany, to
+start a new position as FPGA Developer at MicroTCA Technology Lab at
+&lt;a href="https://www.desy.de/"&gt;DESY&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;This is me in European XFEL tunnel:&lt;/p&gt;
+&lt;p style="width:70%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Jan in European XFEL tunnel" src="www.j-marjanovic.io/images/jan_at_desy.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;There …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Jan Marjanovic</dc:creator><pubDate>Sat, 15 Sep 2018 19:00:00 +0200</pubDate><guid isPermaLink="false">tag:None,2018-09-15:www.j-marjanovic.io/blog-restart.html</guid></item><item><title>FOSDEM 2017</title><link>www.j-marjanovic.io/fosdem-2017.html</link><description>&lt;p&gt;I am writing this post from Brussels where I am attending &lt;a href="https://fosdem.org/2017/"&gt;FOSDEM 2017&lt;/a&gt;
 conference.&lt;/p&gt;
 &lt;p&gt;There are a lot of interesting talks, and sometimes it is quite hard to decide
 on which one to go. Luckily there the talks are recorded and one can later

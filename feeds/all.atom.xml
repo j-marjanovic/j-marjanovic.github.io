@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/all.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2017-02-03T18:00:00+01:00</updated><entry><title>FOSDEM 2017</title><link href="www.j-marjanovic.io/fosdem-2017.html" rel="alternate"></link><published>2017-02-03T18:00:00+01:00</published><updated>2017-02-03T18:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2017-02-03:www.j-marjanovic.io/fosdem-2017.html</id><summary type="html">&lt;p&gt;I am writing this post from Brussels where I am attending &lt;a href="https://fosdem.org/2017/"&gt;FOSDEM 2017&lt;/a&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/all.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2018-09-15T19:00:00+02:00</updated><entry><title>Blog restart</title><link href="www.j-marjanovic.io/blog-restart.html" rel="alternate"></link><published>2018-09-15T19:00:00+02:00</published><updated>2018-09-15T19:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2018-09-15:www.j-marjanovic.io/blog-restart.html</id><summary type="html">&lt;p&gt;This blog was left dormant for quite some time now. From the last blog post
+in February 2017 a lot has happened. I have moved to Hamburg, Germany, to
+start a new position as FPGA Developer at MicroTCA Technology Lab at
+&lt;a href="https://www.desy.de/"&gt;DESY&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;This is me in European XFEL tunnel:&lt;/p&gt;
+&lt;p style="width:70%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Jan in European XFEL tunnel" src="www.j-marjanovic.io/images/jan_at_desy.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;There …&lt;/p&gt;</summary><content type="html">&lt;p&gt;This blog was left dormant for quite some time now. From the last blog post
+in February 2017 a lot has happened. I have moved to Hamburg, Germany, to
+start a new position as FPGA Developer at MicroTCA Technology Lab at
+&lt;a href="https://www.desy.de/"&gt;DESY&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;This is me in European XFEL tunnel:&lt;/p&gt;
+&lt;p style="width:70%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Jan in European XFEL tunnel" src="www.j-marjanovic.io/images/jan_at_desy.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;There are a couple of topics which I would like to explore as a hobby, and
+having a blog is a nice way to organize your thoughts and outputs. Writing a
+blog post at the end of the project requires someone to gather his thoughts
+and to write down the conclusion.&lt;/p&gt;
+&lt;p&gt;That is all for now, expect more interesting blog posts (probably focusing on
+FPGA, mid-level languages as Chisel and high-level synthesis) in the future.&lt;/p&gt;</content></entry><entry><title>FOSDEM 2017</title><link href="www.j-marjanovic.io/fosdem-2017.html" rel="alternate"></link><published>2017-02-03T18:00:00+01:00</published><updated>2017-02-03T18:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2017-02-03:www.j-marjanovic.io/fosdem-2017.html</id><summary type="html">&lt;p&gt;I am writing this post from Brussels where I am attending &lt;a href="https://fosdem.org/2017/"&gt;FOSDEM 2017&lt;/a&gt;
 conference.&lt;/p&gt;
 &lt;p&gt;There are a lot of interesting talks, and sometimes it is quite hard to decide
 on which one to go. Luckily there the talks are recorded and one can later
