@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/projects.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2016-10-18T23:00:00+02:00</updated><entry><title>Books read: E. Stavinov: 100 Power Tips for FPGA Designers</title><link href="www.j-marjanovic.io/books-read-e-stavinov-100-power-tips-for-fpga-designers.html" rel="alternate"></link><published>2016-10-18T23:00:00+02:00</published><author><name>Jan Marjanovic</name></author><id>tag:,2016-10-18:www.j-marjanovic.io/books-read-e-stavinov-100-power-tips-for-fpga-designers.html</id><summary type="html">&lt;p&gt;I recently found a great book explaining in details FPGA workflow for Xilinx
+<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io - Projects</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/projects.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2016-10-18T23:00:00+02:00</updated><entry><title>Books read: E. Stavinov: 100 Power Tips for FPGA Designers</title><link href="www.j-marjanovic.io/books-read-e-stavinov-100-power-tips-for-fpga-designers.html" rel="alternate"></link><published>2016-10-18T23:00:00+02:00</published><updated>2016-10-18T23:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2016-10-18:www.j-marjanovic.io/books-read-e-stavinov-100-power-tips-for-fpga-designers.html</id><summary type="html">&lt;p&gt;I recently found a great book explaining in details FPGA workflow for Xilinx
+tools, titled 100 Power Tips for FPGA Designers. &lt;a href="http://www.outputlogic.com"&gt;Evgeni
+Stavinov&lt;/a&gt; is an experienced FPGA designer who
+previously worked for Xilinx. It is not evident from the title, but this book
+focuses almost entirely on the Xilinx, while …&lt;/p&gt;</summary><content type="html">&lt;p&gt;I recently found a great book explaining in details FPGA workflow for Xilinx
 tools, titled 100 Power Tips for FPGA Designers. &lt;a href="http://www.outputlogic.com"&gt;Evgeni
 Stavinov&lt;/a&gt; is an experienced FPGA designer who
 previously worked for Xilinx. It is not evident from the title, but this book
@@ -9,7 +13,7 @@ to a fast-paced development of the FPGAs and corresponding tools, it is clear
 that a book from 2011 would be slightly outdated in 2016. Most notable change
 in the previous years was a new software suite from Xilinx, called Vivado and
 the slow introduction of C-to-FPGA tools, such as Vivado HLS.&lt;/p&gt;
-&lt;p style="width:70%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Evgeni Stavinov: 100 Power Tips for FPGA Designers" src="www.j-marjanovic.io/images/100_power_tips_fpga_designers.jpg" /&gt;&lt;/p&gt;
+&lt;p style="width:70%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Evgeni Stavinov: 100 Power Tips for FPGA Designers" src="www.j-marjanovic.io/images/100_power_tips_fpga_designers.jpg"&gt;&lt;/p&gt;
 &lt;p&gt;Nonetheless, this book is ideal for somebody who already has some (formal)
 education about the FPGA but lacks the real world experience. The author
 manages to touch every aspect of the FPGA design, from device selection,
@@ -192,7 +196,10 @@ of the entire project directly from the source code in the repository.&lt;/p&gt;
 &lt;p&gt;Another tools which could be added to this list is &lt;a href="http://www.ohwr.org/projects/hdl-make"&gt;hdlmake&lt;/a&gt;
 which is meant to be an equivalent of Make for FPGA projects. Currently it is
 not able to tackle more complex compilation procedures, such as re-compiling
-vendor IP cores or handling Vivado Block Diagrams.&lt;/p&gt;</summary><category term="FPGA"></category><category term="Xilinx"></category></entry><entry><title>HDL data type for Python parser implementations</title><link href="www.j-marjanovic.io/hdl-data-type-for-python-parser-implementations.html" rel="alternate"></link><published>2015-11-15T22:00:00+01:00</published><author><name>Jan Marjanovic</name></author><id>tag:,2015-11-15:www.j-marjanovic.io/hdl-data-type-for-python-parser-implementations.html</id><summary type="html">&lt;p&gt;Recently I had to implement a parser for the PCIe protocol. The data was
+vendor IP cores or handling Vivado Block Diagrams.&lt;/p&gt;</content><category term="FPGA"></category><category term="Xilinx"></category></entry><entry><title>HDL data type for Python parser implementations</title><link href="www.j-marjanovic.io/hdl-data-type-for-python-parser-implementations.html" rel="alternate"></link><published>2015-11-15T22:00:00+01:00</published><updated>2015-11-15T22:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2015-11-15:www.j-marjanovic.io/hdl-data-type-for-python-parser-implementations.html</id><summary type="html">&lt;p&gt;Recently I had to implement a parser for the PCIe protocol. The data was
+captured with Xilinx ChipScope and saved as TSV (tab-separated value) text file.
+I wanted to implement a parser in Python, my favorite language for this kind of
+tasks. I have stumbled to a problem when I …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Recently I had to implement a parser for the PCIe protocol. The data was
 captured with Xilinx ChipScope and saved as TSV (tab-separated value) text file.
 I wanted to implement a parser in Python, my favorite language for this kind of
 tasks. I have stumbled to a problem when I needed an elegant way to represent
@@ -261,7 +268,7 @@ which discouraged me from using it in my parser.&lt;/p&gt;
             &lt;span class="n"&gt;dummy&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;myhdl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;intbv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mh"&gt;0xAB&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 
 
-&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
     &lt;span class="n"&gt;unittest&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -289,7 +296,10 @@ more sense to use the same notation in both languages.&lt;/p&gt;
 (duh), but the Python with the generators, list comprehensions and dictionaries
 (well, SystemVerilog does have associative array) is much more elegant language.
 The ability to test commands on-the-fly in the interpreter is also much
-welcomed.&lt;/p&gt;</summary><category term="Python"></category><category term="Verilog"></category><category term="FPGA"></category><category term="HDL"></category></entry><entry><title>Compilation of Linux kernel for Raspberry Pi</title><link href="www.j-marjanovic.io/compilation-of-linux-kernel-for-raspberry-pi.html" rel="alternate"></link><published>2015-03-01T19:00:00+01:00</published><author><name>Jan Marjanovic</name></author><id>tag:,2015-03-01:www.j-marjanovic.io/compilation-of-linux-kernel-for-raspberry-pi.html</id><summary type="html">&lt;p&gt;Yesterday I got my Raspberry Pi 2, the evolution of the legendary Raspberry Pi. 
+welcomed.&lt;/p&gt;</content><category term="Python"></category><category term="Verilog"></category><category term="FPGA"></category><category term="HDL"></category></entry><entry><title>Compilation of Linux kernel for Raspberry Pi</title><link href="www.j-marjanovic.io/compilation-of-linux-kernel-for-raspberry-pi.html" rel="alternate"></link><published>2015-03-01T19:00:00+01:00</published><updated>2015-03-01T19:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2015-03-01:www.j-marjanovic.io/compilation-of-linux-kernel-for-raspberry-pi.html</id><summary type="html">&lt;p&gt;Yesterday I got my Raspberry Pi 2, the evolution of the legendary Raspberry Pi. 
+The evolution is the right word to describe what has changed compared to 
+the previous version. The processor it is now a quad-core, it runs faster,
+it has got a newer instruction set (ARMv7) and the …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Yesterday I got my Raspberry Pi 2, the evolution of the legendary Raspberry Pi. 
 The evolution is the right word to describe what has changed compared to 
 the previous version. The processor it is now a quad-core, it runs faster,
 it has got a newer instruction set (ARMv7) and the board now incorporates 1GB
@@ -436,7 +446,7 @@ compared to 17 minutes it takes on my laptop with not-so-new i3 and 6GB of RAM.&
 &lt;p&gt;The following figure shows the temperature during the compilation. The temperature
 was captured every minute with a Cron job which read from 
 &lt;strong&gt;/sys/class/thermal/thermal_zone0/temp&lt;/strong&gt;&lt;/p&gt;
-&lt;p style="width:90%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="RPi temperature" src="www.j-marjanovic.io/images/pi_temp_during_compile.png" /&gt;&lt;/p&gt;
+&lt;p style="width:90%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="RPi temperature" src="www.j-marjanovic.io/images/pi_temp_during_compile.png"&gt;&lt;/p&gt;
 &lt;p&gt;Finally, using freshly compiled kernel on RPi, I managed to get compile my 
 module and to load it in kernel (debug message from kernel):&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="go"&gt;[   38.324756] ============================================&lt;/span&gt;
@@ -444,7 +454,10 @@ module and to load it in kernel (debug message from kernel):&lt;/p&gt;
 &lt;span class="go"&gt;[   38.324796] &lt;/span&gt;
 &lt;span class="go"&gt;[   38.324808]   built: Mar  1 2015 11:38:10&lt;/span&gt;
 &lt;span class="go"&gt;[   38.324818] ============================================&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</summary><category term="Linux"></category><category term="Raspberry Pi"></category></entry><entry><title>Lattice iCEcube2 on Ubuntu 14.04</title><link href="www.j-marjanovic.io/lattice-icecube2-on-ubuntu-1404.html" rel="alternate"></link><published>2015-03-01T19:00:00+01:00</published><author><name>Jan Marjanovic</name></author><id>tag:,2015-03-01:www.j-marjanovic.io/lattice-icecube2-on-ubuntu-1404.html</id><summary type="html">&lt;p&gt;/home/jan/opt/lscc/iCEcube2.2014.12/synpbase/bin/synplify_pro: 186: [: unexpected operator
+&lt;/pre&gt;&lt;/div&gt;</content><category term="Linux"></category><category term="Raspberry Pi"></category></entry><entry><title>Lattice iCEcube2 on Ubuntu 14.04</title><link href="www.j-marjanovic.io/lattice-icecube2-on-ubuntu-1404.html" rel="alternate"></link><published>2015-03-01T19:00:00+01:00</published><updated>2015-03-01T19:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2015-03-01:www.j-marjanovic.io/lattice-icecube2-on-ubuntu-1404.html</id><summary type="html">&lt;p&gt;/home/jan/opt/lscc/iCEcube2.2014.12/synpbase/bin/synplify_pro: 186: [: unexpected operator
+/home/jan/opt/lscc/iCEcube2.2014.12/synpbase/bin/synplify_pro: 200: [: !=: argument expected
+/home/jan/opt/lscc/iCEcube2.2014.12/synpbase/bin/c_hdl: 186: [: unexpected operator
+/home/jan/opt/lscc/iCEcube2.2014.12/synpbase/bin/c_hdl: 200 …&lt;/p&gt;</summary><content type="html">&lt;p&gt;/home/jan/opt/lscc/iCEcube2.2014.12/synpbase/bin/synplify_pro: 186: [: unexpected operator
 /home/jan/opt/lscc/iCEcube2.2014.12/synpbase/bin/synplify_pro: 200: [: !=: argument expected
 /home/jan/opt/lscc/iCEcube2.2014.12/synpbase/bin/c_hdl: 186: [: unexpected operator
 /home/jan/opt/lscc/iCEcube2.2014.12/synpbase/bin/c_hdl: 200: [: !=: argument expected
@@ -460,7 +473,10 @@ sed: couldn't edit config: not a regular file
 jan@jan-ThinkPad-T510 ~/opt/lscc/iCEcube2.2014.12/synpbase/bin
  % &lt;/p&gt;
 &lt;p&gt;for file in $(ls -la | grep -E '^[^d]' | awk -F "/" '{print $NF}' ); do echo $file; done &lt;/p&gt;
-&lt;p&gt;for file in $(ls -la | tail -n +2 | grep -E '^[^d]' | awk '{print $NF}' ); do sed -i 's/\/bin\/sh/\/bin\/bash/g' $file; done &lt;/p&gt;</summary><category term="Lattice"></category><category term="iCE40"></category><category term="Linux"></category><category term="Ubuntu"></category></entry><entry><title>Lattice iCE40 configuration using Raspberry Pi</title><link href="www.j-marjanovic.io/lattice-ice40-configuration-using-raspberry-pi.html" rel="alternate"></link><published>2015-01-18T22:00:00+01:00</published><author><name>Jan Marjanovic</name></author><id>tag:,2015-01-18:www.j-marjanovic.io/lattice-ice40-configuration-using-raspberry-pi.html</id><summary type="html">&lt;p&gt;As I mentioned in previous post, I started playing around with Lattice iCE40 FPGA. 
+&lt;p&gt;for file in $(ls -la | tail -n +2 | grep -E '^[^d]' | awk '{print $NF}' ); do sed -i 's/\/bin\/sh/\/bin\/bash/g' $file; done &lt;/p&gt;</content><category term="Lattice"></category><category term="iCE40"></category><category term="Linux"></category><category term="Ubuntu"></category></entry><entry><title>Lattice iCE40 configuration using Raspberry Pi</title><link href="www.j-marjanovic.io/lattice-ice40-configuration-using-raspberry-pi.html" rel="alternate"></link><published>2015-01-18T22:00:00+01:00</published><updated>2015-01-18T22:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2015-01-18:www.j-marjanovic.io/lattice-ice40-configuration-using-raspberry-pi.html</id><summary type="html">&lt;p&gt;As I mentioned in previous post, I started playing around with Lattice iCE40 FPGA. 
+In the last post I did a quick overview of the 
+iCE40 tools. The iCEcube2 cannot compete with Xilinx ISE and Altera Quartus II, 
+not to mention the Vivado, but since this is a low-cost FPGA …&lt;/p&gt;</summary><content type="html">&lt;p&gt;As I mentioned in previous post, I started playing around with Lattice iCE40 FPGA. 
 In the last post I did a quick overview of the 
 iCE40 tools. The iCEcube2 cannot compete with Xilinx ISE and Altera Quartus II, 
 not to mention the Vivado, but since this is a low-cost FPGA the current tool 
@@ -478,7 +494,7 @@ shows that it can be programmed also by writing from
 another device (e.g. microprocessor to the SPI port). This is called SPI Slave 
 programming mode and it is enabled by holding the line CS_n low at the reset of
 the FPGA. &lt;/p&gt;
-&lt;p style="width:600px; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="iCE40 development board and Raspberry Pi" src="www.j-marjanovic.io/images/ice40_rpi_conf.jpg" /&gt;&lt;/p&gt;
+&lt;p style="width:600px; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="iCE40 development board and Raspberry Pi" src="www.j-marjanovic.io/images/ice40_rpi_conf.jpg"&gt;&lt;/p&gt;
 &lt;p&gt;So I tried programming it using Raspberry Pi. I connected:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;grounds together&lt;/li&gt;
@@ -523,7 +539,10 @@ configuration file can be stored on Raspberry Pi SD card and at each start-up
 the FPGA gets programmed. The image update can be done very easily and there 
 is no way a user can brick the FPGA (which can easily happen if the FPGA writes
 the configuration image and boots from its Flash, in this case two images 
-(factory and user) are recommended).&lt;/p&gt;</summary><category term="Lattice"></category><category term="iCE40"></category><category term="FPGA"></category><category term="Raspberry Pi"></category><category term="bash"></category></entry><entry><title>My first encounter with Lattice Semiconductor</title><link href="www.j-marjanovic.io/my-first-encounter-with-lattice-semiconductor.html" rel="alternate"></link><published>2014-12-24T20:00:00+01:00</published><author><name>Jan Marjanovic</name></author><id>tag:,2014-12-24:www.j-marjanovic.io/my-first-encounter-with-lattice-semiconductor.html</id><summary type="html">&lt;p&gt;The FPGA market is one of those classical markets where there are two players 
+(factory and user) are recommended).&lt;/p&gt;</content><category term="Lattice"></category><category term="iCE40"></category><category term="FPGA"></category><category term="Raspberry Pi"></category><category term="bash"></category></entry><entry><title>My first encounter with Lattice Semiconductor</title><link href="www.j-marjanovic.io/my-first-encounter-with-lattice-semiconductor.html" rel="alternate"></link><published>2014-12-24T20:00:00+01:00</published><updated>2014-12-24T20:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-12-24:www.j-marjanovic.io/my-first-encounter-with-lattice-semiconductor.html</id><summary type="html">&lt;p&gt;The FPGA market is one of those classical markets where there are two players 
+who have nearly 100% market share, e.g. PC processors (Intel and AMD), graphic
+cards (NVIDIA and ATI), ... The two mayor players on the FPGA market are Xilinx
+and Altera. Both of this two companies follows …&lt;/p&gt;</summary><content type="html">&lt;p&gt;The FPGA market is one of those classical markets where there are two players 
 who have nearly 100% market share, e.g. PC processors (Intel and AMD), graphic
 cards (NVIDIA and ATI), ... The two mayor players on the FPGA market are Xilinx
 and Altera. Both of this two companies follows their rival very closely.
@@ -576,7 +595,7 @@ ifconfig eth0 hw ether xx:xx:xx:xx:xx:xx
 
 
 &lt;p&gt;After setting everything up, a view on the iCEcube2 showed before me.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="iCEcube2" src="www.j-marjanovic.io/images/icestudio.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="iCEcube2" src="www.j-marjanovic.io/images/icestudio.png"&gt;&lt;/p&gt;
 &lt;p&gt;It is a little Spartan but it has all basic functions the FPGA developer needs. The
 text editor lacks code coloring, auto-complete but there is a chance to use a 3rd
 party text editor. The text in the output window is light violet on white background
@@ -592,18 +611,32 @@ very user friendly approach.&lt;/p&gt;
 
 
 &lt;p&gt;Well this is it for now, i need to switch to Windows. Merry Christmas to everybody!&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;All trademarks and registered trademarks are the property of their respective owners.&lt;/p&gt;</summary><category term="Lattice"></category><category term="iCE40"></category><category term="FPGA"></category></entry><entry><title>Theremin First Demo</title><link href="www.j-marjanovic.io/theremin-first-demo.html" rel="alternate"></link><published>2014-11-18T23:00:00+01:00</published><author><name>Jan Marjanovic</name></author><id>tag:,2014-11-18:www.j-marjanovic.io/theremin-first-demo.html</id><summary type="html">&lt;p&gt;During the weekend I was able to take some time to do first test of the theremin.
+&lt;hr&gt;
+&lt;p&gt;All trademarks and registered trademarks are the property of their respective owners.&lt;/p&gt;</content><category term="Lattice"></category><category term="iCE40"></category><category term="FPGA"></category></entry><entry><title>Theremin First Demo</title><link href="www.j-marjanovic.io/theremin-first-demo.html" rel="alternate"></link><published>2014-11-18T23:00:00+01:00</published><updated>2014-11-18T23:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-18:www.j-marjanovic.io/theremin-first-demo.html</id><summary type="html">&lt;p&gt;During the weekend I was able to take some time to do first test of the theremin.
 Here are two recordings of my friend Luka playing.&lt;/p&gt;
 &lt;iframe width="100%" height="450" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/177559922&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;visual=true"&gt;&lt;/iframe&gt;
 
 &lt;iframe width="100%" height="450" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/177561150&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;visual=true"&gt;&lt;/iframe&gt;
 
 &lt;p&gt;There are some more articles explaining how digital theremin works coming,
- remember to check out my blog.&lt;/p&gt;</summary><category term="Theremin"></category></entry><entry><title>I just got a Nintendo 64</title><link href="www.j-marjanovic.io/i-just-got-a-nintendo-64.html" rel="alternate"></link><published>2014-11-16T18:00:00+01:00</published><author><name>Jan Marjanovic</name></author><id>tag:,2014-11-16:www.j-marjanovic.io/i-just-got-a-nintendo-64.html</id><summary type="html">&lt;p&gt;I just got a Nintendo 64, my friend Rok was kind enough to lend it.&lt;/p&gt;
-&lt;p style="width:700px; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Nintendo 64" src="www.j-marjanovic.io/images/N64.png" /&gt;&lt;/p&gt;
+ remember to check out my blog.&lt;/p&gt;</summary><content type="html">&lt;p&gt;During the weekend I was able to take some time to do first test of the theremin.
+Here are two recordings of my friend Luka playing.&lt;/p&gt;
+&lt;iframe width="100%" height="450" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/177559922&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;visual=true"&gt;&lt;/iframe&gt;
+
+&lt;iframe width="100%" height="450" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/177561150&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;visual=true"&gt;&lt;/iframe&gt;
+
+&lt;p&gt;There are some more articles explaining how digital theremin works coming,
+ remember to check out my blog.&lt;/p&gt;</content><category term="Theremin"></category></entry><entry><title>I just got a Nintendo 64</title><link href="www.j-marjanovic.io/i-just-got-a-nintendo-64.html" rel="alternate"></link><published>2014-11-16T18:00:00+01:00</published><updated>2014-11-16T18:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-16:www.j-marjanovic.io/i-just-got-a-nintendo-64.html</id><summary type="html">&lt;p&gt;I just got a Nintendo 64, my friend Rok was kind enough to lend it.&lt;/p&gt;
+&lt;p style="width:700px; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Nintendo 64" src="www.j-marjanovic.io/images/N64.png"&gt;&lt;/p&gt;
 &lt;p&gt;I have an interesting project in mind, I will keep you updated.
-Rok will for sure be the first one to get the alpha version.&lt;/p&gt;</summary><category term="Nintendo 64"></category></entry><entry><title>Theremin Antenna Measurements</title><link href="www.j-marjanovic.io/theremin-antenna-measurements.html" rel="alternate"></link><published>2014-11-09T09:00:00+01:00</published><author><name>Jan Marjanovic</name></author><id>tag:,2014-11-09:www.j-marjanovic.io/theremin-antenna-measurements.html</id><summary type="html">&lt;p&gt;Last week I briefly explained how theremin works. I also presented my idea to develop a 
+Rok will for sure be the first one to get the alpha version.&lt;/p&gt;</summary><content type="html">&lt;p&gt;I just got a Nintendo 64, my friend Rok was kind enough to lend it.&lt;/p&gt;
+&lt;p style="width:700px; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Nintendo 64" src="www.j-marjanovic.io/images/N64.png"&gt;&lt;/p&gt;
+&lt;p&gt;I have an interesting project in mind, I will keep you updated.
+Rok will for sure be the first one to get the alpha version.&lt;/p&gt;</content><category term="Nintendo 64"></category></entry><entry><title>Theremin Antenna Measurements</title><link href="www.j-marjanovic.io/theremin-antenna-measurements.html" rel="alternate"></link><published>2014-11-09T09:00:00+01:00</published><updated>2014-11-09T09:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-09:www.j-marjanovic.io/theremin-antenna-measurements.html</id><summary type="html">&lt;p&gt;Last week I briefly explained how theremin works. I also presented my idea to develop a 
+digital version, using FPGA as a detector of distance between hand and antenna.&lt;/p&gt;
+&lt;p&gt;You have probably already heard a joke about theory and practice. &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Theory is when you know everything but nothing works. Practice …&lt;/p&gt;&lt;/blockquote&gt;</summary><content type="html">&lt;p&gt;Last week I briefly explained how theremin works. I also presented my idea to develop a 
 digital version, using FPGA as a detector of distance between hand and antenna.&lt;/p&gt;
 &lt;p&gt;You have probably already heard a joke about theory and practice. &lt;/p&gt;
 &lt;blockquote&gt;
@@ -619,7 +652,7 @@ of the pitch is also desired.&lt;/p&gt;
 &lt;p&gt;Here you can see this highly advanced test - a ruler strapped to the antenna.
 This will allow us to measure the relationship between time constant and distance of
 the hand. &lt;/p&gt;
-&lt;p style="width:441px; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Test setup" src="www.j-marjanovic.io/images/theremin_antena_meas.jpg" /&gt;&lt;/p&gt;
+&lt;p style="width:441px; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Test setup" src="www.j-marjanovic.io/images/theremin_antena_meas.jpg"&gt;&lt;/p&gt;
 &lt;p&gt;Since the ruler is made out of plastic (we should say dielectric, when studying electric
 fields) it won't affect the antenna field.&lt;/p&gt;
 &lt;p&gt;The FPGA is producing a square wave signal at 10kHz, which is then sent to antenna through
@@ -629,14 +662,14 @@ the measured value. The module in FPGA measures how much time did it take for vo
 antenna to reach certain value (determined by Schmitt Trigger). This time is directly 
 correlated to time constant and therefore to capacitance of the antenna.&lt;/p&gt;
 &lt;p&gt;Here we see what the FPGA measured when I placed hand on different distance from antenna.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Time constant without filtering" src="www.j-marjanovic.io/images/theremin_antenna_direct.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Time constant without filtering" src="www.j-marjanovic.io/images/theremin_antenna_direct.png"&gt;&lt;/p&gt;
 &lt;p&gt;The blue dots denote mean value, the green lines denote one standard deviation and the
 black lines denote minimum and maximum value.&lt;/p&gt;
 &lt;p&gt;Right now, the measurements do not look very promising, we can see some increase of time
 constant as hand approaches antenna, but the noise is extremely high.&lt;/p&gt;
 &lt;p&gt;If we have a look at the frequency spectrum of the measurement, we see the reason for the
 noise.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Time constant spectral analysis" src="www.j-marjanovic.io/images/theremin_antenna_direct_fft.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Time constant spectral analysis" src="www.j-marjanovic.io/images/theremin_antenna_direct_fft.png"&gt;&lt;/p&gt;
 &lt;p&gt;The antenna is 45 cm long copper rod and acts not only as a capacitor for theremin but also
 as radio antenna. All the frequency components above Nyquist frequency (which is 5000 kHz
 in our case) are being aliased to lower frequencies in our frequency range. A 50Hz signal
@@ -645,7 +678,11 @@ from mains is also being picked up.&lt;/p&gt;
 improve.&lt;/p&gt;
 &lt;p&gt;I will write another article on filtering in FPGA, meanwhile let's enjoy much improved 
 results:&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Time constant with filtering" src="www.j-marjanovic.io/images/theremin_antenna_filtered.png" /&gt;&lt;/p&gt;</summary><category term="Theremin"></category></entry><entry><title>Theremin Basics</title><link href="www.j-marjanovic.io/theremin-basics.html" rel="alternate"></link><published>2014-11-06T22:00:00+01:00</published><author><name>Jan Marjanovic</name></author><id>tag:,2014-11-06:www.j-marjanovic.io/theremin-basics.html</id><summary type="html">&lt;p&gt;Theremin, a first electronic instrument. Leon Theremin invented it in 1928. 
+&lt;p&gt;&lt;img alt="Time constant with filtering" src="www.j-marjanovic.io/images/theremin_antenna_filtered.png"&gt;&lt;/p&gt;</content><category term="Theremin"></category></entry><entry><title>Theremin Basics</title><link href="www.j-marjanovic.io/theremin-basics.html" rel="alternate"></link><published>2014-11-06T22:00:00+01:00</published><updated>2014-11-06T22:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-06:www.j-marjanovic.io/theremin-basics.html</id><summary type="html">&lt;p&gt;Theremin, a first electronic instrument. Leon Theremin invented it in 1928. 
+Try to imagine people seeing somebody waving hand in the middle or the air
+and producing an extraterrestrial sounds. Theremin, should be considered a 
+true pioneer of electronic music.&lt;/p&gt;
+&lt;p&gt;The operational principle is quite simple, however an good implementation …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Theremin, a first electronic instrument. Leon Theremin invented it in 1928. 
 Try to imagine people seeing somebody waving hand in the middle or the air
 and producing an extraterrestrial sounds. Theremin, should be considered a 
 true pioneer of electronic music.&lt;/p&gt;
@@ -664,7 +701,7 @@ I did a quick simulation in Python to be able to show some numbers. This is
 meant to be a demonstration of operating principle, so it lacks few
 not-so-minor details. The calculations were done in 2D, where antenna in 
 real world exist in 3 dimensions. &lt;/p&gt;
-&lt;p&gt;&lt;img alt="Theremin simulation" src="www.j-marjanovic.io/images/theremin_antenna.gif" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Theremin simulation" src="www.j-marjanovic.io/images/theremin_antenna.gif"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/drafts/theremin-simulation.html"&gt;Code&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Now we know that antenna acts as a capacitor, so next challenge is to
 produce a tone with the pitch related to capacitance. The original Theremin
@@ -678,5 +715,5 @@ capacitor to reach certain level. A bigger capacitance (smaller distance
 between hand and antenna)  will result in longer time and a smaller
 capacitance (longer distance between hand and antenna) will result in shorter
 time. This difference will generate a different pitch.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Theremin settling time" src="www.j-marjanovic.io/images/theremin_settling_time.png" /&gt;&lt;/p&gt;
-&lt;p&gt;This is all for this part, stay tuned for more.&lt;/p&gt;</summary><category term="Theremin"></category></entry></feed>
+&lt;p&gt;&lt;img alt="Theremin settling time" src="www.j-marjanovic.io/images/theremin_settling_time.png"&gt;&lt;/p&gt;
+&lt;p&gt;This is all for this part, stay tuned for more.&lt;/p&gt;</content><category term="Theremin"></category></entry></feed>

@@ -17,7 +17,7 @@
 
         <!--[if lt IE 7]>
                 <link rel="stylesheet" type="text/css" media="all" href="./css/ie6.css"/><![endif]-->
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" type="text/javascript"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="theme/jquery.cookiesdirective.js"></script>
 
 </head>
@@ -125,7 +125,7 @@ ARM DS-5 Development Studio, which provides support for ARM cores in Altera SoCs
 DS-5 can be useful tool, unfortunately the free-as-a-beer <a href="https://developer.arm.com/products/software-development-tools/ds-5-development-studio/editions/customized-editions/altera/community-edition">DS-5 Community Edition</a>
 only allows debugging Linux user-space applications. In order to use it, the 
 Linux should be up and running in order to run gdbserver on processor.</p>
-<p><img alt="Debug options in DS-5 Altera Community Edition" src="./images/debugging_cyclone_soc_openocd/ds5_debug_options.png" style="max-width:100%; width: auto; display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img alt="Debug options in DS-5 Altera Community Edition" src="./images/debugging_cyclone_soc_openocd/ds5_debug_options.png" style="max-width:100%; width: auto; display: block; margin-left: auto; margin-right: auto;"></p>
 <p>When doing initial bring-up or experimenting this may not be the case. If
 there is something wrong with a kernel, a device tree or the drivers, one can
 easily find himself with a non-responsive system. Even in this case the JTAG
@@ -210,14 +210,14 @@ WITH UBUNTU 14.04</a>. The USB-Blaster has multiple personalities (one for FPGA 
 one for ARM JTAG), the udev rule therefore needs to specify both 6010 and
 6810 as the targeted devices.</p>
 <p>Create /etc/udev/rules.d/51-usbblaster.rules with the following content:</p>
-<div class="highlight"><pre><span></span><span class="err">#</span><span class="x"> For Altera USB-Blaster on SoCkit</span>
-<span class="x">SUBSYSTEM==&quot;usb&quot;,\</span>
-<span class="x">ENV</span><span class="err">{</span><span class="x">DEVTYPE}==&quot;usb_device&quot;,\</span>
-<span class="x">ATTR</span><span class="err">{</span><span class="x">idVendor}==&quot;09fb&quot;,\</span>
-<span class="x">ATTR</span><span class="err">{</span><span class="x">idProduct}==&quot;6010|6810&quot;,\</span>
-<span class="x">MODE=&quot;0666&quot;,\</span>
-<span class="x">NAME=&quot;bus/usb/</span><span class="p">$</span><span class="nv">env</span><span class="err">{</span><span class="x">BUSNUM}/</span><span class="p">$</span><span class="nv">env</span><span class="err">{</span><span class="x">DEVNUM}&quot;,\</span>
-<span class="x">RUN+=&quot;/bin/chmod 0666 %c&quot;</span>
+<div class="highlight"><pre><span></span># For Altera USB-Blaster on SoCkit
+SUBSYSTEM==&quot;usb&quot;,\
+ENV{DEVTYPE}==&quot;usb_device&quot;,\
+ATTR{idVendor}==&quot;09fb&quot;,\
+ATTR{idProduct}==&quot;6010|6810&quot;,\
+MODE=&quot;0666&quot;,\
+NAME=&quot;bus/usb/$env{BUSNUM}/$env{DEVNUM}&quot;,\
+RUN+=&quot;/bin/chmod 0666 %c&quot;
 </pre></div>
 
 
@@ -268,15 +268,15 @@ correct command to use it later with the GDB debugger.</p>
 <h2>Eclipse plug-in</h2>
 <p>Now we just have to set-up the Eclipse with the OpenOCD plug-in. I have used the
 newest version of Eclipse available at the moment, Eclipse Neon.</p>
-<p><img alt="Eclipse Neon" src="./images/debugging_cyclone_soc_openocd/eclipse_neon.png" style="width:500px; display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img alt="Eclipse Neon" src="./images/debugging_cyclone_soc_openocd/eclipse_neon.png" style="width:500px; display: block; margin-left: auto; margin-right: auto;"></p>
 <p><a href="http://gnuarmeclipse.github.io/plugins/install/">This page</a> describes how to
 install the OpenOCD plug-in for Eclipse, the easiest way is to drag and drop
 install icon into a running instance of Eclipse.</p>
 <p>Once this is set, we can create a new project. For simpler (bare-metal)
 project it would probably make sense to go with "Makefile Project with
 Existing Code". For a Linux kernel debugging the plain Project will be enough.</p>
-<p><img alt="Creation of new project in Eclipse" src="./images/debugging_cyclone_soc_openocd/eclipse_new_project.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;" /></p>
-<p><img alt="Creation of new project in Eclipse" src="./images/debugging_cyclone_soc_openocd/eclipse_new_project_name.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img alt="Creation of new project in Eclipse" src="./images/debugging_cyclone_soc_openocd/eclipse_new_project.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;"></p>
+<p><img alt="Creation of new project in Eclipse" src="./images/debugging_cyclone_soc_openocd/eclipse_new_project_name.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;"></p>
 <p>Now let's find the original Linux binary. When building kernel with Yocto, the
 created file in deploy directory is <code>zimage</code> file. This is a compressed image
 with all debugging symbols stripped out. It is optimized to be used in
@@ -303,17 +303,17 @@ of the kernel).</p>
 <p>In Eclipse we then select: <code>Run -&gt; Debug Configurations...</code></p>
 <p>And then we just need to setup the correct parameters for debug. Under "Main
 tab" we need to select the right Linux binary image:</p>
-<p><img alt="Creation of new project in Eclipse" src="./images/debugging_cyclone_soc_openocd/eclipse_debug_main.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img alt="Creation of new project in Eclipse" src="./images/debugging_cyclone_soc_openocd/eclipse_debug_main.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;"></p>
 <p>Under "Debugger tab" we need to set-up the OpenOCD setting and use the correct
 gdb (the one produced by Yocto):</p>
-<p><img alt="Creation of new project in Eclipse" src="./images/debugging_cyclone_soc_openocd/eclipse_debug_debugger.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img alt="Creation of new project in Eclipse" src="./images/debugging_cyclone_soc_openocd/eclipse_debug_debugger.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;"></p>
 <p>If we want to attach to a running kernel, we should un-check "Inital Reset"
 and "Load executable" fields under "Startup tab".</p>
-<p><img alt="Creation of new project in Eclipse" src="./images/debugging_cyclone_soc_openocd/eclipse_debug_startup.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img alt="Creation of new project in Eclipse" src="./images/debugging_cyclone_soc_openocd/eclipse_debug_startup.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;"></p>
 <p>And we are good to go. After pressing the "Debug" button, the debugging
 perspective will show up. Now we can access <code>__log_buf</code> buffer to determine
 what is stopping the kernel boot.</p>
-<p><img alt="Creation of new project in Eclipse" src="./images/debugging_cyclone_soc_openocd/eclipse_debug_final.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img alt="Creation of new project in Eclipse" src="./images/debugging_cyclone_soc_openocd/eclipse_debug_final.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;"></p>
         </div><!-- /.entry-content -->
 <a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="janmarjanovic">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script><br/><br/>
 
@@ -326,8 +326,8 @@ what is stopping the kernel boot.</p>
 	
         <footer id="contentinfo" >
                 <address id="about" class="vcard ">
-                Proudly powered by <a href="http://getpelican.com/" target="_blank">Pelican</a>, which takes
-                great advantage of <a href="http://python.org" target="_blank">Python</a>.
+                Proudly powered by <a href="https://getpelican.com/" target="_blank">Pelican</a>, which takes
+                great advantage of <a href="https://python.org" target="_blank">Python</a>.
 		
                 </address><!-- /#about -->
 		

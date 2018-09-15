@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/misc.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2017-02-03T18:00:00+01:00</updated><entry><title>FOSDEM 2017</title><link href="www.j-marjanovic.io/fosdem-2017.html" rel="alternate"></link><published>2017-02-03T18:00:00+01:00</published><author><name>Jan Marjanovic</name></author><id>tag:,2017-02-03:www.j-marjanovic.io/fosdem-2017.html</id><summary type="html">&lt;p&gt;I am writing this post from Brussels where I am attending &lt;a href="https://fosdem.org/2017/"&gt;FOSDEM 2017&lt;/a&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io - Misc</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/misc.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2017-02-03T18:00:00+01:00</updated><entry><title>FOSDEM 2017</title><link href="www.j-marjanovic.io/fosdem-2017.html" rel="alternate"></link><published>2017-02-03T18:00:00+01:00</published><updated>2017-02-03T18:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2017-02-03:www.j-marjanovic.io/fosdem-2017.html</id><summary type="html">&lt;p&gt;I am writing this post from Brussels where I am attending &lt;a href="https://fosdem.org/2017/"&gt;FOSDEM 2017&lt;/a&gt;
+conference.&lt;/p&gt;
+&lt;p&gt;There are a lot of interesting talks, and sometimes it is quite hard to decide
+on which one to go. Luckily there the talks are recorded and one can later
+check also the missed ones.&lt;/p&gt;
+&lt;p&gt;Here …&lt;/p&gt;</summary><content type="html">&lt;p&gt;I am writing this post from Brussels where I am attending &lt;a href="https://fosdem.org/2017/"&gt;FOSDEM 2017&lt;/a&gt;
 conference.&lt;/p&gt;
 &lt;p&gt;There are a lot of interesting talks, and sometimes it is quite hard to decide
 on which one to go. Luckily there the talks are recorded and one can later
@@ -70,7 +75,11 @@ check also the missed ones.&lt;/p&gt;
 &lt;h2&gt;Sunday&lt;/h2&gt;
 &lt;p&gt;On Sunday I plan to spend most of the time in &lt;a href="https://fosdem.org/2017/schedule/track/electronic_design_automation_eda/"&gt;Electronic Design Automation (EDA) devroom&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Here is a selfie of me with the famous &lt;a href="https://en.wikipedia.org/wiki/Manneken_Pis"&gt;Manneken Pis status&lt;/a&gt;:&lt;/p&gt;
-&lt;p style="width:50%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Selfie with Manneken Pis" src="www.j-marjanovic.io/images/fosdem_2017/IMG_4898.JPG" /&gt;&lt;/p&gt;</summary><category term="Conference"></category></entry><entry><title>Debugging Linux start-up on Altera Cyclone V SoC with OpenOCD</title><link href="www.j-marjanovic.io/debugging-linux-start-up-on-altera-cyclone-v-soc-with-openocd.html" rel="alternate"></link><published>2016-07-12T22:00:00+02:00</published><author><name>Jan Marjanovic</name></author><id>tag:,2016-07-12:www.j-marjanovic.io/debugging-linux-start-up-on-altera-cyclone-v-soc-with-openocd.html</id><summary type="html">&lt;p&gt;This blog post will show you how one can use the OpenOCD debugger with Altera
+&lt;p style="width:50%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Selfie with Manneken Pis" src="www.j-marjanovic.io/images/fosdem_2017/IMG_4898.JPG"&gt;&lt;/p&gt;</content><category term="Conference"></category></entry><entry><title>Debugging Linux start-up on Altera Cyclone V SoC with OpenOCD</title><link href="www.j-marjanovic.io/debugging-linux-start-up-on-altera-cyclone-v-soc-with-openocd.html" rel="alternate"></link><published>2016-07-12T22:00:00+02:00</published><updated>2016-07-12T22:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2016-07-12:www.j-marjanovic.io/debugging-linux-start-up-on-altera-cyclone-v-soc-with-openocd.html</id><summary type="html">&lt;p&gt;This blog post will show you how one can use the OpenOCD debugger with Altera
+Cyclone V SoC. Altera Cyclone V SoC is a very interesting integrated circuit,
+combining dual-core ARM processor and a decent FPGA, allowing a wide variety
+of possibilities to partition the application between the two.&lt;/p&gt;
+&lt;p&gt;Xilinx …&lt;/p&gt;</summary><content type="html">&lt;p&gt;This blog post will show you how one can use the OpenOCD debugger with Altera
 Cyclone V SoC. Altera Cyclone V SoC is a very interesting integrated circuit,
 combining dual-core ARM processor and a decent FPGA, allowing a wide variety
 of possibilities to partition the application between the two.&lt;/p&gt;
@@ -82,7 +91,7 @@ ARM DS-5 Development Studio, which provides support for ARM cores in Altera SoCs
 DS-5 can be useful tool, unfortunately the free-as-a-beer &lt;a href="https://developer.arm.com/products/software-development-tools/ds-5-development-studio/editions/customized-editions/altera/community-edition"&gt;DS-5 Community Edition&lt;/a&gt;
 only allows debugging Linux user-space applications. In order to use it, the 
 Linux should be up and running in order to run gdbserver on processor.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Debug options in DS-5 Altera Community Edition" src="www.j-marjanovic.io/images/debugging_cyclone_soc_openocd/ds5_debug_options.png" style="max-width:100%; width: auto; display: block; margin-left: auto; margin-right: auto;" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Debug options in DS-5 Altera Community Edition" src="www.j-marjanovic.io/images/debugging_cyclone_soc_openocd/ds5_debug_options.png" style="max-width:100%; width: auto; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;p&gt;When doing initial bring-up or experimenting this may not be the case. If
 there is something wrong with a kernel, a device tree or the drivers, one can
 easily find himself with a non-responsive system. Even in this case the JTAG
@@ -167,14 +176,14 @@ WITH UBUNTU 14.04&lt;/a&gt;. The USB-Blaster has multiple personalities (one for
 one for ARM JTAG), the udev rule therefore needs to specify both 6010 and
 6810 as the targeted devices.&lt;/p&gt;
 &lt;p&gt;Create /etc/udev/rules.d/51-usbblaster.rules with the following content:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="x"&gt; For Altera USB-Blaster on SoCkit&lt;/span&gt;
-&lt;span class="x"&gt;SUBSYSTEM==&amp;quot;usb&amp;quot;,\&lt;/span&gt;
-&lt;span class="x"&gt;ENV&lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="x"&gt;DEVTYPE}==&amp;quot;usb_device&amp;quot;,\&lt;/span&gt;
-&lt;span class="x"&gt;ATTR&lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="x"&gt;idVendor}==&amp;quot;09fb&amp;quot;,\&lt;/span&gt;
-&lt;span class="x"&gt;ATTR&lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="x"&gt;idProduct}==&amp;quot;6010|6810&amp;quot;,\&lt;/span&gt;
-&lt;span class="x"&gt;MODE=&amp;quot;0666&amp;quot;,\&lt;/span&gt;
-&lt;span class="x"&gt;NAME=&amp;quot;bus/usb/&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;env&lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="x"&gt;BUSNUM}/&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;env&lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="x"&gt;DEVNUM}&amp;quot;,\&lt;/span&gt;
-&lt;span class="x"&gt;RUN+=&amp;quot;/bin/chmod 0666 %c&amp;quot;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# For Altera USB-Blaster on SoCkit
+SUBSYSTEM==&amp;quot;usb&amp;quot;,\
+ENV{DEVTYPE}==&amp;quot;usb_device&amp;quot;,\
+ATTR{idVendor}==&amp;quot;09fb&amp;quot;,\
+ATTR{idProduct}==&amp;quot;6010|6810&amp;quot;,\
+MODE=&amp;quot;0666&amp;quot;,\
+NAME=&amp;quot;bus/usb/$env{BUSNUM}/$env{DEVNUM}&amp;quot;,\
+RUN+=&amp;quot;/bin/chmod 0666 %c&amp;quot;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -225,15 +234,15 @@ correct command to use it later with the GDB debugger.&lt;/p&gt;
 &lt;h2&gt;Eclipse plug-in&lt;/h2&gt;
 &lt;p&gt;Now we just have to set-up the Eclipse with the OpenOCD plug-in. I have used the
 newest version of Eclipse available at the moment, Eclipse Neon.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Eclipse Neon" src="www.j-marjanovic.io/images/debugging_cyclone_soc_openocd/eclipse_neon.png" style="width:500px; display: block; margin-left: auto; margin-right: auto;" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Eclipse Neon" src="www.j-marjanovic.io/images/debugging_cyclone_soc_openocd/eclipse_neon.png" style="width:500px; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="http://gnuarmeclipse.github.io/plugins/install/"&gt;This page&lt;/a&gt; describes how to
 install the OpenOCD plug-in for Eclipse, the easiest way is to drag and drop
 install icon into a running instance of Eclipse.&lt;/p&gt;
 &lt;p&gt;Once this is set, we can create a new project. For simpler (bare-metal)
 project it would probably make sense to go with "Makefile Project with
 Existing Code". For a Linux kernel debugging the plain Project will be enough.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Creation of new project in Eclipse" src="www.j-marjanovic.io/images/debugging_cyclone_soc_openocd/eclipse_new_project.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;" /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Creation of new project in Eclipse" src="www.j-marjanovic.io/images/debugging_cyclone_soc_openocd/eclipse_new_project_name.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Creation of new project in Eclipse" src="www.j-marjanovic.io/images/debugging_cyclone_soc_openocd/eclipse_new_project.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Creation of new project in Eclipse" src="www.j-marjanovic.io/images/debugging_cyclone_soc_openocd/eclipse_new_project_name.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;p&gt;Now let's find the original Linux binary. When building kernel with Yocto, the
 created file in deploy directory is &lt;code&gt;zimage&lt;/code&gt; file. This is a compressed image
 with all debugging symbols stripped out. It is optimized to be used in
@@ -260,17 +269,20 @@ of the kernel).&lt;/p&gt;
 &lt;p&gt;In Eclipse we then select: &lt;code&gt;Run -&amp;gt; Debug Configurations...&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;And then we just need to setup the correct parameters for debug. Under "Main
 tab" we need to select the right Linux binary image:&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Creation of new project in Eclipse" src="www.j-marjanovic.io/images/debugging_cyclone_soc_openocd/eclipse_debug_main.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Creation of new project in Eclipse" src="www.j-marjanovic.io/images/debugging_cyclone_soc_openocd/eclipse_debug_main.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;p&gt;Under "Debugger tab" we need to set-up the OpenOCD setting and use the correct
 gdb (the one produced by Yocto):&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Creation of new project in Eclipse" src="www.j-marjanovic.io/images/debugging_cyclone_soc_openocd/eclipse_debug_debugger.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Creation of new project in Eclipse" src="www.j-marjanovic.io/images/debugging_cyclone_soc_openocd/eclipse_debug_debugger.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;p&gt;If we want to attach to a running kernel, we should un-check "Inital Reset"
 and "Load executable" fields under "Startup tab".&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Creation of new project in Eclipse" src="www.j-marjanovic.io/images/debugging_cyclone_soc_openocd/eclipse_debug_startup.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Creation of new project in Eclipse" src="www.j-marjanovic.io/images/debugging_cyclone_soc_openocd/eclipse_debug_startup.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;p&gt;And we are good to go. After pressing the "Debug" button, the debugging
 perspective will show up. Now we can access &lt;code&gt;__log_buf&lt;/code&gt; buffer to determine
 what is stopping the kernel boot.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Creation of new project in Eclipse" src="www.j-marjanovic.io/images/debugging_cyclone_soc_openocd/eclipse_debug_final.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;" /&gt;&lt;/p&gt;</summary><category term="FPGA"></category><category term="Altera"></category><category term="Linux"></category><category term="OpenOCD"></category></entry><entry><title>Hello world</title><link href="www.j-marjanovic.io/hello-world.html" rel="alternate"></link><published>2014-11-02T13:00:00+01:00</published><author><name>Jan Marjanovic</name></author><id>tag:,2014-11-02:www.j-marjanovic.io/hello-world.html</id><summary type="html">&lt;p&gt;Hi and welcome to my blog.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Creation of new project in Eclipse" src="www.j-marjanovic.io/images/debugging_cyclone_soc_openocd/eclipse_debug_final.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;</content><category term="FPGA"></category><category term="Altera"></category><category term="Linux"></category><category term="OpenOCD"></category></entry><entry><title>Hello world</title><link href="www.j-marjanovic.io/hello-world.html" rel="alternate"></link><published>2014-11-02T13:00:00+01:00</published><updated>2014-11-02T13:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-02:www.j-marjanovic.io/hello-world.html</id><summary type="html">&lt;p&gt;Hi and welcome to my blog.&lt;/p&gt;
+&lt;p&gt;This is a "hello world" style post, I am curently testing pelican static blog generator.
+Since I don't know how much time I will have to manage this blog I prefer that everything 
+is static. If I some day stop writing this blog, at …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Hi and welcome to my blog.&lt;/p&gt;
 &lt;p&gt;This is a "hello world" style post, I am curently testing pelican static blog generator.
 Since I don't know how much time I will have to manage this blog I prefer that everything 
 is static. If I some day stop writing this blog, at least there won't be any security threats
@@ -278,4 +290,4 @@ due to out-of-date web page.&lt;/p&gt;
 &lt;p&gt;This blog will be about one of my biggest passions, electronics and technology in general.
 Since I was a kid I was curious about electronic devices and to this day I always enjoy
 taking thing appart (and sometimes also together, that is what I am being paid for). &lt;/p&gt;
-&lt;p&gt;This is all for now, let's see if it "compiles"...&lt;/p&gt;</summary></entry></feed>
+&lt;p&gt;This is all for now, let's see if it "compiles"...&lt;/p&gt;</content></entry></feed>
