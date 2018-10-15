@@ -1,5 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/all.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2018-09-15T19:00:00+02:00</updated><entry><title>Blog restart</title><link href="www.j-marjanovic.io/blog-restart.html" rel="alternate"></link><published>2018-09-15T19:00:00+02:00</published><updated>2018-09-15T19:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2018-09-15:www.j-marjanovic.io/blog-restart.html</id><summary type="html">&lt;p&gt;This blog was left dormant for quite some time now. From the last blog post
+<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/all.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2018-10-14T21:00:00+02:00</updated><entry><title>Chisel tester with overridden step() method</title><link href="www.j-marjanovic.io/chisel-tester-with-overridden-step-method.html" rel="alternate"></link><published>2018-10-14T21:00:00+02:00</published><updated>2018-10-14T21:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2018-10-14:www.j-marjanovic.io/chisel-tester-with-overridden-step-method.html</id><summary type="html">&lt;h1&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://chisel.eecs.berkeley.edu/"&gt;Chisel&lt;/a&gt; is a modern take on Hardware
+Description Languages, such as (System)Verilog and VHDL. Both Verilog and VHDL
+were conceived in 80s, and are currently still the main two options when it
+comes to describing hardware. From the Developer Experience point-of-view, I
+would say that both languages are …&lt;/p&gt;</summary><content type="html">&lt;h1&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://chisel.eecs.berkeley.edu/"&gt;Chisel&lt;/a&gt; is a modern take on Hardware
+Description Languages, such as (System)Verilog and VHDL. Both Verilog and VHDL
+were conceived in 80s, and are currently still the main two options when it
+comes to describing hardware. From the Developer Experience point-of-view, I
+would say that both languages are kind of OK once one gets used to them.&lt;/p&gt;
+&lt;h1&gt;Short comparison to VHDL and Verilog&lt;/h1&gt;
+&lt;p&gt;Obviously there are still areas where this two languages could be improved. That
+is why I have started to experiment with Chisel in my free time. The modules
+written in Chisel are shorter and thus more readable. &lt;/p&gt;
+&lt;h2&gt;Verbosity&lt;/h2&gt;
+&lt;p&gt;Having one implicit clock domain is (in most cases) great, and everything is
+then clocked from this clock. This saves a lot of typing compared to the
+Verilog:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;always&lt;/span&gt; &lt;span class="p"&gt;@(&lt;/span&gt;&lt;span class="k"&gt;posedge&lt;/span&gt; &lt;span class="n"&gt;clk&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;begin&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;proc_smth&lt;/span&gt;
+  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;reset&lt;/span&gt; &lt;span class="k"&gt;begin&lt;/span&gt;
+    &lt;span class="c1"&gt;// reset logic&lt;/span&gt;
+   &lt;span class="k"&gt;end&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="k"&gt;begin&lt;/span&gt;
+    &lt;span class="c1"&gt;// here comes the real useful stuff&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;and VHDL:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nc"&gt;proc_smth&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;process&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;clk&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;begin&lt;/span&gt;
+  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;rising_edge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;clk&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;reset&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sc"&gt;&amp;#39;1&amp;#39;&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt;
+      &lt;span class="c1"&gt;-- reset logic&lt;/span&gt;
+    &lt;span class="k"&gt;else&lt;/span&gt;
+      &lt;span class="c1"&gt;-- here comes the real useful stuff&lt;/span&gt;
+    &lt;span class="k"&gt;end&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt; &lt;span class="k"&gt;process&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;I would argue that half of the lines in a typical VHDL modules are not needed,
+as demonstrated in previous example. A typical module for me would be some DSP
+or protocol processing module, operating in a single clock domain. For special
+cases, where precise control of clocks is needed, such as in ADC interface with
+ISERDES, one can still write the "sensitive" parts in classic HDL.&lt;/p&gt;
+&lt;h2&gt;Development tools&lt;/h2&gt;
+&lt;p&gt;Other advantage of Chisel is: one can use &lt;a href="https://www.jetbrains.com/idea/download/"&gt;IntelliJ IDEA Community
+Edition&lt;/a&gt; to write code. Compared even
+to the best VHDL/Verilog IDEs, e.g. &lt;a href="https://www.sigasi.com/"&gt;Sigasi&lt;/a&gt;, IntelliJ
+is light-years ahead when it comes to refactoring, autocompletion, integration
+with Git and countless little helpers.&lt;/p&gt;
+&lt;h2&gt;Testing&lt;/h2&gt;
+&lt;p&gt;Chisel is based on Scala, and for hardware generation and testing this is a
+significant advantage. Chisel provides &lt;code&gt;ChiselFlatSpec&lt;/code&gt; which is based on
+&lt;code&gt;FlatSpec&lt;/code&gt; and allows declaring specifications (in style of &lt;code&gt;"Module" should "do
+something"&lt;/code&gt;) which are then evaluated.&lt;/p&gt;
+&lt;p&gt;One area where Chisel is seriously lacking compared to VHDL and Verilog are
+the implementation of the testbenches (or testers in Chisel-speak). In Verilog
+and VHDL one can write testbench in a same language with the same constructs
+as "Device" Under Test. In Chisel, synthesizable logic is written in Chisel,
+while testbenches are written in Scala.&lt;/p&gt;
+&lt;h1&gt;Better testbenches&lt;/h1&gt;
+&lt;p&gt;If we cannot write the testbenches in same language as logic, let's explore
+other options. Chisel itself provides multiple
+&lt;a href="https://github.com/freechipsproject/chisel-testers"&gt;testers&lt;/a&gt;, such as
+&lt;code&gt;PeekPokeTester&lt;/code&gt;, &lt;code&gt;SteppedHWIOTester&lt;/code&gt; and &lt;code&gt;OrderedDecoupledHWIOTester&lt;/code&gt;. In my
+opinion, &lt;code&gt;OrderedDecoupledHWIOTester&lt;/code&gt; and &lt;code&gt;SteppedHWIOTester&lt;/code&gt; are only suitable
+for very small modules, and do not provide enough features to sufficiently test
+a DSP module with AXI4-Stream input, AXI4-Stream output and AXI4-Lite slave
+port for configuration.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;PeekPokeTester&lt;/code&gt; allows &lt;code&gt;poke&lt;/code&gt;-ing the inputs to DUT and &lt;code&gt;peek&lt;/code&gt;-ing the outputs
+from DUT. It also provides a &lt;code&gt;step()&lt;/code&gt; method to advance simulation time by one
+or more clock period.&lt;/p&gt;
+&lt;p&gt;In the previously-described case with a DUT with three ports (two AXI4-Stream
+and one AXI4-Lite) one would ideally need three separate Bus Functional Models
+(BFMs) which get executed (read their inputs and update their outputs) every
+clock cycle. This can be achieved by overriding the &lt;code&gt;step()&lt;/code&gt; method of the
+&lt;code&gt;PeekPokeTester&lt;/code&gt;.&lt;/p&gt;
+&lt;h1&gt;Overriding &lt;code&gt;step()&lt;/code&gt; method&lt;/h1&gt;
+&lt;p&gt;The code for this example is available on my GitHub, in &lt;a href="https://github.com/j-marjanovic/chisel-stuff/tree/master/example-1-override-step"&gt;chisel-stuff/example-1&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In this simplified (stripped to the minimum) example, we have a DUT with two
+interfaces. Each interface consist only of &lt;code&gt;data&lt;/code&gt; and &lt;code&gt;valid&lt;/code&gt; signals, neither
+DUT nor monitor BFM are unable to backpressure the stream of data. The testbench
+will consist of three logical units: DUT, Driver BFM and Monitor BFM. Both BFMs
+are updated every clock cycles, so that driver BFM can drive the input port of
+the DUT and monitor BFM can in parallel monitor the output port of the DUT.&lt;/p&gt;
+&lt;p&gt;The core of this examples are the following couple of lines (from &lt;a href="https://github.com/j-marjanovic/chisel-stuff/blob/master/example-1-override-step/src/test/scala/overrideStepExample/OverrideStepExampleTester.scala#L126"&gt;OverrideStepExampleTester.scala:126&lt;/a&gt;):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;  &lt;span class="c1"&gt;//==========================================================================&lt;/span&gt;
+  &lt;span class="c1"&gt;// step&lt;/span&gt;
+
+  &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;rm&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;runtimeMirror&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;getClass&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getClassLoader&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;im&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reflect&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;members&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;im&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;symbol&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;typeSignature&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;members&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;bfms&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;members&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;filter&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;_&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;typeSignature&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;:&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;typeOf&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;ChiselBfm&lt;/span&gt;&lt;span class="o"&gt;])&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;stepSingle&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Unit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bfm&lt;/span&gt; &lt;span class="k"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="n"&gt;bfms&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+      &lt;span class="n"&gt;im&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reflectField&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bfm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;asTerm&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;asInstanceOf&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;ChiselBfm&lt;/span&gt;&lt;span class="o"&gt;].&lt;/span&gt;&lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+    &lt;span class="k"&gt;super&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;step&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+  &lt;span class="k"&gt;override&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;step&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Unit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;_&lt;/span&gt; &lt;span class="k"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="n"&gt;until&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+      &lt;span class="n"&gt;stepSingle&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Through Scala's &lt;a href="https://www.michaelpollmeier.com/fun-with-scalas-new-reflection-api-2-10"&gt;Reflection API&lt;/a&gt;
+we are able to find all instances of classes which have a trait of &lt;code&gt;ChiselBfm&lt;/code&gt;,
+and then call their &lt;code&gt;update()&lt;/code&gt; methods. This allows both BFMs to read and write
+to the ports as they desire, independent from each other.&lt;/p&gt;
+&lt;p&gt;The instantiations of both BFMs is a little clunky, we need to manually provide
+them all the methods from &lt;code&gt;PeekPokeTester&lt;/code&gt; which are needed during the
+operation of the BFMs.&lt;/p&gt;
+&lt;p&gt;Running &lt;code&gt;sbt test&lt;/code&gt; in &lt;code&gt;example-1-override-step&lt;/code&gt;, we obtain the following result:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[info] [0.002] SEED 1539634207505
+[info] [0.023]     0 Test starting...
+[info] [0.271]     5 Driver: sent 0
+[info] [0.274]     6 Driver: sent 1
+[info] [0.278]     7 Monitor: received 1
+[info] [0.278]     7 Driver: sent 2
+[info] [0.289]     8 Monitor: received 2
+[info] [0.290]     8 Driver: sent 10
+[info] [0.310]     9 Monitor: received 3
+[info] [0.310]     9 Driver: sent 99
+[info] [0.314]    10 Monitor: received 11
+[info] [0.315]    10 Driver: sent 100
+[info] [0.324]    11 Monitor: received 100
+[info] [0.326]    11 Driver: sent 65534
+[info] [0.340]    12 Monitor: received 101
+[info] [0.340]    12 Driver: sent 65535
+[info] [0.344]    13 Monitor: received 65535
+[info] [0.348]    14 Monitor: received 0
+[info] [0.401]    23 Test finished.
+Enabling waves..
+Exit Code: 0
+[info] [0.409] RAN 23 CYCLES PASSED
+[info] OverrideStepExampleTest:
+[info] pipeline tester
+[info] - should compare expected and obtained response
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And this is the display of the waveforms from GTKWave:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="GTKWave display" src="www.j-marjanovic.io/images/chisel_override_clock.png"&gt;&lt;/p&gt;
+&lt;p&gt;It can be noted that both Driver and Monitor are able to perform their tasks
+in parallel.&lt;/p&gt;
+&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;Shown here is a convenient method to enhance the Chisel &lt;code&gt;PeekPokeTester&lt;/code&gt;. In
+this particular case (when DUT has only one input and one output port), one
+could also use &lt;code&gt;OrderedDecoupledHWIOTester&lt;/code&gt;, but it should be obvious that the
+method presented here provides more control and flexibility in more complex
+cases.&lt;/p&gt;</content><category term="FPGA"></category><category term="Scala"></category><category term="BFM"></category></entry><entry><title>Blog restart</title><link href="www.j-marjanovic.io/blog-restart.html" rel="alternate"></link><published>2018-09-15T19:00:00+02:00</published><updated>2018-09-15T19:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2018-09-15:www.j-marjanovic.io/blog-restart.html</id><summary type="html">&lt;p&gt;This blog was left dormant for quite some time now. From the last blog post
 in February 2017 a lot has happened. I have moved to Hamburg, Germany, to
 start a new position as FPGA Developer at MicroTCA Technology Lab at
 &lt;a href="https://www.desy.de/"&gt;DESY&lt;/a&gt;.&lt;/p&gt;

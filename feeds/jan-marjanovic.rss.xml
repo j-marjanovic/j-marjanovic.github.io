@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>j-marjanovic.io - Jan Marjanovic</title><link>www.j-marjanovic.io/</link><description></description><lastBuildDate>Sat, 15 Sep 2018 19:00:00 +0200</lastBuildDate><item><title>Blog restart</title><link>www.j-marjanovic.io/blog-restart.html</link><description>&lt;p&gt;This blog was left dormant for quite some time now. From the last blog post
+<rss version="2.0"><channel><title>j-marjanovic.io - Jan Marjanovic</title><link>www.j-marjanovic.io/</link><description></description><lastBuildDate>Sun, 14 Oct 2018 21:00:00 +0200</lastBuildDate><item><title>Chisel tester with overridden step() method</title><link>www.j-marjanovic.io/chisel-tester-with-overridden-step-method.html</link><description>&lt;h1&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://chisel.eecs.berkeley.edu/"&gt;Chisel&lt;/a&gt; is a modern take on Hardware
+Description Languages, such as (System)Verilog and VHDL. Both Verilog and VHDL
+were conceived in 80s, and are currently still the main two options when it
+comes to describing hardware. From the Developer Experience point-of-view, I
+would say that both languages are …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Jan Marjanovic</dc:creator><pubDate>Sun, 14 Oct 2018 21:00:00 +0200</pubDate><guid isPermaLink="false">tag:None,2018-10-14:www.j-marjanovic.io/chisel-tester-with-overridden-step-method.html</guid><category>FPGA</category><category>Scala</category><category>BFM</category></item><item><title>Blog restart</title><link>www.j-marjanovic.io/blog-restart.html</link><description>&lt;p&gt;This blog was left dormant for quite some time now. From the last blog post
 in February 2017 a lot has happened. I have moved to Hamburg, Germany, to
 start a new position as FPGA Developer at MicroTCA Technology Lab at
 &lt;a href="https://www.desy.de/"&gt;DESY&lt;/a&gt;.&lt;/p&gt;
