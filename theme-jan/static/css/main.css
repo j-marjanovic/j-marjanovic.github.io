@@ -450,7 +450,8 @@ li:last-child .hentry, #content > .hentry {border: 0; margin: 0;}
 .entry-title a:link, .entry-title a:visited {text-decoration: none; color: #333;}
 .entry-title a:visited {background-color: #fff;}
 .entry-content blockquote {font-size: 1em; margin: 10px 20px; background-color: #DDD; border-radius: 5px; }
-.entry-content li {font-size: 1.6em;}
+.entry-content li {font-size: 1.2em;}
+.entry-content li li {font-size: 1.0em;}
 #featured .body li {font-size: 1.6em;}
 #featured .body blockquote {font-size: 1em; margin: 10px 20px; background-color: #DDD; border-radius: 5px; }
 
