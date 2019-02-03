@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>j-marjanovic.io - Jan Marjanovic</title><link>www.j-marjanovic.io/</link><description></description><lastBuildDate>Sun, 14 Oct 2018 21:00:00 +0200</lastBuildDate><item><title>Chisel tester with overridden step() method</title><link>www.j-marjanovic.io/chisel-tester-with-overridden-step-method.html</link><description>&lt;h1&gt;Introduction&lt;/h1&gt;
+<rss version="2.0"><channel><title>j-marjanovic.io - Jan Marjanovic</title><link>www.j-marjanovic.io/</link><description></description><lastBuildDate>Sun, 03 Feb 2019 20:10:00 +0100</lastBuildDate><item><title>Notes from FOSDEM 2019</title><link>www.j-marjanovic.io/notes-from-fosdem-2019.html</link><description>&lt;p&gt;I attended FOSDEM 2019 in Brussels:&lt;/p&gt;
+&lt;p style="width:40%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Brussels" src="www.j-marjanovic.io/images/fosdem2019.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;and these are my notes from Quantum Computers, CAD and Open Hardware
+and Python tracks:&lt;/p&gt;
+&lt;h1&gt;Quantum Computing&lt;/h1&gt;
+&lt;h2&gt;Delivering Practical Quantum Computing on the D-Wave System&lt;/h2&gt;
+&lt;h3&gt;Intro&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;marketing slide for D-Wave Leap&lt;/li&gt;
+&lt;li&gt;practical = Adiabatic Quantum computer&lt;/li&gt;
+&lt;li&gt;Riggeti uses gate model instead&lt;/li&gt;
+&lt;li&gt;physical impl: 3 m …&lt;/li&gt;&lt;/ul&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Jan Marjanovic</dc:creator><pubDate>Sun, 03 Feb 2019 20:10:00 +0100</pubDate><guid isPermaLink="false">tag:None,2019-02-03:www.j-marjanovic.io/notes-from-fosdem-2019.html</guid><category>Quantum computers</category><category>Open Hardware</category><category>Chisel</category></item><item><title>Chisel tester with overridden step() method</title><link>www.j-marjanovic.io/chisel-tester-with-overridden-step-method.html</link><description>&lt;h1&gt;Introduction&lt;/h1&gt;
 &lt;p&gt;&lt;a href="https://chisel.eecs.berkeley.edu/"&gt;Chisel&lt;/a&gt; is a modern take on Hardware
 Description Languages, such as (System)Verilog and VHDL. Both Verilog and VHDL
 were conceived in 80s, and are currently still the main two options when it

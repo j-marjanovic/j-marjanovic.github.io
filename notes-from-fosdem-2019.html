@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Notes from FOSDEM 2019</title>
+        <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="shortcut icon" href="./theme/images/favicon.ico"/>
+        <link rel="stylesheet" href="./theme/css/main.css" type="text/css" />
+        <link href="www.j-marjanovic.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="j-marjanovic.io Atom Feed" />
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie.css"/>
+                <script src="./js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie6.css"/><![endif]-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="theme/jquery.cookiesdirective.js"></script>
+
+</head>
+
+<body id="index" class="home">
+<script type="text/javascript">
+	// Using $(document).ready never hurts
+	$(document).ready(function(){
+
+		// Cookie setting script wrapper
+		var cookieScripts = function () {
+			// Internal javascript called
+			console.log("Running");
+		
+			// Loading external javascript file
+			$.cookiesDirective.loadScript({
+				uri:'external.js',
+				appendTo: 'eantics'
+			});
+		}
+	
+		/* Call cookiesDirective, overriding any default params
+		
+			*** These are the defaults ***
+				explicitConsent: true,
+				position: 'top',
+				duration: 10,
+				limit: 0,
+				message: null,				
+				cookieScripts: null,
+				privacyPolicyUri: 'privacy.html',
+				scriptWrapper: function(){},	
+				fontFamily: 'helvetica',
+				fontColor: '#FFFFFF',
+				fontSize: '13px',
+				backgroundColor: '#000000',
+				backgroundOpacity: '80',
+				linkColor: '#CA0000'
+				
+		*/
+		
+		$.cookiesDirective({
+			privacyPolicyUri: 'myprivacypolicy.html',
+			explicitConsent: false,
+			position : 'bottom',
+			scriptWrapper: cookieScripts, 
+			cookieScripts: 'Google Analytics', 
+			backgroundColor: '#52B54A',
+			linkColor: '#ffffff'
+		});
+	});
+</script>
+
+	
+  <!-- <header id="banner" class="body"> -->
+  <!--               <h1><a href="./"><img src="http://www.launchyard.com/images/logo.png" /></a></h1> -->
+  <!--       </header> --> 
+
+  <div class="LaunchyardDetail" style="align:right;">
+    <!-- <p> -->
+    <!-- <img src="./theme/images/blue-pin.png" width="100" height="100" alt="Graph icon"> -->
+    <!-- </p> -->
+    <p><a id="sitesubtitle" href="./">j-marjanovic.io</a></p>
+
+	<br>
+    <p style="float: right; margin-right: 50px;"><a id="aboutlink" href="./pages/about.html">About</a></p>
+
+    <br>
+	<p style="float: right; margin-right: 50px;"><img src="./theme/images/icons/rss.png"> <a id="aboutlink" href="./feeds/jan-marjanovic.atom.xml">Atom feed</a></p>
+    <br>
+
+  </div>
+
+<section id="content" >
+    <div class="body">
+      <article>
+        <header>
+          <h1 class="entry-title">
+            <a href="./notes-from-fosdem-2019.html" rel="bookmark"
+               title="Permalink to Notes from FOSDEM 2019">Notes from FOSDEM 2019</a></h1>
+
+        </header>
+
+        <div class="entry-content">
+<div class="post-info">
+	<ul>
+        <li class="vcard author">
+                 by&nbsp;<a class="url fn" href="./author/jan-marjanovic.html">Jan Marjanovic</a>
+        </li>
+        <li class="published" title="2019-02-03T20:10:00+01:00">
+          on&nbsp;Sun 03 February 2019
+        </li>
+
+	</ul>
+<p>Category: <a href="./tag/quantum-computers.html">Quantum computers</a>, <a href="./tag/open-hardware.html">Open Hardware</a>, <a href="./tag/chisel.html">Chisel</a>, </p>
+</div><!-- /.post-info -->          <p>I attended FOSDEM 2019 in Brussels:</p>
+<p style="width:40%; display: block; margin-left: auto; margin-right: auto;"><img alt="Brussels" src="./images/fosdem2019.jpg"></p>
+<p>and these are my notes from Quantum Computers, CAD and Open Hardware
+and Python tracks:</p>
+<h1>Quantum Computing</h1>
+<h2>Delivering Practical Quantum Computing on the D-Wave System</h2>
+<h3>Intro</h3>
+<ul>
+<li>marketing slide for D-Wave Leap</li>
+<li>practical = Adiabatic Quantum computer</li>
+<li>Riggeti uses gate model instead</li>
+<li>physical impl: 3 m high box + 3 normal racks</li>
+<li>QPU (Quantum Processor Unit): 16x16 grid</li>
+</ul>
+<h3>theory</h3>
+<ul>
+<li>language<ul>
+<li>qubit</li>
+<li>coupler (either both in same direction or opposite)</li>
+<li>weights (? initial state)</li>
+<li>strength (for couplers)</li>
+<li>objective (function which gets minimized)</li>
+</ul>
+</li>
+<li>BQM (?)</li>
+<li>5 us annealing</li>
+<li>problems: noise</li>
+<li>noise can bring you in more than one solution (might be useful for some problems)</li>
+</ul>
+<h3>Markets</h3>
+<ul>
+<li>portfolio</li>
+<li>internet ad</li>
+<li>high-energy physics</li>
+<li>image recognition</li>
+</ul>
+<h3>Q &amp; A</h3>
+<ul>
+<li>clock speed -&gt; no clock speed</li>
+<li>total computation time -&gt; 5 us to 1 s</li>
+<li>Pegasus: proposed arch for a new machine</li>
+<li>new Hamiltonioan in Pegasus</li>
+<li>error corrections: from 2048 bits, no error corrections because of what
+  they calculate</li>
+<li>classical solutions vs quantum solutions: wall-clock time is the benchmark</li>
+<li>hello world: </li>
+<li>D-Wave: not a threat for a normal crypto (factoring a number is not a good problem)</li>
+</ul>
+<h2>D-Wave's Software Development Kit</h2>
+<ul>
+<li>tools and utilities for QC development</li>
+</ul>
+<h3>motivation</h3>
+<ul>
+<li>solution space is "smooth": good solutions are "grouped together"</li>
+<li>step 1: problem as polynomial</li>
+</ul>
+<h3>equation</h3>
+<ul>
+<li>b-terms: linear bias</li>
+<li>a-terms: quadratic bias</li>
+</ul>
+<p>Quantum Machine Instr: biases in certain range: because of physical limitaiton?
+* Chimera graph and Pegasus graph</p>
+<h3>Ocean software</h3>
+<ul>
+<li>
+<p>Python front-end, C++ for high performance</p>
+</li>
+<li>
+<p>mapping methods</p>
+</li>
+<li>samplers</li>
+<li>compute resources</li>
+</ul>
+<h4>dimod</h4>
+<ul>
+<li>API for samplers</li>
+<li>BQM</li>
+</ul>
+<h4>cloud client</h4>
+<h4>minorminer</h4>
+<h4>dwavebinaryscp</h4>
+<p>constraint satisfaction</p>
+<h4>dwave-networkx</h4>
+<p>graph theory problem,
+same API as networkx</p>
+<h3>Steps</h3>
+<ol>
+<li>translate to binary</li>
+<li>define BQM function</li>
+<li>BQM to matrix form</li>
+<li>BQM through sampler</li>
+<li>post-processing and interpretation</li>
+</ol>
+<h3>Conclusion</h3>
+<p><code>pip install dwave-ocean-sdk</code></p>
+<h3>Q &amp; A</h3>
+<ul>
+<li>resolution: 0.01 resolution</li>
+<li>Fujitsu and Hitachi: another providers</li>
+<li>8 couplers per qbit</li>
+</ul>
+<h2>D-Wave Hybrid Framework</h2>
+<ul>
+<li>decomposition -&gt; split the problem to fit into BQM</li>
+</ul>
+<p>github.com/dwavesystems/dwave-hybrid</p>
+<ul>
+<li>solver/sampler framework</li>
+<li>uses both quantum and classical resources</li>
+<li>dataflow paradigm</li>
+</ul>
+<h2>What is IBMQ</h2>
+<h3>quantum algorithms</h3>
+<ul>
+<li>current algorithms --&gt; quantum algorithms</li>
+<li>supra-polynomial speed-up</li>
+<li>Schor's algorithm: polynomial time for factoring of the numbers</li>
+<li>simulating quantum mechanics (Hamiltonian equations); for chemistry</li>
+<li>factoring 1024-bit number: hours with QC</li>
+<li>
+<p>how to program a QC: mapping interference pattern on qbits</p>
+</li>
+<li>
+<p>entanglement -&gt; consistent quantum system -&gt; colapse</p>
+</li>
+<li>every quantum program: circuit (no feedback!)</li>
+<li>
+<p>result is non deterministic (robust algorithms provide good results)</p>
+</li>
+<li>
+<p>quantum volume (metric used at IBM)</p>
+</li>
+<li>
+<p>coherence time: 100s of us</p>
+</li>
+<li>
+<p>technology is quantum ready</p>
+</li>
+</ul>
+<h3>quantum technologies</h3>
+<ul>
+<li>superconductive Josephson junction</li>
+<li>entaglion (only hypothetical?)</li>
+<li>QASM (quantum assembly language)</li>
+<li>5 GHz, 240 mK, low noise</li>
+<li>all QC look similar: only way to do it</li>
+<li>current state: oscilloscopes, signal generators, ...</li>
+<li>pizza box for controlling the QC in the future</li>
+</ul>
+<h3>quantum advantage</h3>
+<ul>
+<li>IBM provides a lot of stuff on their GitHub</li>
+<li>Jupyter notebooks, vscode plugin</li>
+<li>Quiskit Acua: example problem: bonding energy for a molecule </li>
+<li>Quiskit Aer: ...</li>
+<li>publicly available QC</li>
+<li>gate error and readout error are publicly available (~1e-3 for the example)</li>
+<li>IBM has several QC architectures (Tokyo, Melburne)</li>
+</ul>
+<h3>Q &amp; A</h3>
+<ul>
+<li>noise problems for QC, do qbits produce noise -&gt; engineering will find a solution</li>
+<li>quantum volue of Tokyo -&gt; "the best, it is not just the number of qbits"</li>
+<li>Quiskit Aqua: chemistry API</li>
+</ul>
+<h1>CAD and Open Hardware</h1>
+<h2>gnucap</h2>
+<h3>intro</h3>
+<ul>
+<li>mixed-signal simulator</li>
+<li>prototype for Verilog-AMS (~10 years ago)</li>
+<li>analog circuits and digital circuits simulators are different (transient vs event-based)</li>
+</ul>
+<h3>analog circuit simulation</h3>
+<ul>
+<li>node equations --&gt; matrix form</li>
+<li>often: differential equations, Newton iteration</li>
+</ul>
+<h3>digital circuit simulation</h3>
+<ul>
+<li>event based, with evaluation queue</li>
+<li>can be used</li>
+</ul>
+<h3>Gnucap</h3>
+<ul>
+<li>Gnucap decompose the circuit matrix into L and U</li>
+<li>Gnucap keeps track of the changes to the matrix, schedules an update to
+  the circuit matrix </li>
+<li>bypass = not computing something</li>
+<li>Gnucap uses all the tricks to calculate inverse of the matrix (pivoting)</li>
+</ul>
+<h3>architecture of Gnucap</h3>
+<ul>
+<li>the concept (matrix solving + event-based updates) is tighly integrated
+  in the codebase</li>
+<li>plugin infrasctructure: modeling languages (VHDL, Verilog-AMS, SystemC considered)</li>
+<li>
+<p>shared library for basic s</p>
+</li>
+<li>
+<p>compoenents are plugins (dlopen)</p>
+</li>
+<li>
+<p>components</p>
+</li>
+<li>commands</li>
+<li>algorithms </li>
+</ul>
+<h3>plugins</h3>
+<ul>
+<li>Turing complete</li>
+<li>examples of plugins</li>
+<li>import module (python)</li>
+<li>
+<p>insmod module (linux)</p>
+</li>
+<li>
+<p><code>gnucap-python</code>, e.g. Jupyter, user can access internal data, use Scipy, ...</p>
+</li>
+<li>Verilog-A in QUCS/gnucsator</li>
+</ul>
+<h3>license for models</h3>
+<ul>
+<li>
+<p>Gnucap supports models from other sources</p>
+</li>
+<li>
+<p>two types:</p>
+</li>
+<li>
+<p>distributed as source code: --&gt; just log it into the Gnucap (no issues)</p>
+</li>
+<li>
+<p>distributed as binary: --&gt; wrapper + blob</p>
+</li>
+</ul>
+<h3>summary</h3>
+<ul>
+<li>mixed-mode is faster</li>
+<li>more front-end work needed</li>
+</ul>
+<h2>ngspice</h2>
+<ul>
+<li>talk is not about the details, but about the framework, user interface and future</li>
+</ul>
+<h3>intro</h3>
+<ul>
+<li>input: standard SPICE text inpu</li>
+<li>output: transient simulator </li>
+<li>
+<p>successor of spice3f5 from Berkley</p>
+</li>
+<li>
+<p>three flavors:</p>
+</li>
+<li>
+<p>standard executable: CLI, file and graphics output, control language</p>
+</li>
+<li>shared library for tcl/tk (not used so much)</li>
+<li>C shared library (so/dll): input and output via callbacks</li>
+</ul>
+<h3>scripting language</h3>
+<ul>
+<li>its own library (developer don't like python)</li>
+<li>94 commands, math functions, loops, ...</li>
+</ul>
+<h3>device models</h3>
+<ul>
+<li>hard-coded models (BJS, MOS, JFET, xFET, trans lines, Verilog A interface via adms)</li>
+<li>B source with build-in function</li>
+<li>XSPICE shared library (written in C, both analog and digital)</li>
+</ul>
+<h3>application areas</h3>
+<ul>
+<li>PCB design</li>
+<li>mix of ICs and discrete components</li>
+<li>requires a comfortable user interface (offered by 3rd parties - e.g. KiCAD)</li>
+<li>
+<p>PSPICE and LTSPICE model requirements</p>
+</li>
+<li>
+<p>IC design</p>
+</li>
+<li>models from the foundries (very reliable but complex)</li>
+<li>supports HSPICE</li>
+<li>MOS models, large circuits, certain speed</li>
+<li>integration with other tools ongoing</li>
+</ul>
+<h3>mixed-signal capabilities</h3>
+<ul>
+<li>from XSPICE</li>
+<li>digital: event based, signal strengths and delays</li>
+<li>analog: C coded models, time and freq domain</li>
+<li>simple example: digital is 50x faster than analog</li>
+</ul>
+<h3>experimental developments</h3>
+<ul>
+<li>KLU solver: 2x, 3x faster</li>
+<li>CUDA for GPU: development on-going</li>
+<li>Cider: 1D and 2D TCAD: device structure, solve physics equations</li>
+</ul>
+<h3>licenses</h3>
+<ul>
+<li>core: BSD, LGPL, ... no issues</li>
+<li>Verilog A models: more complicated</li>
+<li>vendor devices: can be used, but not distributed</li>
+<li>IC model data: PDKs are under NDA (also encryption)</li>
+</ul>
+<h3>future</h3>
+<ul>
+<li>unicode</li>
+<li>some commands (pz, ...)</li>
+<li>integration with other tools and flows</li>
+</ul>
+<h2>openEMS - An Introduction and Overview</h2>
+<h3>intro</h3>
+<ul>
+<li>FOSS solver for electromagnetics fields</li>
+<li>simulate and evaluate RF and optical devices</li>
+<li>uses FDTD (finite differences in time domain)</li>
+<li>co-ordinate systems: cylindrial and cartesian</li>
+<li>lumped elements available</li>
+<li>human body models</li>
+<li>dispersive models</li>
+<li>support for remote simulation (cluster)</li>
+</ul>
+<h3>show cases</h3>
+<ul>
+<li>notch filter, very nice demo</li>
+<li>examples: helical antena, antenna array, MRI antenna design (loop coils)</li>
+<li>small size PCB antenna</li>
+</ul>
+<h3>interfacing</h3>
+<ul>
+<li>nice to have: interface to PCB editors</li>
+<li>
+<p>problem: link (between EMS and PCB editors) is very week</p>
+</li>
+<li>
+<p>some examples:</p>
+</li>
+<li>hyp2mat</li>
+<li>pcb-rnd</li>
+<li>
+<p>pcbmodelgen (KiCAD to openEMS)</p>
+</li>
+<li>
+<p>ultimate goal: Circuit simulation &lt;--&gt; PCB design &lt;--&gt; RF simulation</p>
+</li>
+</ul>
+<h3>status</h3>
+<ul>
+<li>openEMS is a mature EM simulation package</li>
+<li>TODO list: improve the documentation, interface to tools, ...</li>
+</ul>
+<h2>Project Trellis and nextpnr</h2>
+<h3>ECP5</h3>
+<ul>
+<li>85k logic cells (4 LUTS, FF, carry), block RAM, 18x18 DSPs, SERDES (up to 5 GTs)</li>
+<li>split into tiles, tiles split into slices</li>
+<li>fixed wires</li>
+<li>arcs and pip</li>
+<li>all arcs and wires are undirectional - mux topology</li>
+<li>dedicated clock network</li>
+<li>programmable interconnect: pass gates (cascade of 2 mux)</li>
+</ul>
+<h3>status</h3>
+<ul>
+<li>bit and routing done</li>
+<li>missing: DSP</li>
+<li>timing documentation for fabric, logic cells, RAM, ...</li>
+</ul>
+<h3>text configuration format</h3>
+<ul>
+<li>tools to convert from and to bitstream</li>
+<li>intermediate format for place &amp; route</li>
+</ul>
+<h3>timing</h3>
+<ul>
+<li>not enought vendor support</li>
+<li>delays for the cells extracted from SDF files</li>
+<li>routing delay obtained using least-squares from reports for entire net</li>
+</ul>
+<h3>workflow</h3>
+<h4>yosys</h4>
+<ul>
+<li>support ECP5, iCE40, Xilinx, ...</li>
+<li>uses Berkley ABC for logic optimization</li>
+<li>formal equivalence checking, assertions</li>
+<li>....</li>
+</ul>
+<h4>nextpnr</h4>
+<ul>
+<li>replacement for arachnepnr</li>
+<li>developments from May 2018</li>
+<li>timing-driven</li>
+<li>architecture implements an API: useful for different architectures</li>
+<li>each arch has its own binary: a lot of optimization possible</li>
+<li>7-series is VERY experimental (more work planned)</li>
+<li>first implementation:</li>
+<li>SA placer</li>
+<li>A*+ripup router</li>
+<li>future</li>
+<li>analyty placer</li>
+<li>SAT-based placer,</li>
+<li>...</li>
+<li>nice graphical interface</li>
+</ul>
+<h2>Design Automation in Wonderland</h2>
+<h3>intro</h3>
+<ul>
+<li>motivation and goals</li>
+<li>reuse common functionality</li>
+<li>easy to integrate, easy to adapt libraries</li>
+<li>a set of modular libraries</li>
+<li>
+<p>based on Berkley ABC</p>
+</li>
+<li>
+<p>use C++14 or C++17</p>
+</li>
+<li>header-only</li>
+<li>well documented, well tested</li>
+</ul>
+<h3>libraries</h3>
+<h4>lorina: parsing library</h4>
+<ul>
+<li>can pasrse very simple Verilog</li>
+<li>parser reads Verilog and provides data to mockturtle</li>
+</ul>
+<h4>mockturtle: logic network library</h4>
+<ul>
+<li>network interface API</li>
+<li>logic synth, opt, technology mapping</li>
+<li>impelementations: and-inverted, kLUT, ...</li>
+<li>
+<p>performance tweeks</p>
+</li>
+<li>
+<p>cut the combinatorial network into LUTs, based on cost function (speed/area)</p>
+</li>
+</ul>
+<h4>kitty: truth table</h4>
+<ul>
+<li>manipulation of truth table</li>
+</ul>
+<h4>percy: exact synthesis library</h4>
+<ul>
+<li>re-synthesis</li>
+</ul>
+<h4>conclusion</h4>
+<ul>
+<li>exctract the logic function</li>
+<li>optimization</li>
+<li>mapping to tech</li>
+</ul>
+<p>github.com/lsils</p>
+<h2>Open source virtual prototyping for faster hardware and software co-design</h2>
+<ul>
+<li>virtual prototyping </li>
+</ul>
+<h3>current development</h3>
+<ol>
+<li>idea</li>
+<li>SW and HW developed in parallel</li>
+<li>integration</li>
+</ol>
+<h3>virtual prototype</h3>
+<ol>
+<li>idea</li>
+<li>virtual prototype --&gt; SW can be developed in parallel</li>
+</ol>
+<p>virtual prototyping: SW environment simulating the HW</p>
+<h3>example</h3>
+<ul>
+<li>
+<p>model entire SoC (RPi: quad core, peripheral)</p>
+</li>
+<li>
+<p>issues:</p>
+</li>
+<li>models (of the IP) are hard to find</li>
+<li>too much components --&gt; needs to be done: shared effort</li>
+</ul>
+<h3>?</h3>
+<p>"interoperability is the key" --&gt; take advantage of the community</p>
+<ul>
+<li>toolchain: marketplace for components, GUI, ...</li>
+</ul>
+<h3>Q &amp; A</h3>
+<ul>
+<li>interface with SystemC and TLM: support for TLM is there</li>
+<li>modules: how to verify the model: ?</li>
+</ul>
+<h2>Lesson learned from Retro-uC and search for ideal HDL for open source silicon</h2>
+<h3>intro</h3>
+<ul>
+<li>idea: open source microcontroller (Z80, MOS 65 and 68000, 3 uC in one chip)</li>
+<li>
+<ul>
+<li>a development board</li>
+</ul>
+</li>
+<li>"VHDL and Verilog are not the right tools for the job"</li>
+</ul>
+<h3>RTL faults</h3>
+<ul>
+<li>clock is logic signal</li>
+<li>if --&gt; mux or flip-flop</li>
+<li>synth vs non-synth</li>
+<li>Verilog: block and non-blocking</li>
+<li>FPGA vs ASIC</li>
+<li>RTFLRM</li>
+</ul>
+<h3>improvements</h3>
+<ul>
+<li>signed</li>
+<li>process(all)</li>
+<li>generate</li>
+<li>...</li>
+</ul>
+<p>"putting a lipstick on a pig"</p>
+<h3>new developments</h3>
+<ul>
+<li>TL-Verilog</li>
+<li>SystemC/TLM</li>
+<li>"good tools are proprierty" (Vivado HLS, Catapult)</li>
+<li>Panda Bamboo</li>
+<li>
+<p>GAUT (gaut.fr)</p>
+</li>
+<li>
+<p>MyHDL</p>
+</li>
+<li>Chisel/SpinalHDL --&gt; "going in the right direction" --&gt; first need to learn Scala</li>
+<li>Migen/MiSoc/nmigen --&gt; prefered by the speaker</li>
+</ul>
+<h1>Python</h1>
+<h2>CPython Memory Management</h2>
+<h3>motivation</h3>
+<ul>
+<li>what user needs to know</li>
+<li>learn how to control (gc, sys.getrefcount)</li>
+<li>memory leaks </li>
+</ul>
+<h3>allocation of memory</h3>
+<ul>
+<li>CPython has PyObject for everything</li>
+<li>size: obj size &lt; 512 bytes --&gt; small, ele big</li>
+<li>big objects: system allocator</li>
+<li>
+<p>small object: 3 levels, pools and arena</p>
+</li>
+<li>
+<p>8-byte alignment --&gt; size idx: size / 8 - 1</p>
+</li>
+</ul>
+<h4>pools</h4>
+<ul>
+<li>4k size, objects of same size</li>
+<li>blocks </li>
+</ul>
+<h4>arenas</h4>
+<ul>
+<li>encapsulate pools</li>
+<li>containts 64 pools</li>
+</ul>
+<h4>object specificts</h4>
+<ul>
+<li>string interning (simple string)</li>
+<li>small integers (-5 to 256)</li>
+</ul>
+<h3>garbage collection</h3>
+<ul>
+<li>reference counting</li>
+<li>easy to find unused obj</li>
+<li>no marking</li>
+<li>memory overhead</li>
+<li>no cyclical references</li>
+</ul>
+<h3>tools in python</h3>
+<ul>
+<li>two modules: gc and tracemalloc</li>
+<li>plus: sys._debugmallocstats()</li>
+</ul>
+<p><em>That's all folks, 'till next year!</em></p>
+        </div><!-- /.entry-content -->
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="janmarjanovic">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script><br/><br/>
+
+      </article>
+    </div>
+</section>
+        <section id="extras" >
+        
+        </section><!-- /#extras -->
+	
+        <footer id="contentinfo" >
+                <address id="about" class="vcard ">
+                Proudly powered by <a href="https://getpelican.com/" target="_blank">Pelican</a>, which takes
+                great advantage of <a href="https://python.org" target="_blank">Python</a>.
+		
+                </address><!-- /#about -->
+		
+
+                
+        </footer><!-- /#contentinfo -->
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-56555055-1', 'auto');
+  ga('send', 'pageview');
+
+</script></body>
+</html>
