@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>j-marjanovic.io - Jan Marjanovic</title><link>www.j-marjanovic.io/</link><description></description><lastBuildDate>Sun, 03 Feb 2019 20:10:00 +0100</lastBuildDate><item><title>Notes from FOSDEM 2019</title><link>www.j-marjanovic.io/notes-from-fosdem-2019.html</link><description>&lt;p&gt;I attended FOSDEM 2019 in Brussels:&lt;/p&gt;
+<rss version="2.0"><channel><title>j-marjanovic.io - Jan Marjanovic</title><link>www.j-marjanovic.io/</link><description></description><lastBuildDate>Sat, 20 Apr 2019 08:40:00 +0200</lastBuildDate><item><title>New Ubuntu, old problems with ModelSim</title><link>www.j-marjanovic.io/new-ubuntu-old-problems-with-modelsim.html</link><description>&lt;p&gt;A couple of days ago a new release of Ubuntu, Ubuntu 19.04 Disco Dingo was
+released. On my personal laptop I follow the non-LTS line, which brings
+me cool features and updated programs (e.g. Python 3.7, GCC 8.3, ...)
+out-of-the-box.&lt;/p&gt;
+&lt;p&gt;Unfortunately, because the libraries are updated, the …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Jan Marjanovic</dc:creator><pubDate>Sat, 20 Apr 2019 08:40:00 +0200</pubDate><guid isPermaLink="false">tag:None,2019-04-20:www.j-marjanovic.io/new-ubuntu-old-problems-with-modelsim.html</guid><category>FPGA</category><category>ModelSim</category></item><item><title>Notes from FOSDEM 2019</title><link>www.j-marjanovic.io/notes-from-fosdem-2019.html</link><description>&lt;p&gt;I attended FOSDEM 2019 in Brussels:&lt;/p&gt;
 &lt;p style="width:40%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Brussels" src="www.j-marjanovic.io/images/fosdem2019.jpg"&gt;&lt;/p&gt;
 &lt;p&gt;and these are my notes from Quantum Computers, CAD and Open Hardware
 and Python tracks:&lt;/p&gt;

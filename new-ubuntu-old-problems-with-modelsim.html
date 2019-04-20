@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>New Ubuntu, old problems with ModelSim</title>
+        <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="shortcut icon" href="./theme/images/favicon.ico"/>
+        <link rel="stylesheet" href="./theme/css/main.css" type="text/css" />
+        <link href="www.j-marjanovic.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="j-marjanovic.io Atom Feed" />
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie.css"/>
+                <script src="./js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie6.css"/><![endif]-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="theme/jquery.cookiesdirective.js"></script>
+
+</head>
+
+<body id="index" class="home">
+<script type="text/javascript">
+	// Using $(document).ready never hurts
+	$(document).ready(function(){
+
+		// Cookie setting script wrapper
+		var cookieScripts = function () {
+			// Internal javascript called
+			console.log("Running");
+		
+			// Loading external javascript file
+			$.cookiesDirective.loadScript({
+				uri:'external.js',
+				appendTo: 'eantics'
+			});
+		}
+	
+		/* Call cookiesDirective, overriding any default params
+		
+			*** These are the defaults ***
+				explicitConsent: true,
+				position: 'top',
+				duration: 10,
+				limit: 0,
+				message: null,				
+				cookieScripts: null,
+				privacyPolicyUri: 'privacy.html',
+				scriptWrapper: function(){},	
+				fontFamily: 'helvetica',
+				fontColor: '#FFFFFF',
+				fontSize: '13px',
+				backgroundColor: '#000000',
+				backgroundOpacity: '80',
+				linkColor: '#CA0000'
+				
+		*/
+		
+		$.cookiesDirective({
+			privacyPolicyUri: 'myprivacypolicy.html',
+			explicitConsent: false,
+			position : 'bottom',
+			scriptWrapper: cookieScripts, 
+			cookieScripts: 'Google Analytics', 
+			backgroundColor: '#52B54A',
+			linkColor: '#ffffff'
+		});
+	});
+</script>
+
+	
+  <!-- <header id="banner" class="body"> -->
+  <!--               <h1><a href="./"><img src="http://www.launchyard.com/images/logo.png" /></a></h1> -->
+  <!--       </header> --> 
+
+  <div class="LaunchyardDetail" style="align:right;">
+    <!-- <p> -->
+    <!-- <img src="./theme/images/blue-pin.png" width="100" height="100" alt="Graph icon"> -->
+    <!-- </p> -->
+    <p><a id="sitesubtitle" href="./">j-marjanovic.io</a></p>
+
+	<br>
+    <p style="float: right; margin-right: 50px;"><a id="aboutlink" href="./pages/about.html">About</a></p>
+
+    <br>
+	<p style="float: right; margin-right: 50px;"><img src="./theme/images/icons/rss.png"> <a id="aboutlink" href="./feeds/jan-marjanovic.atom.xml">Atom feed</a></p>
+    <br>
+
+  </div>
+
+<section id="content" >
+    <div class="body">
+      <article>
+        <header>
+          <h1 class="entry-title">
+            <a href="./new-ubuntu-old-problems-with-modelsim.html" rel="bookmark"
+               title="Permalink to New Ubuntu, old problems with ModelSim">New Ubuntu, old problems with ModelSim</a></h1>
+
+        </header>
+
+        <div class="entry-content">
+<div class="post-info">
+	<ul>
+        <li class="vcard author">
+                 by&nbsp;<a class="url fn" href="./author/jan-marjanovic.html">Jan Marjanovic</a>
+        </li>
+        <li class="published" title="2019-04-20T08:40:00+02:00">
+          on&nbsp;Sat 20 April 2019
+        </li>
+
+	</ul>
+<p>Category: <a href="./tag/fpga.html">FPGA</a>, <a href="./tag/modelsim.html">ModelSim</a>, </p>
+</div><!-- /.post-info -->          <p>A couple of days ago a new release of Ubuntu, Ubuntu 19.04 Disco Dingo was
+released. On my personal laptop I follow the non-LTS line, which brings
+me cool features and updated programs (e.g. Python 3.7, GCC 8.3, ...)
+out-of-the-box.</p>
+<p>Unfortunately, because the libraries are updated, the update process causes
+some programs to become broken. Mentor Graphics ModelSim is for example
+one of the tools which required some tweaks to make it work on Ubuntu 19.04.</p>
+<p>Described here are the steps which made ModelSim to work on Ubuntu 19.04.</p>
+<p><strong>Please note: according to <a href="https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/manual/quartus_install.pdf">Intel® FPGA Software Installation and
+Licensing</a>,
+ModelSim - Intel FPGA Edition officially supports RHEL 5, 6 or 7 and Windows.
+Ubuntu is officially not supported.</strong></p>
+<h1>Initial attempt</h1>
+<p>I have started with a fresh installation of ModelSim*-Intel® FPGA Starter
+Edition Software from Quartus 19.1 package.</p>
+<p>When running <code>vsim</code> from <code>intelFPGA/19.1/modelsim_ase/bin</code> I get the
+following error message:</p>
+<div class="highlight"><pre><span></span>$ ./vsim
+Error: cannot find <span class="s2">&quot;./../linux_rh60/vsim&quot;</span>
+$
+</pre></div>
+
+
+<p>From the path it is clear that ModelSim thinks it is running on RHEL 6. As
+described in an extensive <a href="https://wiki.archlinux.org/index.php/Altera_Design_Software#ModelSim-Altera_Edition">Wiki entry on Altera
+software on Arch Linux Wiki</a>,
+one needs to modify <code>vco</code> file and downgrade <code>freetype</code> library.</p>
+<p>Once this is settles (by the way, this used to be enough to make ModelSim work on
+Ubuntu 18.10) we get the following error:</p>
+<div class="highlight"><pre><span></span>$ ./vsim
+Reading pref.tcl
+./../linuxaloem/vish: symbol lookup error: /usr/lib/i386-linux-gnu/libfontconfig.so.1: undefined symbol: FT_Done_MM_Var
+** Fatal: Read failure in vlm process <span class="o">(</span><span class="m">0</span>,0<span class="o">)</span>
+</pre></div>
+
+
+<p>This message is new and it required me to do some investigation to get it fixed.</p>
+<h1>Downgrading fontconfig</h1>
+<p>From the error message it is clear that <code>libfontconfig.so</code> tries to use function
+called <code>FT_Done_MM_Var</code> and is unable to find it.</p>
+<p>To investigate further I cloned <code>fontconfig</code> source code from:
+https://gitlab.freedesktop.org/fontconfig/fontconfig.git</p>
+<p>A quick <code>grep</code> finds the following instances of the symbol in question:</p>
+<div class="highlight"><pre><span></span>$ grep -rn FT_Done_MM_Var .
+./README:119:      Use FT_Done_MM_Var <span class="k">if</span> available
+./src/fcfreetype.c:2261:    FT_Done_MM_Var <span class="o">(</span>ftLibrary, mm_var<span class="o">)</span><span class="p">;</span>
+./configure.ac:321:AC_CHECK_FUNCS<span class="o">(</span>FT_Get_BDF_Property FT_Get_PS_Font_Info FT_Has_PS_Glyph_Names FT_Get_X11_Font_Format FT_Done_MM_Var<span class="o">)</span>
+</pre></div>
+
+
+<p>One <code>git blame</code> after we find the following commit which introduced this function:</p>
+<div class="highlight"><pre><span></span>commit 94683a1255c065a7f8e7fadee9de605f3eaf9ac7
+Author: Behdad Esfahbod &lt;behdad@behdad.org&gt;
+Date:   Mon Jan 8 09:55:41 2018 +0000
+
+    Use FT_Done_MM_Var if available
+</pre></div>
+
+
+<p>And then we can find out that release <strong>2.12.92</strong> is the last one which does
+not contain this change.</p>
+<p>I checked out the code from release <strong>2.12.92</strong>:</p>
+<div class="highlight"><pre><span></span>git checkout -b 2.12.92 2.12.92
+</pre></div>
+
+
+<p>Installed the libraries needed:</p>
+<div class="highlight"><pre><span></span>sudo apt install libxml2-dev:i386 uuid-dev:i386
+</pre></div>
+
+
+<p>And used the following commands to compile and install an older version
+of <code>fontconfig</code> library:</p>
+<div class="highlight"><pre><span></span>aclocal -I m4
+autoconf
+libtoolize
+./autogen.sh
+CFLAGS=-m32 LDFLAGS=-L/home/jan/local/packages/freetype-2.4.7-32bit/lib ./configure --prefix=/home/jan/local/packages/fontconfig-2.12.92-32bit --enable-libxml2
+make
+make install
+</pre></div>
+
+
+<h1>Changes to vco</h1>
+<p>Finally, I needed to change <code>vco</code> in <code>intelFPGA/19.1/modelsim_ase/bin</code> folder
+to load the freshly-recompiled libraries:</p>
+<div class="highlight"><pre><span></span><span class="err">$</span> <span class="s s-Atom">diff</span> <span class="s s-Atom">vco</span> <span class="s s-Atom">vco</span><span class="p">.</span><span class="s s-Atom">orig</span>
+<span class="mi">11</span><span class="p">,</span><span class="mi">13</span><span class="s s-Atom">d10</span>
+<span class="o">&lt;</span> <span class="s s-Atom">#</span> <span class="s s-Atom">added</span> <span class="s s-Atom">for</span> <span class="nv">Ubuntu</span> <span class="mf">19.04</span><span class="s s-Atom">:</span> <span class="s s-Atom">recompiled</span> <span class="s s-Atom">libraries</span>
+<span class="o">&lt;</span> <span class="s s-Atom">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="s s-Atom">=/home</span><span class="o">/</span><span class="s s-Atom">jan</span><span class="o">/</span><span class="s s-Atom">local</span><span class="o">/</span><span class="s s-Atom">packages</span><span class="o">/</span><span class="s s-Atom">freetype</span><span class="o">-</span><span class="mf">2.4.7</span><span class="o">-</span><span class="mi">32</span><span class="s s-Atom">bit</span><span class="o">/</span><span class="nn">lib</span><span class="p">:</span><span class="o">/</span><span class="s s-Atom">home</span><span class="o">/</span><span class="s s-Atom">jan</span><span class="o">/</span><span class="s s-Atom">local</span><span class="o">/</span><span class="s s-Atom">packages</span><span class="o">/</span><span class="s s-Atom">fontconfig</span><span class="o">-</span><span class="mf">2.12.92</span><span class="o">-</span><span class="mi">32</span><span class="s s-Atom">bit</span><span class="o">/</span><span class="nn">lib</span><span class="p">:</span><span class="err">$</span><span class="nv">LD_LIBRARY_PATH</span>
+<span class="o">&lt;</span> 
+<span class="mi">16</span><span class="p">,</span><span class="mi">17</span><span class="s s-Atom">c13</span>
+<span class="o">&lt;</span> <span class="s s-Atom">#</span> <span class="s s-Atom">changed</span> <span class="s s-Atom">for</span> <span class="nv">Ubuntu</span> <span class="mf">19.04</span><span class="s s-Atom">:</span> <span class="s s-Atom">force</span> <span class="mi">32</span><span class="o">-</span><span class="s s-Atom">bit</span> <span class="s s-Atom">mode</span>
+<span class="o">&lt;</span> <span class="s s-Atom">mode=</span><span class="err">$</span><span class="p">{</span><span class="nv">MTI_VCO_MODE</span><span class="p">:-</span><span class="s2">&quot;32&quot;</span><span class="p">}</span>
+<span class="s s-Atom">---</span>
+<span class="o">&gt;</span> <span class="s s-Atom">mode=</span><span class="err">$</span><span class="p">{</span><span class="nv">MTI_VCO_MODE</span><span class="p">:-</span><span class="s2">&quot;&quot;</span><span class="p">}</span>
+<span class="mi">213</span><span class="p">,</span><span class="mi">214</span><span class="s s-Atom">d208</span>
+<span class="o">&lt;</span>           <span class="s s-Atom">#</span> <span class="s s-Atom">added</span> <span class="s s-Atom">for</span> <span class="nv">Ubuntu</span> <span class="mf">19.04</span><span class="s s-Atom">:</span> <span class="s s-Atom">if</span> <span class="s s-Atom">kernel</span> <span class="s s-Atom">version</span> <span class="mf">5.</span><span class="s s-Atom">x</span> <span class="s s-Atom">then</span> <span class="s s-Atom">use</span> <span class="s s-Atom">linuxaloem</span>
+<span class="o">&lt;</span>           <span class="mf">5.</span><span class="p">[</span><span class="mi">0</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="s s-Atom">*</span><span class="p">)</span>         <span class="s s-Atom">vco=</span><span class="s2">&quot;linuxaloem&quot;</span> <span class="p">;;</span>
+</pre></div>
+
+
+<h1>Conclusion</h1>
+<p>Ta-da, ModelSim now works on Ubuntu 19.04. The font styles are a little bit
+broken, but being humble is a good characteristic, and we won't ask too much.</p>
+<p style="width:80%; display: block; margin-left: auto; margin-right: auto;"><img alt="ModelSim up and running" src="./images/modelsim_on_ubuntu19-04.png"></p>
+        </div><!-- /.entry-content -->
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="janmarjanovic">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script><br/><br/>
+
+      </article>
+    </div>
+</section>
+        <section id="extras" >
+        
+        </section><!-- /#extras -->
+	
+        <footer id="contentinfo" >
+                <address id="about" class="vcard ">
+                Proudly powered by <a href="https://getpelican.com/" target="_blank">Pelican</a>, which takes
+                great advantage of <a href="https://python.org" target="_blank">Python</a>.
+		
+                </address><!-- /#about -->
+		
+
+                
+        </footer><!-- /#contentinfo -->
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-56555055-1', 'auto');
+  ga('send', 'pageview');
+
+</script></body>
+</html>

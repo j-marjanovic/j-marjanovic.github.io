@@ -1,5 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io - Misc</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/misc.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2018-09-15T19:00:00+02:00</updated><entry><title>Blog restart</title><link href="www.j-marjanovic.io/blog-restart.html" rel="alternate"></link><published>2018-09-15T19:00:00+02:00</published><updated>2018-09-15T19:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2018-09-15:www.j-marjanovic.io/blog-restart.html</id><summary type="html">&lt;p&gt;This blog was left dormant for quite some time now. From the last blog post
+<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io - misc</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/misc.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2019-04-20T08:40:00+02:00</updated><entry><title>New Ubuntu, old problems with ModelSim</title><link href="www.j-marjanovic.io/new-ubuntu-old-problems-with-modelsim.html" rel="alternate"></link><published>2019-04-20T08:40:00+02:00</published><updated>2019-04-20T08:40:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2019-04-20:www.j-marjanovic.io/new-ubuntu-old-problems-with-modelsim.html</id><summary type="html">&lt;p&gt;A couple of days ago a new release of Ubuntu, Ubuntu 19.04 Disco Dingo was
+released. On my personal laptop I follow the non-LTS line, which brings
+me cool features and updated programs (e.g. Python 3.7, GCC 8.3, ...)
+out-of-the-box.&lt;/p&gt;
+&lt;p&gt;Unfortunately, because the libraries are updated, the …&lt;/p&gt;</summary><content type="html">&lt;p&gt;A couple of days ago a new release of Ubuntu, Ubuntu 19.04 Disco Dingo was
+released. On my personal laptop I follow the non-LTS line, which brings
+me cool features and updated programs (e.g. Python 3.7, GCC 8.3, ...)
+out-of-the-box.&lt;/p&gt;
+&lt;p&gt;Unfortunately, because the libraries are updated, the update process causes
+some programs to become broken. Mentor Graphics ModelSim is for example
+one of the tools which required some tweaks to make it work on Ubuntu 19.04.&lt;/p&gt;
+&lt;p&gt;Described here are the steps which made ModelSim to work on Ubuntu 19.04.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Please note: according to &lt;a href="https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/manual/quartus_install.pdf"&gt;Intel® FPGA Software Installation and
+Licensing&lt;/a&gt;,
+ModelSim - Intel FPGA Edition officially supports RHEL 5, 6 or 7 and Windows.
+Ubuntu is officially not supported.&lt;/strong&gt;&lt;/p&gt;
+&lt;h1&gt;Initial attempt&lt;/h1&gt;
+&lt;p&gt;I have started with a fresh installation of ModelSim*-Intel® FPGA Starter
+Edition Software from Quartus 19.1 package.&lt;/p&gt;
+&lt;p&gt;When running &lt;code&gt;vsim&lt;/code&gt; from &lt;code&gt;intelFPGA/19.1/modelsim_ase/bin&lt;/code&gt; I get the
+following error message:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ ./vsim
+Error: cannot find &lt;span class="s2"&gt;&amp;quot;./../linux_rh60/vsim&amp;quot;&lt;/span&gt;
+$
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;From the path it is clear that ModelSim thinks it is running on RHEL 6. As
+described in an extensive &lt;a href="https://wiki.archlinux.org/index.php/Altera_Design_Software#ModelSim-Altera_Edition"&gt;Wiki entry on Altera
+software on Arch Linux Wiki&lt;/a&gt;,
+one needs to modify &lt;code&gt;vco&lt;/code&gt; file and downgrade &lt;code&gt;freetype&lt;/code&gt; library.&lt;/p&gt;
+&lt;p&gt;Once this is settles (by the way, this used to be enough to make ModelSim work on
+Ubuntu 18.10) we get the following error:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ ./vsim
+Reading pref.tcl
+./../linuxaloem/vish: symbol lookup error: /usr/lib/i386-linux-gnu/libfontconfig.so.1: undefined symbol: FT_Done_MM_Var
+** Fatal: Read failure in vlm process &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;,0&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This message is new and it required me to do some investigation to get it fixed.&lt;/p&gt;
+&lt;h1&gt;Downgrading fontconfig&lt;/h1&gt;
+&lt;p&gt;From the error message it is clear that &lt;code&gt;libfontconfig.so&lt;/code&gt; tries to use function
+called &lt;code&gt;FT_Done_MM_Var&lt;/code&gt; and is unable to find it.&lt;/p&gt;
+&lt;p&gt;To investigate further I cloned &lt;code&gt;fontconfig&lt;/code&gt; source code from:
+https://gitlab.freedesktop.org/fontconfig/fontconfig.git&lt;/p&gt;
+&lt;p&gt;A quick &lt;code&gt;grep&lt;/code&gt; finds the following instances of the symbol in question:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ grep -rn FT_Done_MM_Var .
+./README:119:      Use FT_Done_MM_Var &lt;span class="k"&gt;if&lt;/span&gt; available
+./src/fcfreetype.c:2261:    FT_Done_MM_Var &lt;span class="o"&gt;(&lt;/span&gt;ftLibrary, mm_var&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+./configure.ac:321:AC_CHECK_FUNCS&lt;span class="o"&gt;(&lt;/span&gt;FT_Get_BDF_Property FT_Get_PS_Font_Info FT_Has_PS_Glyph_Names FT_Get_X11_Font_Format FT_Done_MM_Var&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;One &lt;code&gt;git blame&lt;/code&gt; after we find the following commit which introduced this function:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;commit 94683a1255c065a7f8e7fadee9de605f3eaf9ac7
+Author: Behdad Esfahbod &amp;lt;behdad@behdad.org&amp;gt;
+Date:   Mon Jan 8 09:55:41 2018 +0000
+
+    Use FT_Done_MM_Var if available
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And then we can find out that release &lt;strong&gt;2.12.92&lt;/strong&gt; is the last one which does
+not contain this change.&lt;/p&gt;
+&lt;p&gt;I checked out the code from release &lt;strong&gt;2.12.92&lt;/strong&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git checkout -b 2.12.92 2.12.92
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Installed the libraries needed:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo apt install libxml2-dev:i386 uuid-dev:i386
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And used the following commands to compile and install an older version
+of &lt;code&gt;fontconfig&lt;/code&gt; library:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;aclocal -I m4
+autoconf
+libtoolize
+./autogen.sh
+CFLAGS=-m32 LDFLAGS=-L/home/jan/local/packages/freetype-2.4.7-32bit/lib ./configure --prefix=/home/jan/local/packages/fontconfig-2.12.92-32bit --enable-libxml2
+make
+make install
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;Changes to vco&lt;/h1&gt;
+&lt;p&gt;Finally, I needed to change &lt;code&gt;vco&lt;/code&gt; in &lt;code&gt;intelFPGA/19.1/modelsim_ase/bin&lt;/code&gt; folder
+to load the freshly-recompiled libraries:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="s s-Atom"&gt;diff&lt;/span&gt; &lt;span class="s s-Atom"&gt;vco&lt;/span&gt; &lt;span class="s s-Atom"&gt;vco&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="s s-Atom"&gt;orig&lt;/span&gt;
+&lt;span class="mi"&gt;11&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;13&lt;/span&gt;&lt;span class="s s-Atom"&gt;d10&lt;/span&gt;
+&lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="s s-Atom"&gt;#&lt;/span&gt; &lt;span class="s s-Atom"&gt;added&lt;/span&gt; &lt;span class="s s-Atom"&gt;for&lt;/span&gt; &lt;span class="nv"&gt;Ubuntu&lt;/span&gt; &lt;span class="mf"&gt;19.04&lt;/span&gt;&lt;span class="s s-Atom"&gt;:&lt;/span&gt; &lt;span class="s s-Atom"&gt;recompiled&lt;/span&gt; &lt;span class="s s-Atom"&gt;libraries&lt;/span&gt;
+&lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="s s-Atom"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;LD_LIBRARY_PATH&lt;/span&gt;&lt;span class="s s-Atom"&gt;=/home&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="s s-Atom"&gt;jan&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="s s-Atom"&gt;local&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="s s-Atom"&gt;packages&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="s s-Atom"&gt;freetype&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;2.4.7&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;32&lt;/span&gt;&lt;span class="s s-Atom"&gt;bit&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nn"&gt;lib&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="s s-Atom"&gt;home&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="s s-Atom"&gt;jan&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="s s-Atom"&gt;local&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="s s-Atom"&gt;packages&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="s s-Atom"&gt;fontconfig&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;2.12.92&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;32&lt;/span&gt;&lt;span class="s s-Atom"&gt;bit&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nn"&gt;lib&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;LD_LIBRARY_PATH&lt;/span&gt;
+&lt;span class="o"&gt;&amp;lt;&lt;/span&gt; 
+&lt;span class="mi"&gt;16&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;17&lt;/span&gt;&lt;span class="s s-Atom"&gt;c13&lt;/span&gt;
+&lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="s s-Atom"&gt;#&lt;/span&gt; &lt;span class="s s-Atom"&gt;changed&lt;/span&gt; &lt;span class="s s-Atom"&gt;for&lt;/span&gt; &lt;span class="nv"&gt;Ubuntu&lt;/span&gt; &lt;span class="mf"&gt;19.04&lt;/span&gt;&lt;span class="s s-Atom"&gt;:&lt;/span&gt; &lt;span class="s s-Atom"&gt;force&lt;/span&gt; &lt;span class="mi"&gt;32&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="s s-Atom"&gt;bit&lt;/span&gt; &lt;span class="s s-Atom"&gt;mode&lt;/span&gt;
+&lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="s s-Atom"&gt;mode=&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nv"&gt;MTI_VCO_MODE&lt;/span&gt;&lt;span class="p"&gt;:-&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;32&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="s s-Atom"&gt;---&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="s s-Atom"&gt;mode=&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nv"&gt;MTI_VCO_MODE&lt;/span&gt;&lt;span class="p"&gt;:-&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="mi"&gt;213&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;214&lt;/span&gt;&lt;span class="s s-Atom"&gt;d208&lt;/span&gt;
+&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;           &lt;span class="s s-Atom"&gt;#&lt;/span&gt; &lt;span class="s s-Atom"&gt;added&lt;/span&gt; &lt;span class="s s-Atom"&gt;for&lt;/span&gt; &lt;span class="nv"&gt;Ubuntu&lt;/span&gt; &lt;span class="mf"&gt;19.04&lt;/span&gt;&lt;span class="s s-Atom"&gt;:&lt;/span&gt; &lt;span class="s s-Atom"&gt;if&lt;/span&gt; &lt;span class="s s-Atom"&gt;kernel&lt;/span&gt; &lt;span class="s s-Atom"&gt;version&lt;/span&gt; &lt;span class="mf"&gt;5.&lt;/span&gt;&lt;span class="s s-Atom"&gt;x&lt;/span&gt; &lt;span class="s s-Atom"&gt;then&lt;/span&gt; &lt;span class="s s-Atom"&gt;use&lt;/span&gt; &lt;span class="s s-Atom"&gt;linuxaloem&lt;/span&gt;
+&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;           &lt;span class="mf"&gt;5.&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="s s-Atom"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;         &lt;span class="s s-Atom"&gt;vco=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;linuxaloem&amp;quot;&lt;/span&gt; &lt;span class="p"&gt;;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;Ta-da, ModelSim now works on Ubuntu 19.04. The font styles are a little bit
+broken, but being humble is a good characteristic, and we won't ask too much.&lt;/p&gt;
+&lt;p style="width:80%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="ModelSim up and running" src="www.j-marjanovic.io/images/modelsim_on_ubuntu19-04.png"&gt;&lt;/p&gt;</content><category term="FPGA"></category><category term="ModelSim"></category></entry><entry><title>Blog restart</title><link href="www.j-marjanovic.io/blog-restart.html" rel="alternate"></link><published>2018-09-15T19:00:00+02:00</published><updated>2018-09-15T19:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2018-09-15:www.j-marjanovic.io/blog-restart.html</id><summary type="html">&lt;p&gt;This blog was left dormant for quite some time now. From the last blog post
 in February 2017 a lot has happened. I have moved to Hamburg, Germany, to
 start a new position as FPGA Developer at MicroTCA Technology Lab at
 &lt;a href="https://www.desy.de/"&gt;DESY&lt;/a&gt;.&lt;/p&gt;
