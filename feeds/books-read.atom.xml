@@ -1,5 +1,207 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io - Books read</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/books-read.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2016-06-05T22:00:00+02:00</updated><entry><title>Books read: 97 Things Every Programmer Should Know</title><link href="www.j-marjanovic.io/books-read-97-things-every-programmer-should-know.html" rel="alternate"></link><published>2016-06-05T22:00:00+02:00</published><updated>2016-06-05T22:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2016-06-05:www.j-marjanovic.io/books-read-97-things-every-programmer-should-know.html</id><summary type="html">&lt;p&gt;I have seen this book referenced on several occasions when the software
+<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io - Books read</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/books-read.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2019-11-02T12:30:00+01:00</updated><entry><title>Books read: Synchrotron Radiation Sources</title><link href="www.j-marjanovic.io/books-read-synchrotron-radiation-sources.html" rel="alternate"></link><published>2019-11-02T12:30:00+01:00</published><updated>2019-11-02T12:30:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2019-11-02:www.j-marjanovic.io/books-read-synchrotron-radiation-sources.html</id><summary type="html">&lt;p&gt;Here are my notes on the book "Synchrotron Radiation Sources: A Primer", edited
+by H. Winick. Although a little bit dated (the book is from 1995) it gives a
+nice overview of all components of a modern synchrotron and helps with better
+understanding of how all subsystem interconnect together. It …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Here are my notes on the book "Synchrotron Radiation Sources: A Primer", edited
+by H. Winick. Although a little bit dated (the book is from 1995) it gives a
+nice overview of all components of a modern synchrotron and helps with better
+understanding of how all subsystem interconnect together. It also serves as a
+good introduction in the field of machine physics, which was for me (I have a
+diploma degree in electronics) quite effective to better understand the
+challenges faced in synchrotrons of the 4th generation (diffraction-limited
+storage rings).&lt;/p&gt;
+&lt;p style="width:80%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Synchrotron Radiation Sources: A Primer" src="www.j-marjanovic.io/images/synchrotron_light_sources.jpg"&gt;&lt;/p&gt;
+&lt;h1&gt;Chapter 1&lt;/h1&gt;
+&lt;p&gt;page 2: "electron (or positrons)" --&amp;gt; how would a a SLS with protons look like?
+larger insertions devices? different SR wavelengths?&lt;/p&gt;
+&lt;p&gt;page 4: betatron - early machines, vertical magnetic field (spatially const,
+time varying)&lt;/p&gt;
+&lt;p&gt;page 7: non top-up mode --&amp;gt; from what I heard it took several hours to start
+the machine&lt;/p&gt;
+&lt;p&gt;page 9: &lt;span class="math"&gt;\(\gamma = \frac{mc^2}{E}\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;page 12: time structure - ESRF hybrid mode: "pulsed experiments in us, ns and ps
+time scale" (&lt;em&gt;M. Wulff et al., Time-resolved structures of macromolecules at the
+ESRF&lt;/em&gt;)&lt;/p&gt;
+&lt;p&gt;page 13: are the main advantage of FELs short pulses or higher brightness?&lt;/p&gt;
+&lt;p&gt;page 15: TESLA CDR published in 1988, the book is from 1994.&lt;/p&gt;
+&lt;h1&gt;Chapter 2&lt;/h1&gt;
+&lt;p&gt;page 34: theory on strong focusing --&amp;gt; very interesting, study &lt;em&gt;E. D. Curant et
+al., Theory of the alternating-gradient synchrotron&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;page 35: are betatron oscillations period or is there a phase advance?&lt;/p&gt;
+&lt;p&gt;page 39: (slightly) rotated quadrupoles introduce x-y coupling&lt;/p&gt;
+&lt;p&gt;page 41: correctors at the beggining and at the end of the insertion device --&amp;gt;
+modern take presented in &lt;em&gt;G. Rehm et al.: First projects at Diamond Light Source
+involving MTCA&lt;/em&gt;
+(https://indico.desy.de/indico/event/20703/session/0/contribution/77/material/slides/1.pdf, page 9)&lt;/p&gt;
+&lt;p&gt;page 41: what is a "tune shift"?&lt;/p&gt;
+&lt;p&gt;page 43: planar design --&amp;gt; prevents orbit "growth" in y (apart from coupling from quadrupoles)&lt;/p&gt;
+&lt;p&gt;page 44: dispersion-free region&lt;/p&gt;
+&lt;p&gt;page 46: dynamic aperture: max betatron osc that can be sustained&lt;/p&gt;
+&lt;p&gt;page 48: for how much do insertion devices reduce the energy? is this important
+for the orbit?&lt;/p&gt;
+&lt;p&gt;page 49: vertical/horizontal emittance ratio for most machines: 0.01 to 0.03&lt;/p&gt;
+&lt;h1&gt;Chapter 3&lt;/h1&gt;
+&lt;p&gt;page 60: septum magnets: what is the purpose, how do they work&lt;/p&gt;
+&lt;p&gt;page 62: off axis &amp;lt;-/-&amp;gt; on axis&lt;/p&gt;
+&lt;p&gt;page 68: max booster boost ratio of 50, in reality a little less. example 1:
+DESY II (injection at 450 MeV, ejection at 6 GeV - factor 13). example 2: SPS
+(max energy 450 GeV) to LHC (max energy 6500 GeV), factor 14&lt;/p&gt;
+&lt;p&gt;page 65: RF photo cathode gun now more popular&lt;/p&gt;
+&lt;p&gt;page 73: "brute force" used at MedAustron&lt;/p&gt;
+&lt;p&gt;page 75: 3 kA, 13 kV!!!&lt;/p&gt;
+&lt;p&gt;page 78: high-Z = high atomic number (e.g. W, Pb)&lt;/p&gt;
+&lt;p&gt;page 81: harmonic nr = number of buckets&lt;/p&gt;
+&lt;h1&gt;Chapter 4&lt;/h1&gt;
+&lt;p&gt;page 95: first mention of time-resolved measurement&lt;/p&gt;
+&lt;p&gt;page 91: synchrotron osc = longitudinal, betatron osc = transversal&lt;/p&gt;
+&lt;p&gt;page 96: cavity impedance scales lineraly with the number of cells&lt;/p&gt;
+&lt;p&gt;page 105: what about traveling-wave cavity? is this used in SLS?&lt;/p&gt;
+&lt;p&gt;page 111: How a Klystron amplifier works (https://www.youtube.com/watch?v=Fvud81pYGOg)&lt;/p&gt;
+&lt;p&gt;page 117: protection for kylstron: Klystron Lifetime Management (http://accelconf.web.cern.ch/AccelConf/ICALEPCS2013/talks/tucoca09_talk.pdf)&lt;/p&gt;
+&lt;h1&gt;Chapter 5&lt;/h1&gt;
+&lt;p&gt;page 122: photon BPMs to global orbit feedback also possible - Diamond, ELETTRA
+(here only local feedback is described)&lt;/p&gt;
+&lt;p&gt;page 132: "DIAMOND at Deresbury"&lt;/p&gt;
+&lt;p&gt;page 145: "the designer is relying very much on the good will of the stell
+company" --&amp;gt; the reality we work in&lt;/p&gt;
+&lt;h1&gt;Chapter 6&lt;/h1&gt;
+&lt;p&gt;page 159: digital feedback have taken over since the book was written&lt;/p&gt;
+&lt;h1&gt;Chapter 7&lt;/h1&gt;
+&lt;p&gt;page 163: book is from 1994, more modern methods could be used -&amp;gt; PXI or MTCA
+crate with motor controller and fast ADC&lt;/p&gt;
+&lt;p&gt;page 194: corrector magnets are not mentioned, but it would be convenient (and
+interesting) to measure the resp with high freq (e.g. at 1 kHz)&lt;/p&gt;
+&lt;h1&gt;Chapter 8&lt;/h1&gt;
+&lt;p&gt;page 197: "the beam would propagate only a few meters in atmosphere" --&amp;gt; more
+than I would expect&lt;/p&gt;
+&lt;p&gt;page 199: desorption &amp;lt;-/-&amp;gt; absorption (photon- and electron-stimulated desorbtion)&lt;/p&gt;
+&lt;p&gt;page 203: beam stop - photones after diploe --&amp;gt; more than 10 kW of power&lt;/p&gt;
+&lt;p&gt;page 211: 1e-11 Torr = still 1e11 molecules per L (= 2.5e22 molecules/L of air *
+1e-11 Tor in atm)&lt;/p&gt;
+&lt;h1&gt;Chapter 9&lt;/h1&gt;
+&lt;p&gt;page 218: AI: last wave of AI, Lisp-based, very advanced but still very limited (=specific)&lt;/p&gt;
+&lt;p&gt;page 219: interesting from historical point of view - only EPICS is mentioned&lt;/p&gt;
+&lt;p&gt;page 220: communication protocols from the past Bitbus (http://accelconf.web.cern.ch/accelconf/p91/PDF/PAC1991_1496.PDF)
+and Multibus &lt;/p&gt;
+&lt;p&gt;page 220: reflective memory techniques (for FOFB)&lt;/p&gt;
+&lt;p&gt;page 225: drift and negative drift sounds very hackish; wouldn't it be easier to
+take the position and angle of the insertion device (2 step simulation)&lt;/p&gt;
+&lt;p&gt;page 226: check ref 27: "Computer Codes for Particle Accelerator Design and
+Analysis: A Compendium"&lt;/p&gt;
+&lt;p&gt;page 227: phase-space 6D - x, x', y, y' dp/p, ds - each coordinate relative
+to ideal orbit&lt;/p&gt;
+&lt;p&gt;page 228: R matrix sometimes 2x2, should is be 6x6 in "normal" case? find some
+examples for individual elements ...&lt;/p&gt;
+&lt;p&gt;page 228: beta-function is a solution for single particle motion&lt;/p&gt;
+&lt;p&gt;page 229: Twiss parameters &amp;lt;-&amp;gt; beta func and beta' (alfa, beta, gamma)&lt;/p&gt;
+&lt;p&gt;page 239: read again G. Strang: Linear Algebra and Its Applications&lt;/p&gt;
+&lt;h1&gt;Chapter 10&lt;/h1&gt;
+&lt;p&gt;page 245: time-resolved spectroscopy - learn more on this&lt;/p&gt;
+&lt;p&gt;page 251: "Signal Processing" chapter was written before DSP became mainstream&lt;/p&gt;
+&lt;p&gt;page 262: section on BPM is rather short --&amp;gt; study ref 61: K. Wittenburg "Beam
+Loss Detection"&lt;/p&gt;
+&lt;p&gt;page 271: wire scan is not mentioned?&lt;/p&gt;
+&lt;h1&gt;Chapter 11&lt;/h1&gt;
+&lt;p&gt;page 297: successive alignment steps: non-converging, circling around 0 in
+N-dim space&lt;/p&gt;
+&lt;p&gt;page 301: "Cultural noise at DESY" :D&lt;/p&gt;
+&lt;h1&gt;Chapter 12&lt;/h1&gt;
+&lt;p&gt;page 306: "resonate for a long time" - wake field decay --&amp;gt; check at FLASH&lt;/p&gt;
+&lt;p&gt;page 308: slightly of topic: we are dealing with 18 orders of magnitude&lt;/p&gt;
+&lt;p&gt;page 312: wake functions = causal functions; here i do not understand enough
+physics, isn't the field also present in front of the bunch? or is this
+valid only for ultra-relativistic bunches?&lt;/p&gt;
+&lt;h1&gt;Chapter 13&lt;/h1&gt;
+&lt;p&gt;page 346: three types of motion, three different time scales: longitudinal osc,
+transversal osc and closed orbit errors&lt;/p&gt;
+&lt;p&gt;page 349: Fig 13.2 (SSRL) --&amp;gt; feedback too slow to suppres 60 Hz and harmonics&lt;/p&gt;
+&lt;p&gt;page 351: phBPM: gap few times RMS of the beam&lt;/p&gt;
+&lt;p&gt;page 353: a mention of feedback simulation, no references given&lt;/p&gt;
+&lt;p&gt;page 358: Z transform: http://techteach.no/publications/discretetime_signals_systems/discrete.pdf&lt;/p&gt;
+&lt;p&gt;page 358: "beyond the Nyquist freq" --&amp;gt; not entirely true, undersampling is
+possible&lt;/p&gt;
+&lt;p&gt;page 362: MIMO, check:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ref 19&lt;/li&gt;
+&lt;li&gt;ref 20&lt;/li&gt;
+&lt;li&gt;ref 21&lt;/li&gt;
+&lt;li&gt;ref 22&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 14 and 15&lt;/h1&gt;
+&lt;p&gt;no relevant notes&lt;/p&gt;
+&lt;h1&gt;Chapter 16&lt;/h1&gt;
+&lt;p&gt;page 432: "safety is a part of doing things"&lt;/p&gt;
+&lt;p&gt;page 435: general observation: unreliable safety feature (i.e. interlock) will
+increase the danger&lt;/p&gt;
+&lt;p&gt;page 440: "The OPCOs have [...] the authority to stop any activity where safety
+[...] is in question" - everybody has (or should have) the Stop Work Authority&lt;/p&gt;
+&lt;p&gt;page 448: tungsten --&amp;gt; impossible to melt with beam&lt;/p&gt;
+&lt;p&gt;page 456: interlock testing: each input --&amp;gt; response&lt;/p&gt;
+&lt;p&gt;page 457: for PLCs the standard for functional safety (IEC 61508) should be
+mentioned. The standard was first published in 1998, while the book is from
+1994.&lt;/p&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</content></entry><entry><title>Books read: 97 Things Every Programmer Should Know</title><link href="www.j-marjanovic.io/books-read-97-things-every-programmer-should-know.html" rel="alternate"></link><published>2016-06-05T22:00:00+02:00</published><updated>2016-06-05T22:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2016-06-05:www.j-marjanovic.io/books-read-97-things-every-programmer-should-know.html</id><summary type="html">&lt;p&gt;I have seen this book referenced on several occasions when the software
 engineering was discussed, but I never had the time to read from first page to
 the last. I bought the dead-tree version, which gives you a better motivation
 to read the whole book. Here are my comments and …&lt;/p&gt;</summary><content type="html">&lt;p&gt;I have seen this book referenced on several occasions when the software
