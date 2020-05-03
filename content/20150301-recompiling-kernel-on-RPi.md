@@ -176,7 +176,7 @@ The following figure shows the temperature during the compilation. The temperatu
 was captured every minute with a Cron job which read from 
 **/sys/class/thermal/thermal_zone0/temp**
 
-![RPi temperature]({filename}/images/pi_temp_during_compile.png)
+![RPi temperature]({static}/images/pi_temp_during_compile.png)
 {: style="width:90%; display: block; margin-left: auto; margin-right: auto;"}
 
 

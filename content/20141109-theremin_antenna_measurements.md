@@ -25,7 +25,7 @@ Here you can see this highly advanced test - a ruler strapped to the antenna.
 This will allow us to measure the relationship between time constant and distance of
 the hand. 
 
-![Test setup]({filename}/images/theremin_antena_meas.jpg)
+![Test setup]({static}/images/theremin_antena_meas.jpg)
 {: style="width:441px; display: block; margin-left: auto; margin-right: auto;"}
 
 Since the ruler is made out of plastic (we should say dielectric, when studying electric
@@ -40,7 +40,7 @@ correlated to time constant and therefore to capacitance of the antenna.
 
 Here we see what the FPGA measured when I placed hand on different distance from antenna.
 
-![Time constant without filtering]({filename}/images/theremin_antenna_direct.png)
+![Time constant without filtering]({static}/images/theremin_antenna_direct.png)
 
 
 The blue dots denote mean value, the green lines denote one standard deviation and the
@@ -52,7 +52,7 @@ constant as hand approaches antenna, but the noise is extremely high.
 If we have a look at the frequency spectrum of the measurement, we see the reason for the
 noise.
 
-![Time constant spectral analysis]({filename}/images/theremin_antenna_direct_fft.png)
+![Time constant spectral analysis]({static}/images/theremin_antenna_direct_fft.png)
 
 The antenna is 45 cm long copper rod and acts not only as a capacitor for theremin but also
 as radio antenna. All the frequency components above Nyquist frequency (which is 5000 kHz
@@ -65,5 +65,5 @@ improve.
 I will write another article on filtering in FPGA, meanwhile let's enjoy much improved 
 results:
 
-![Time constant with filtering]({filename}/images/theremin_antenna_filtered.png)
+![Time constant with filtering]({static}/images/theremin_antenna_filtered.png)
 

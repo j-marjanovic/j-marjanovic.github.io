@@ -9,7 +9,7 @@ start a new position as FPGA Developer at MicroTCA Technology Lab at
 
 This is me in European XFEL tunnel:
 
-![Jan in European XFEL tunnel]({filename}/images/jan_at_desy.jpg)
+![Jan in European XFEL tunnel]({static}/images/jan_at_desy.jpg)
 {: style="width:70%; display: block; margin-left: auto; margin-right: auto;"}
 
 There are a couple of topics which I would like to explore as a hobby, and

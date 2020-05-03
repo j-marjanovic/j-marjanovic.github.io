@@ -17,7 +17,7 @@ DS-5 can be useful tool, unfortunately the free-as-a-beer [DS-5 Community Editio
 only allows debugging Linux user-space applications. In order to use it, the 
 Linux should be up and running in order to run gdbserver on processor.
 
-![Debug options in DS-5 Altera Community Edition]({filename}/images/debugging_cyclone_soc_openocd/ds5_debug_options.png){: style="max-width:100%; width: auto; display: block; margin-left: auto; margin-right: auto;"}
+![Debug options in DS-5 Altera Community Edition]({static}/images/debugging_cyclone_soc_openocd/ds5_debug_options.png){: style="max-width:100%; width: auto; display: block; margin-left: auto; margin-right: auto;"}
 
 
 When doing initial bring-up or experimenting this may not be the case. If
@@ -181,7 +181,7 @@ Now we just have to set-up the Eclipse with the OpenOCD plug-in. I have used the
 newest version of Eclipse available at the moment, Eclipse Neon.
 
 
-![Eclipse Neon]({filename}/images/debugging_cyclone_soc_openocd/eclipse_neon.png){: style="width:500px; display: block; margin-left: auto; margin-right: auto;"}
+![Eclipse Neon]({static}/images/debugging_cyclone_soc_openocd/eclipse_neon.png){: style="width:500px; display: block; margin-left: auto; margin-right: auto;"}
 
 
 [This page](http://gnuarmeclipse.github.io/plugins/install/) describes how to
@@ -193,9 +193,9 @@ project it would probably make sense to go with "Makefile Project with
 Existing Code". For a Linux kernel debugging the plain Project will be enough.
 
 
-![Creation of new project in Eclipse]({filename}/images/debugging_cyclone_soc_openocd/eclipse_new_project.png){: style="width:800px; display: block; margin-left: auto; margin-right: auto;"}
+![Creation of new project in Eclipse]({static}/images/debugging_cyclone_soc_openocd/eclipse_new_project.png){: style="width:800px; display: block; margin-left: auto; margin-right: auto;"}
 
-![Creation of new project in Eclipse]({filename}/images/debugging_cyclone_soc_openocd/eclipse_new_project_name.png){: style="width:800px; display: block; margin-left: auto; margin-right: auto;"}
+![Creation of new project in Eclipse]({static}/images/debugging_cyclone_soc_openocd/eclipse_new_project_name.png){: style="width:800px; display: block; margin-left: auto; margin-right: auto;"}
 
 Now let's find the original Linux binary. When building kernel with Yocto, the
 created file in deploy directory is `zimage` file. This is a compressed image
@@ -225,22 +225,22 @@ In Eclipse we then select: `Run -> Debug Configurations...`
 And then we just need to setup the correct parameters for debug. Under "Main
 tab" we need to select the right Linux binary image:
 
-![Creation of new project in Eclipse]({filename}/images/debugging_cyclone_soc_openocd/eclipse_debug_main.png){: style="width:800px; display: block; margin-left: auto; margin-right: auto;"}
+![Creation of new project in Eclipse]({static}/images/debugging_cyclone_soc_openocd/eclipse_debug_main.png){: style="width:800px; display: block; margin-left: auto; margin-right: auto;"}
 
 Under "Debugger tab" we need to set-up the OpenOCD setting and use the correct
 gdb (the one produced by Yocto):
 
-![Creation of new project in Eclipse]({filename}/images/debugging_cyclone_soc_openocd/eclipse_debug_debugger.png){: style="width:800px; display: block; margin-left: auto; margin-right: auto;"}
+![Creation of new project in Eclipse]({static}/images/debugging_cyclone_soc_openocd/eclipse_debug_debugger.png){: style="width:800px; display: block; margin-left: auto; margin-right: auto;"}
 
 
 If we want to attach to a running kernel, we should un-check "Inital Reset"
 and "Load executable" fields under "Startup tab".
 
-![Creation of new project in Eclipse]({filename}/images/debugging_cyclone_soc_openocd/eclipse_debug_startup.png){: style="width:800px; display: block; margin-left: auto; margin-right: auto;"}
+![Creation of new project in Eclipse]({static}/images/debugging_cyclone_soc_openocd/eclipse_debug_startup.png){: style="width:800px; display: block; margin-left: auto; margin-right: auto;"}
 
 And we are good to go. After pressing the "Debug" button, the debugging
 perspective will show up. Now we can access `__log_buf` buffer to determine
 what is stopping the kernel boot.
 
-![Creation of new project in Eclipse]({filename}/images/debugging_cyclone_soc_openocd/eclipse_debug_final.png){: style="width:800px; display: block; margin-left: auto; margin-right: auto;"}
+![Creation of new project in Eclipse]({static}/images/debugging_cyclone_soc_openocd/eclipse_debug_final.png){: style="width:800px; display: block; margin-left: auto; margin-right: auto;"}
 

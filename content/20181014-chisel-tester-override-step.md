@@ -173,7 +173,7 @@ Exit Code: 0
 
 And this is the display of the waveforms from GTKWave:
 
-![GTKWave display]({filename}/images/chisel_override_clock.png)
+![GTKWave display]({static}/images/chisel_override_clock.png)
 
 It can be noted that both Driver and Monitor are able to perform their tasks
 in parallel.

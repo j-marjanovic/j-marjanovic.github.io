@@ -16,7 +16,7 @@ in the previous years was a new software suite from Xilinx, called Vivado and
 the slow introduction of C-to-FPGA tools, such as Vivado HLS.
 
 
-![Evgeni Stavinov: 100 Power Tips for FPGA Designers]({filename}/images/100_power_tips_fpga_designers.jpg)
+![Evgeni Stavinov: 100 Power Tips for FPGA Designers]({static}/images/100_power_tips_fpga_designers.jpg)
 {: style="width:70%; display: block; margin-left: auto; margin-right: auto;"}
 
 

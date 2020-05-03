@@ -12,7 +12,7 @@ contribution in this book.
 
 
 
-![97 Things Every Programmer Should Know]({filename}/images/97_thing_every_programmer_should_know.jpg)
+![97 Things Every Programmer Should Know]({static}/images/97_thing_every_programmer_should_know.jpg)
 {: style="width:70%; display: block; margin-left: auto; margin-right: auto;"}
 
 

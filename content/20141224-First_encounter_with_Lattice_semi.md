@@ -63,7 +63,7 @@ the x's with desired MAC address):
 
 After setting everything up, a view on the iCEcube2 showed before me.
 
-![iCEcube2]({filename}/images/icestudio.png)
+![iCEcube2]({static}/images/icestudio.png)
 
 
 It is a little Spartan but it has all basic functions the FPGA developer needs. The

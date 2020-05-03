@@ -26,7 +26,7 @@ meant to be a demonstration of operating principle, so it lacks few
 not-so-minor details. The calculations were done in 2D, where antenna in 
 real world exist in 3 dimensions. 
 
-![Theremin simulation]({filename}/images/theremin_antenna.gif)
+![Theremin simulation]({static}/images/theremin_antenna.gif)
 
 
 [Code](/drafts/theremin-simulation.html)
@@ -46,6 +46,6 @@ between hand and antenna)  will result in longer time and a smaller
 capacitance (longer distance between hand and antenna) will result in shorter
 time. This difference will generate a different pitch.
 
-![Theremin settling time]({filename}/images/theremin_settling_time.png)
+![Theremin settling time]({static}/images/theremin_settling_time.png)
 
 This is all for this part, stay tuned for more.

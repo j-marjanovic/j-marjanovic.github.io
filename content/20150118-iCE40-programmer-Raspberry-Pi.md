@@ -25,7 +25,7 @@ another device (e.g. microprocessor to the SPI port). This is called SPI Slave
 programming mode and it is enabled by holding the line CS_n low at the reset of
 the FPGA. 
 
-![iCE40 development board and Raspberry Pi]({filename}/images/ice40_rpi_conf.jpg)
+![iCE40 development board and Raspberry Pi]({static}/images/ice40_rpi_conf.jpg)
 {: style="width:600px; display: block; margin-left: auto; margin-right: auto;"}
 
 So I tried programming it using Raspberry Pi. I connected:
