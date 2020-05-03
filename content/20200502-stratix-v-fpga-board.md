@@ -248,3 +248,6 @@ determined are the reference clock and an enable signal from the connector.
 
 Eventually I plan to produce a small PCB that would allow plugging this board
 in a normal PCIe card slot.
+
+-------------------------
+All trademarks and registered trademarks are the property of their respective owners.
