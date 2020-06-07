@@ -20,10 +20,10 @@ Ubuntu is officially not supported.&lt;/strong&gt;&lt;/p&gt;
 Edition Software from Quartus 19.1 package.&lt;/p&gt;
 &lt;p&gt;When running &lt;code&gt;vsim&lt;/code&gt; from &lt;code&gt;intelFPGA/19.1/modelsim_ase/bin&lt;/code&gt; I get the
 following error message:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ ./vsim
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ ./vsim
 Error: cannot find &lt;span class="s2"&gt;&amp;quot;./../linux_rh60/vsim&amp;quot;&lt;/span&gt;
 $
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;From the path it is clear that ModelSim thinks it is running on RHEL 6. As
@@ -32,11 +32,11 @@ software on Arch Linux Wiki&lt;/a&gt;,
 one needs to modify &lt;code&gt;vco&lt;/code&gt; file and downgrade &lt;code&gt;freetype&lt;/code&gt; library.&lt;/p&gt;
 &lt;p&gt;Once this is settles (by the way, this used to be enough to make ModelSim work on
 Ubuntu 18.10) we get the following error:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ ./vsim
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ ./vsim
 Reading pref.tcl
 ./../linuxaloem/vish: symbol lookup error: /usr/lib/i386-linux-gnu/libfontconfig.so.1: undefined symbol: FT_Done_MM_Var
 ** Fatal: Read failure in vlm process &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;,0&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;This message is new and it required me to do some investigation to get it fixed.&lt;/p&gt;
@@ -46,50 +46,50 @@ called &lt;code&gt;FT_Done_MM_Var&lt;/code&gt; and is unable to find it.&lt;/p&g
 &lt;p&gt;To investigate further I cloned &lt;code&gt;fontconfig&lt;/code&gt; source code from:
 https://gitlab.freedesktop.org/fontconfig/fontconfig.git&lt;/p&gt;
 &lt;p&gt;A quick &lt;code&gt;grep&lt;/code&gt; finds the following instances of the symbol in question:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ grep -rn FT_Done_MM_Var .
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ grep -rn FT_Done_MM_Var .
 ./README:119:      Use FT_Done_MM_Var &lt;span class="k"&gt;if&lt;/span&gt; available
 ./src/fcfreetype.c:2261:    FT_Done_MM_Var &lt;span class="o"&gt;(&lt;/span&gt;ftLibrary, mm_var&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 ./configure.ac:321:AC_CHECK_FUNCS&lt;span class="o"&gt;(&lt;/span&gt;FT_Get_BDF_Property FT_Get_PS_Font_Info FT_Has_PS_Glyph_Names FT_Get_X11_Font_Format FT_Done_MM_Var&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;One &lt;code&gt;git blame&lt;/code&gt; after we find the following commit which introduced this function:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;commit 94683a1255c065a7f8e7fadee9de605f3eaf9ac7
-Author: Behdad Esfahbod &amp;lt;behdad@behdad.org&amp;gt;
-Date:   Mon Jan 8 09:55:41 2018 +0000
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;commit&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;94683&lt;/span&gt;&lt;span class="n"&gt;a1255c065a7f8e7fadee9de605f3eaf9ac7&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="nl"&gt;Author&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Behdad&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Esfahbod&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;behdad&lt;/span&gt;&lt;span class="nv"&gt;@behdad&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;org&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="nc"&gt;Date&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="n"&gt;Mon&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Jan&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;09&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;55&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;41&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;2018&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;0000&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 
-    Use FT_Done_MM_Var if available
-&lt;/pre&gt;&lt;/div&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;Use&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;FT_Done_MM_Var&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;available&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;And then we can find out that release &lt;strong&gt;2.12.92&lt;/strong&gt; is the last one which does
 not contain this change.&lt;/p&gt;
 &lt;p&gt;I checked out the code from release &lt;strong&gt;2.12.92&lt;/strong&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git checkout -b 2.12.92 2.12.92
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;git checkout -b 2.12.92 2.12.92&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Installed the libraries needed:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo apt install libxml2-dev:i386 uuid-dev:i386
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;sudo apt install libxml2-dev:i386 uuid-dev:i386&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;And used the following commands to compile and install an older version
 of &lt;code&gt;fontconfig&lt;/code&gt; library:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;aclocal -I m4
-autoconf
-libtoolize
-./autogen.sh
-CFLAGS=-m32 LDFLAGS=-L/home/jan/local/packages/freetype-2.4.7-32bit/lib ./configure --prefix=/home/jan/local/packages/fontconfig-2.12.92-32bit --enable-libxml2
-make
-make install
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;aclocal -I m4&lt;/span&gt;
+&lt;span class="err"&gt;autoconf&lt;/span&gt;
+&lt;span class="err"&gt;libtoolize&lt;/span&gt;
+&lt;span class="err"&gt;./autogen.sh&lt;/span&gt;
+&lt;span class="err"&gt;CFLAGS=-m32 LDFLAGS=-L/home/jan/local/packages/freetype-2.4.7-32bit/lib ./configure --prefix=/home/jan/local/packages/fontconfig-2.12.92-32bit --enable-libxml2&lt;/span&gt;
+&lt;span class="err"&gt;make&lt;/span&gt;
+&lt;span class="err"&gt;make install&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h1&gt;Changes to vco&lt;/h1&gt;
 &lt;p&gt;Finally, I needed to change &lt;code&gt;vco&lt;/code&gt; in &lt;code&gt;intelFPGA/19.1/modelsim_ase/bin&lt;/code&gt; folder
 to load the freshly-recompiled libraries:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="s s-Atom"&gt;diff&lt;/span&gt; &lt;span class="s s-Atom"&gt;vco&lt;/span&gt; &lt;span class="s s-Atom"&gt;vco&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="s s-Atom"&gt;orig&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="s s-Atom"&gt;diff&lt;/span&gt; &lt;span class="s s-Atom"&gt;vco&lt;/span&gt; &lt;span class="s s-Atom"&gt;vco&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="s s-Atom"&gt;orig&lt;/span&gt;
 &lt;span class="mi"&gt;11&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;13&lt;/span&gt;&lt;span class="s s-Atom"&gt;d10&lt;/span&gt;
 &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="s s-Atom"&gt;#&lt;/span&gt; &lt;span class="s s-Atom"&gt;added&lt;/span&gt; &lt;span class="s s-Atom"&gt;for&lt;/span&gt; &lt;span class="nv"&gt;Ubuntu&lt;/span&gt; &lt;span class="mf"&gt;19.04&lt;/span&gt;&lt;span class="s s-Atom"&gt;:&lt;/span&gt; &lt;span class="s s-Atom"&gt;recompiled&lt;/span&gt; &lt;span class="s s-Atom"&gt;libraries&lt;/span&gt;
 &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="s s-Atom"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;LD_LIBRARY_PATH&lt;/span&gt;&lt;span class="s s-Atom"&gt;=/home&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="s s-Atom"&gt;jan&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="s s-Atom"&gt;local&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="s s-Atom"&gt;packages&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="s s-Atom"&gt;freetype&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;2.4.7&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;32&lt;/span&gt;&lt;span class="s s-Atom"&gt;bit&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nn"&gt;lib&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="s s-Atom"&gt;home&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="s s-Atom"&gt;jan&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="s s-Atom"&gt;local&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="s s-Atom"&gt;packages&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="s s-Atom"&gt;fontconfig&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;2.12.92&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;32&lt;/span&gt;&lt;span class="s s-Atom"&gt;bit&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nn"&gt;lib&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;LD_LIBRARY_PATH&lt;/span&gt;
@@ -102,13 +102,13 @@ to load the freshly-recompiled libraries:&lt;/p&gt;
 &lt;span class="mi"&gt;213&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;214&lt;/span&gt;&lt;span class="s s-Atom"&gt;d208&lt;/span&gt;
 &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;           &lt;span class="s s-Atom"&gt;#&lt;/span&gt; &lt;span class="s s-Atom"&gt;added&lt;/span&gt; &lt;span class="s s-Atom"&gt;for&lt;/span&gt; &lt;span class="nv"&gt;Ubuntu&lt;/span&gt; &lt;span class="mf"&gt;19.04&lt;/span&gt;&lt;span class="s s-Atom"&gt;:&lt;/span&gt; &lt;span class="s s-Atom"&gt;if&lt;/span&gt; &lt;span class="s s-Atom"&gt;kernel&lt;/span&gt; &lt;span class="s s-Atom"&gt;version&lt;/span&gt; &lt;span class="mf"&gt;5.&lt;/span&gt;&lt;span class="s s-Atom"&gt;x&lt;/span&gt; &lt;span class="s s-Atom"&gt;then&lt;/span&gt; &lt;span class="s s-Atom"&gt;use&lt;/span&gt; &lt;span class="s s-Atom"&gt;linuxaloem&lt;/span&gt;
 &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;           &lt;span class="mf"&gt;5.&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="s s-Atom"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;         &lt;span class="s s-Atom"&gt;vco=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;linuxaloem&amp;quot;&lt;/span&gt; &lt;span class="p"&gt;;;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h1&gt;Conclusion&lt;/h1&gt;
 &lt;p&gt;Ta-da, ModelSim now works on Ubuntu 19.04. The font styles are a little bit
 broken, but being humble is a good characteristic, and we won't ask too much.&lt;/p&gt;
-&lt;p style="width:80%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="ModelSim up and running" src="www.j-marjanovic.io/images/modelsim_on_ubuntu19-04.png"&gt;&lt;/p&gt;</content><category term="FPGA"></category><category term="ModelSim"></category></entry><entry><title>Blog restart</title><link href="www.j-marjanovic.io/blog-restart.html" rel="alternate"></link><published>2018-09-15T19:00:00+02:00</published><updated>2018-09-15T19:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2018-09-15:www.j-marjanovic.io/blog-restart.html</id><summary type="html">&lt;p&gt;This blog was left dormant for quite some time now. From the last blog post
+&lt;p style="width:80%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="ModelSim up and running" src="www.j-marjanovic.io/images/modelsim_on_ubuntu19-04.png"&gt;&lt;/p&gt;</content><category term="misc"></category><category term="FPGA"></category><category term="ModelSim"></category></entry><entry><title>Blog restart</title><link href="www.j-marjanovic.io/blog-restart.html" rel="alternate"></link><published>2018-09-15T19:00:00+02:00</published><updated>2018-09-15T19:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2018-09-15:www.j-marjanovic.io/blog-restart.html</id><summary type="html">&lt;p&gt;This blog was left dormant for quite some time now. From the last blog post
 in February 2017 a lot has happened. I have moved to Hamburg, Germany, to
 start a new position as FPGA Developer at MicroTCA Technology Lab at
 &lt;a href="https://www.desy.de/"&gt;DESY&lt;/a&gt;.&lt;/p&gt;
@@ -125,7 +125,7 @@ having a blog is a nice way to organize your thoughts and outputs. Writing a
 blog post at the end of the project requires someone to gather his thoughts
 and to write down the conclusion.&lt;/p&gt;
 &lt;p&gt;That is all for now, expect more interesting blog posts (probably focusing on
-FPGA, mid-level languages as Chisel and high-level synthesis) in the future.&lt;/p&gt;</content></entry><entry><title>FOSDEM 2017</title><link href="www.j-marjanovic.io/fosdem-2017.html" rel="alternate"></link><published>2017-02-03T18:00:00+01:00</published><updated>2017-02-03T18:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2017-02-03:www.j-marjanovic.io/fosdem-2017.html</id><summary type="html">&lt;p&gt;I am writing this post from Brussels where I am attending &lt;a href="https://fosdem.org/2017/"&gt;FOSDEM 2017&lt;/a&gt;
+FPGA, mid-level languages as Chisel and high-level synthesis) in the future.&lt;/p&gt;</content><category term="Misc"></category></entry><entry><title>FOSDEM 2017</title><link href="www.j-marjanovic.io/fosdem-2017.html" rel="alternate"></link><published>2017-02-03T18:00:00+01:00</published><updated>2017-02-03T18:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2017-02-03:www.j-marjanovic.io/fosdem-2017.html</id><summary type="html">&lt;p&gt;I am writing this post from Brussels where I am attending &lt;a href="https://fosdem.org/2017/"&gt;FOSDEM 2017&lt;/a&gt;
 conference.&lt;/p&gt;
 &lt;p&gt;There are a lot of interesting talks, and sometimes it is quite hard to decide
 on which one to go. Luckily there the talks are recorded and one can later
@@ -201,7 +201,7 @@ check also the missed ones.&lt;/p&gt;
 &lt;h2&gt;Sunday&lt;/h2&gt;
 &lt;p&gt;On Sunday I plan to spend most of the time in &lt;a href="https://fosdem.org/2017/schedule/track/electronic_design_automation_eda/"&gt;Electronic Design Automation (EDA) devroom&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Here is a selfie of me with the famous &lt;a href="https://en.wikipedia.org/wiki/Manneken_Pis"&gt;Manneken Pis status&lt;/a&gt;:&lt;/p&gt;
-&lt;p style="width:50%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Selfie with Manneken Pis" src="www.j-marjanovic.io/images/fosdem_2017/IMG_4898.JPG"&gt;&lt;/p&gt;</content><category term="Conference"></category></entry><entry><title>Debugging Linux start-up on Altera Cyclone V SoC with OpenOCD</title><link href="www.j-marjanovic.io/debugging-linux-start-up-on-altera-cyclone-v-soc-with-openocd.html" rel="alternate"></link><published>2016-07-12T22:00:00+02:00</published><updated>2016-07-12T22:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2016-07-12:www.j-marjanovic.io/debugging-linux-start-up-on-altera-cyclone-v-soc-with-openocd.html</id><summary type="html">&lt;p&gt;This blog post will show you how one can use the OpenOCD debugger with Altera
+&lt;p style="width:50%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Selfie with Manneken Pis" src="www.j-marjanovic.io/images/fosdem_2017/IMG_4898.JPG"&gt;&lt;/p&gt;</content><category term="Misc"></category><category term="Conference"></category></entry><entry><title>Debugging Linux start-up on Altera Cyclone V SoC with OpenOCD</title><link href="www.j-marjanovic.io/debugging-linux-start-up-on-altera-cyclone-v-soc-with-openocd.html" rel="alternate"></link><published>2016-07-12T22:00:00+02:00</published><updated>2016-07-12T22:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2016-07-12:www.j-marjanovic.io/debugging-linux-start-up-on-altera-cyclone-v-soc-with-openocd.html</id><summary type="html">&lt;p&gt;This blog post will show you how one can use the OpenOCD debugger with Altera
 Cyclone V SoC. Altera Cyclone V SoC is a very interesting integrated circuit,
 combining dual-core ARM processor and a decent FPGA, allowing a wide variety
 of possibilities to partition the application between the two.&lt;/p&gt;
@@ -233,62 +233,62 @@ provide a graphical way to debug programs. If you want to know more, at the
 bottom of &lt;a href="http://openocd.org/documentation/"&gt;OpenOCD Documentation page&lt;/a&gt; is
 a link to the presentation on FOSDEM 2006.&lt;/p&gt;
 &lt;p&gt;First we need to install all needed tools:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo apt-get install libtool autotools-dev automake libusb-1.0 libhidapi-dev pkg-config git
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;sudo apt-get install libtool autotools-dev automake libusb-1.0 libhidapi-dev pkg-config git&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Then we get the source code from OpenOCD SourceForge repository. I have used the
 latest available commit in master, which was the one with a git tree-ish value
 of &lt;code&gt;12ff09f&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git clone git://git.code.sf.net/p/openocd/code openocd-code
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;git&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;clone&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nl"&gt;git&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;git&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;code&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sf&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;net&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;openocd&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;code&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;openocd&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;code&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 
-root@eee2f562f8f2:/openocd-code2# git show HEAD
-commit 12ff09f7f27a707fe42226262f55b8ce8351cbf9
-Author: Esben Haabendal &amp;lt;esben@haabendal.dk&amp;gt;
-Date:   Fri Nov 27 09:13:36 2015 +0100
-cfi: Add support for strangely endianness broken SoC implementations
-&lt;/pre&gt;&lt;/div&gt;
+&lt;span class="n"&gt;root&lt;/span&gt;&lt;span class="nv"&gt;@eee2f562f8f2&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;openocd&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;code2&lt;/span&gt;&lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;git&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;show&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;HEAD&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="k"&gt;commit&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;12&lt;/span&gt;&lt;span class="n"&gt;ff09f7f27a707fe42226262f55b8ce8351cbf9&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="nl"&gt;Author&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Esben&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Haabendal&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;esben&lt;/span&gt;&lt;span class="nv"&gt;@haabendal&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dk&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="nc"&gt;Date&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="n"&gt;Fri&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Nov&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;27&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;09&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;13&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;36&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;2015&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;0100&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="nl"&gt;cfi&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;Add&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;support&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;strangely&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;endianness&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;broken&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;SoC&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;implementations&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Perform all needed steps to compile the code (have a look in &lt;code&gt;INSTALL&lt;/code&gt; for
 detailed instructions):&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;cd openocd-code
-aclocal
-./bootstrap
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;cd openocd-code&lt;/span&gt;
+&lt;span class="err"&gt;aclocal&lt;/span&gt;
+&lt;span class="err"&gt;./bootstrap&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;At the end of configure step make sure that support for Altera USB-Blaster II
 and CMSIS-DAP Debugger are configured. The output should look something like
 this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;./configure
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;configure&lt;/span&gt;
 
-...
+&lt;span class="p"&gt;...&lt;/span&gt;
 
-OpenOCD configuration summary
---------------------------------------------------
-MPSSE mode of FTDI based devices        yes (auto)
-Segger J-Link JTAG Programmer           yes (auto)
-ST-Link JTAG Programmer                 yes (auto)
-TI ICDI JTAG Programmer                 yes (auto)
-Keil ULINK JTAG Programmer              yes (auto)
-Altera USB-Blaster II Compatible        yes (auto)
-Versaloon-Link JTAG Programmer          yes (auto)
-OSBDM (JTAG only) Programmer            yes (auto)
-eStick/opendous JTAG Programmer         yes (auto)
-Andes JTAG Programmer                   yes (auto)
-USBProg JTAG Programmer                 no
-Raisonance RLink JTAG Programmer        no
-Olimex ARM-JTAG-EW Programmer           no
-CMSIS-DAP Compliant Debugger            yes (auto)
-&lt;/pre&gt;&lt;/div&gt;
+&lt;span class="n"&gt;OpenOCD&lt;/span&gt; &lt;span class="n"&gt;configuration&lt;/span&gt; &lt;span class="n"&gt;summary&lt;/span&gt;
+&lt;span class="c1"&gt;--------------------------------------------------&lt;/span&gt;
+&lt;span class="n"&gt;MPSSE&lt;/span&gt; &lt;span class="k"&gt;mode&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="n"&gt;FTDI&lt;/span&gt; &lt;span class="n"&gt;based&lt;/span&gt; &lt;span class="n"&gt;devices&lt;/span&gt;        &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Segger&lt;/span&gt; &lt;span class="n"&gt;J&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Link&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;           &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ST&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Link&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;                 &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;TI&lt;/span&gt; &lt;span class="n"&gt;ICDI&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;                 &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Keil&lt;/span&gt; &lt;span class="n"&gt;ULINK&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;              &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Altera&lt;/span&gt; &lt;span class="n"&gt;USB&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Blaster&lt;/span&gt; &lt;span class="n"&gt;II&lt;/span&gt; &lt;span class="n"&gt;Compatible&lt;/span&gt;        &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Versaloon&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Link&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;          &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;OSBDM&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="k"&gt;only&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;            &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;eStick&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opendous&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;         &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Andes&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;                   &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;USBProg&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;                 &lt;span class="k"&gt;no&lt;/span&gt;
+&lt;span class="n"&gt;Raisonance&lt;/span&gt; &lt;span class="n"&gt;RLink&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;        &lt;span class="k"&gt;no&lt;/span&gt;
+&lt;span class="n"&gt;Olimex&lt;/span&gt; &lt;span class="n"&gt;ARM&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;JTAG&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;EW&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;           &lt;span class="k"&gt;no&lt;/span&gt;
+&lt;span class="n"&gt;CMSIS&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;DAP&lt;/span&gt; &lt;span class="n"&gt;Compliant&lt;/span&gt; &lt;span class="n"&gt;Debugger&lt;/span&gt;            &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Then we just need to compile everything and install the openocd binary.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;make
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;make&lt;/span&gt;
 
-sudo make install
-&lt;/pre&gt;&lt;/div&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h2&gt;&lt;code&gt;udev&lt;/code&gt; rules for USB-Blaster&lt;/h2&gt;
@@ -302,57 +302,57 @@ WITH UBUNTU 14.04&lt;/a&gt;. The USB-Blaster has multiple personalities (one for
 one for ARM JTAG), the udev rule therefore needs to specify both 6010 and
 6810 as the targeted devices.&lt;/p&gt;
 &lt;p&gt;Create /etc/udev/rules.d/51-usbblaster.rules with the following content:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# For Altera USB-Blaster on SoCkit
-SUBSYSTEM==&amp;quot;usb&amp;quot;,\
-ENV{DEVTYPE}==&amp;quot;usb_device&amp;quot;,\
-ATTR{idVendor}==&amp;quot;09fb&amp;quot;,\
-ATTR{idProduct}==&amp;quot;6010|6810&amp;quot;,\
-MODE=&amp;quot;0666&amp;quot;,\
-NAME=&amp;quot;bus/usb/$env{BUSNUM}/$env{DEVNUM}&amp;quot;,\
-RUN+=&amp;quot;/bin/chmod 0666 %c&amp;quot;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;# For Altera USB-Blaster on SoCkit&lt;/span&gt;
+&lt;span class="err"&gt;SUBSYSTEM==&amp;quot;usb&amp;quot;,\&lt;/span&gt;
+&lt;span class="err"&gt;ENV{DEVTYPE}==&amp;quot;usb_device&amp;quot;,\&lt;/span&gt;
+&lt;span class="err"&gt;ATTR{idVendor}==&amp;quot;09fb&amp;quot;,\&lt;/span&gt;
+&lt;span class="err"&gt;ATTR{idProduct}==&amp;quot;6010|6810&amp;quot;,\&lt;/span&gt;
+&lt;span class="err"&gt;MODE=&amp;quot;0666&amp;quot;,\&lt;/span&gt;
+&lt;span class="err"&gt;NAME=&amp;quot;bus/usb/$env{BUSNUM}/$env{DEVNUM}&amp;quot;,\&lt;/span&gt;
+&lt;span class="err"&gt;RUN+=&amp;quot;/bin/chmod 0666 %c&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;&lt;code&gt;udev&lt;/code&gt; rules should be reloaded with the following command to take effect
 immediately:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo udevadm control --reload
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;sudo udevadm control --reload&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h2&gt;First checks&lt;/h2&gt;
 &lt;p&gt;Now we can try running Altera &lt;code&gt;jtagconfig&lt;/code&gt; program to check if the permissions
 are OK. When the SoCkit board is attached, the output should look something
 like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;➜  ~ ~/altera/16.0/quartus/bin/jtagconfig                                                                                            
-1) CV SoCKit [1-1.1]                          
-  02D020DD   5CSEBA6(.|ES)/5CSEMA6/..
-  4BA00477   SOCVHPS
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;➜  ~ ~/altera/16.0/quartus/bin/jtagconfig                                                                                            &lt;/span&gt;
+&lt;span class="err"&gt;1) CV SoCKit [1-1.1]                          &lt;/span&gt;
+&lt;span class="err"&gt;  02D020DD   5CSEBA6(.|ES)/5CSEMA6/..&lt;/span&gt;
+&lt;span class="err"&gt;  4BA00477   SOCVHPS&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Now we can also try running OpenOCD:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;➜  ~ openocd -f interface/altera-usb-blaster2.cfg -f target/altera_fpgasoc.cfg
-Open On-Chip Debugger 0.10.0-dev-00324-g12ff09f (2016-06-26-19:19)
-Licensed under GNU GPL v2
-For bug reports, read
-http://openocd.org/doc/doxygen/bugs.html
-Warn : Adapter driver &amp;#39;usb_blaster&amp;#39; did not declare which transports it allows; assuming legacy JTAG-only
-Info : only one transport option; autoselect &amp;#39;jtag&amp;#39;
-adapter speed: 1000 kHz
-cycv_dbginit
-Info : Altera USB-Blaster II (uninitialized) found
-Info : Loading firmware...
-Info : Waiting for renumerate...
-Info : Waiting for renumerate...
-Info : Altera USB-Blaster II found (Firm. rev. = 1.36)
-Info : This adapter doesn&amp;#39;t support configurable speed
-Info : JTAG tap: fpgasoc.dap tap/device found: 0x4ba00477 (mfg: 0x23b (ARM Ltd.), part: 0xba00, ver: 0x4)
-Info : JTAG tap: fpgasoc.fpga.tap tap/device found: 0x02d020dd (mfg: 0x06e (Altera), part: 0x2d02, ver: 0x0)
-Info : DAP transaction stalled (WAIT) - slowing down
-Info : DAP transaction stalled (WAIT) - slowing down
-Info : DAP transaction stalled (WAIT) - slowing down
-Info : fpgasoc.cpu.0: hardware has 6 breakpoints, 4 watchpoints
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;➜  ~ openocd -f interface/altera-usb-blaster2.cfg -f target/altera_fpgasoc.cfg&lt;/span&gt;
+&lt;span class="err"&gt;Open On-Chip Debugger 0.10.0-dev-00324-g12ff09f (2016-06-26-19:19)&lt;/span&gt;
+&lt;span class="err"&gt;Licensed under GNU GPL v2&lt;/span&gt;
+&lt;span class="err"&gt;For bug reports, read&lt;/span&gt;
+&lt;span class="c"&gt;http://openocd.org/doc/doxygen/bugs.html&lt;/span&gt;
+&lt;span class="err"&gt;Warn : Adapter driver &amp;#39;usb_blaster&amp;#39; did not declare which transports it allows; assuming legacy JTAG-only&lt;/span&gt;
+&lt;span class="err"&gt;Info : only one transport option; autoselect &amp;#39;jtag&amp;#39;&lt;/span&gt;
+&lt;span class="err"&gt;adapter speed: 1000 kHz&lt;/span&gt;
+&lt;span class="err"&gt;cycv_dbginit&lt;/span&gt;
+&lt;span class="err"&gt;Info : Altera USB-Blaster II (uninitialized) found&lt;/span&gt;
+&lt;span class="err"&gt;Info : Loading firmware...&lt;/span&gt;
+&lt;span class="err"&gt;Info : Waiting for renumerate...&lt;/span&gt;
+&lt;span class="err"&gt;Info : Waiting for renumerate...&lt;/span&gt;
+&lt;span class="err"&gt;Info : Altera USB-Blaster II found (Firm. rev. = 1.36)&lt;/span&gt;
+&lt;span class="err"&gt;Info : This adapter doesn&amp;#39;t support configurable speed&lt;/span&gt;
+&lt;span class="err"&gt;Info : JTAG tap: fpgasoc.dap tap/device found: 0x4ba00477 (mfg: 0x23b (ARM Ltd.), part: 0xba00, ver: 0x4)&lt;/span&gt;
+&lt;span class="err"&gt;Info : JTAG tap: fpgasoc.fpga.tap tap/device found: 0x02d020dd (mfg: 0x06e (Altera), part: 0x2d02, ver: 0x0)&lt;/span&gt;
+&lt;span class="err"&gt;Info : DAP transaction stalled (WAIT) - slowing down&lt;/span&gt;
+&lt;span class="err"&gt;Info : DAP transaction stalled (WAIT) - slowing down&lt;/span&gt;
+&lt;span class="err"&gt;Info : DAP transaction stalled (WAIT) - slowing down&lt;/span&gt;
+&lt;span class="err"&gt;Info : fpgasoc.cpu.0: hardware has 6 breakpoints, 4 watchpoints&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;This gives us information that ARM core was recognized, this is therefore the
@@ -374,20 +374,20 @@ created file in deploy directory is &lt;code&gt;zimage&lt;/code&gt; file. This i
 with all debugging symbols stripped out. It is optimized to be used in
 embedded environment. We need to find the original &lt;code&gt;vmlinux&lt;/code&gt; image before the
 debugging symbols were stripped out:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;➜  tmp git:(jethro) find . -name vmlinux                                       
-./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/
-linux-cyclone5-standard-build/arch/arm/boot/vmlinux
-./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/
-linux-cyclone5-standard-build/arch/arm/boot/compressed/vmlinux
-./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/
-linux-cyclone5-standard-build/vmlinux
-./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/
-linux-cyclone5-standard-build/arch/arm/boot/vmlinux
-./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/
-linux-cyclone5-standard-build/arch/arm/boot/compressed/vmlinux
-./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/
-linux-cyclone5-standard-build/vmlinux
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;➜  tmp git:(jethro) find . -name vmlinux                                       &lt;/span&gt;
+&lt;span class="err"&gt;./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/&lt;/span&gt;
+&lt;span class="err"&gt;linux-cyclone5-standard-build/arch/arm/boot/vmlinux&lt;/span&gt;
+&lt;span class="err"&gt;./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/&lt;/span&gt;
+&lt;span class="err"&gt;linux-cyclone5-standard-build/arch/arm/boot/compressed/vmlinux&lt;/span&gt;
+&lt;span class="err"&gt;./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/&lt;/span&gt;
+&lt;span class="err"&gt;linux-cyclone5-standard-build/vmlinux&lt;/span&gt;
+&lt;span class="err"&gt;./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/&lt;/span&gt;
+&lt;span class="err"&gt;linux-cyclone5-standard-build/arch/arm/boot/vmlinux&lt;/span&gt;
+&lt;span class="err"&gt;./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/&lt;/span&gt;
+&lt;span class="err"&gt;linux-cyclone5-standard-build/arch/arm/boot/compressed/vmlinux&lt;/span&gt;
+&lt;span class="err"&gt;./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/&lt;/span&gt;
+&lt;span class="err"&gt;linux-cyclone5-standard-build/vmlinux&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;There are various images from various different runs (and different versions
@@ -405,7 +405,7 @@ and "Load executable" fields under "Startup tab".&lt;/p&gt;
 &lt;p&gt;And we are good to go. After pressing the "Debug" button, the debugging
 perspective will show up. Now we can access &lt;code&gt;__log_buf&lt;/code&gt; buffer to determine
 what is stopping the kernel boot.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Creation of new project in Eclipse" src="www.j-marjanovic.io/images/debugging_cyclone_soc_openocd/eclipse_debug_final.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;</content><category term="FPGA"></category><category term="Altera"></category><category term="Linux"></category><category term="OpenOCD"></category></entry><entry><title>Hello world</title><link href="www.j-marjanovic.io/hello-world.html" rel="alternate"></link><published>2014-11-02T13:00:00+01:00</published><updated>2014-11-02T13:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-02:www.j-marjanovic.io/hello-world.html</id><summary type="html">&lt;p&gt;Hi and welcome to my blog.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Creation of new project in Eclipse" src="www.j-marjanovic.io/images/debugging_cyclone_soc_openocd/eclipse_debug_final.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;</content><category term="misc"></category><category term="FPGA"></category><category term="Altera"></category><category term="Linux"></category><category term="OpenOCD"></category></entry><entry><title>Hello world</title><link href="www.j-marjanovic.io/hello-world.html" rel="alternate"></link><published>2014-11-02T13:00:00+01:00</published><updated>2014-11-02T13:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-02:www.j-marjanovic.io/hello-world.html</id><summary type="html">&lt;p&gt;Hi and welcome to my blog.&lt;/p&gt;
 &lt;p&gt;This is a "hello world" style post, I am curently testing pelican static blog generator.
 Since I don't know how much time I will have to manage this blog I prefer that everything 
 is static. If I some day stop writing this blog, at …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Hi and welcome to my blog.&lt;/p&gt;
@@ -416,4 +416,4 @@ due to out-of-date web page.&lt;/p&gt;
 &lt;p&gt;This blog will be about one of my biggest passions, electronics and technology in general.
 Since I was a kid I was curious about electronic devices and to this day I always enjoy
 taking thing appart (and sometimes also together, that is what I am being paid for). &lt;/p&gt;
-&lt;p&gt;This is all for now, let's see if it "compiles"...&lt;/p&gt;</content></entry></feed>
+&lt;p&gt;This is all for now, let's see if it "compiles"...&lt;/p&gt;</content><category term="Misc"></category></entry></feed>

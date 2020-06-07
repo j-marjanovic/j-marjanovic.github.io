@@ -141,62 +141,62 @@ provide a graphical way to debug programs. If you want to know more, at the
 bottom of <a href="http://openocd.org/documentation/">OpenOCD Documentation page</a> is
 a link to the presentation on FOSDEM 2006.</p>
 <p>First we need to install all needed tools:</p>
-<div class="highlight"><pre><span></span>sudo apt-get install libtool autotools-dev automake libusb-1.0 libhidapi-dev pkg-config git
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">sudo apt-get install libtool autotools-dev automake libusb-1.0 libhidapi-dev pkg-config git</span>
+</code></pre></div>
 
 
 <p>Then we get the source code from OpenOCD SourceForge repository. I have used the
 latest available commit in master, which was the one with a git tree-ish value
 of <code>12ff09f</code>:</p>
-<div class="highlight"><pre><span></span>git clone git://git.code.sf.net/p/openocd/code openocd-code
+<div class="highlight"><pre><span></span><code><span class="n">git</span><span class="w"> </span><span class="n">clone</span><span class="w"> </span><span class="nl">git</span><span class="p">:</span><span class="o">//</span><span class="n">git</span><span class="p">.</span><span class="n">code</span><span class="p">.</span><span class="n">sf</span><span class="p">.</span><span class="n">net</span><span class="o">/</span><span class="n">p</span><span class="o">/</span><span class="n">openocd</span><span class="o">/</span><span class="n">code</span><span class="w"> </span><span class="n">openocd</span><span class="o">-</span><span class="n">code</span><span class="w"></span>
 
-root@eee2f562f8f2:/openocd-code2# git show HEAD
-commit 12ff09f7f27a707fe42226262f55b8ce8351cbf9
-Author: Esben Haabendal &lt;esben@haabendal.dk&gt;
-Date:   Fri Nov 27 09:13:36 2015 +0100
-cfi: Add support for strangely endianness broken SoC implementations
-</pre></div>
+<span class="n">root</span><span class="nv">@eee2f562f8f2</span><span class="err">:</span><span class="o">/</span><span class="n">openocd</span><span class="o">-</span><span class="n">code2</span><span class="err">#</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="n">show</span><span class="w"> </span><span class="n">HEAD</span><span class="w"></span>
+<span class="k">commit</span><span class="w"> </span><span class="mi">12</span><span class="n">ff09f7f27a707fe42226262f55b8ce8351cbf9</span><span class="w"></span>
+<span class="nl">Author</span><span class="p">:</span><span class="w"> </span><span class="n">Esben</span><span class="w"> </span><span class="n">Haabendal</span><span class="w"> </span><span class="o">&lt;</span><span class="n">esben</span><span class="nv">@haabendal</span><span class="p">.</span><span class="n">dk</span><span class="o">&gt;</span><span class="w"></span>
+<span class="nc">Date</span><span class="err">:</span><span class="w">   </span><span class="n">Fri</span><span class="w"> </span><span class="n">Nov</span><span class="w"> </span><span class="mi">27</span><span class="w"> </span><span class="mi">09</span><span class="err">:</span><span class="mi">13</span><span class="err">:</span><span class="mi">36</span><span class="w"> </span><span class="mi">2015</span><span class="w"> </span><span class="o">+</span><span class="mi">0100</span><span class="w"></span>
+<span class="nl">cfi</span><span class="p">:</span><span class="w"> </span><span class="k">Add</span><span class="w"> </span><span class="n">support</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">strangely</span><span class="w"> </span><span class="n">endianness</span><span class="w"> </span><span class="n">broken</span><span class="w"> </span><span class="n">SoC</span><span class="w"> </span><span class="n">implementations</span><span class="w"></span>
+</code></pre></div>
 
 
 <p>Perform all needed steps to compile the code (have a look in <code>INSTALL</code> for
 detailed instructions):</p>
-<div class="highlight"><pre><span></span>cd openocd-code
-aclocal
-./bootstrap
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">cd openocd-code</span>
+<span class="err">aclocal</span>
+<span class="err">./bootstrap</span>
+</code></pre></div>
 
 
 <p>At the end of configure step make sure that support for Altera USB-Blaster II
 and CMSIS-DAP Debugger are configured. The output should look something like
 this:</p>
-<div class="highlight"><pre><span></span>./configure
+<div class="highlight"><pre><span></span><code><span class="p">.</span><span class="o">/</span><span class="n">configure</span>
 
-...
+<span class="p">...</span>
 
-OpenOCD configuration summary
---------------------------------------------------
-MPSSE mode of FTDI based devices        yes (auto)
-Segger J-Link JTAG Programmer           yes (auto)
-ST-Link JTAG Programmer                 yes (auto)
-TI ICDI JTAG Programmer                 yes (auto)
-Keil ULINK JTAG Programmer              yes (auto)
-Altera USB-Blaster II Compatible        yes (auto)
-Versaloon-Link JTAG Programmer          yes (auto)
-OSBDM (JTAG only) Programmer            yes (auto)
-eStick/opendous JTAG Programmer         yes (auto)
-Andes JTAG Programmer                   yes (auto)
-USBProg JTAG Programmer                 no
-Raisonance RLink JTAG Programmer        no
-Olimex ARM-JTAG-EW Programmer           no
-CMSIS-DAP Compliant Debugger            yes (auto)
-</pre></div>
+<span class="n">OpenOCD</span> <span class="n">configuration</span> <span class="n">summary</span>
+<span class="c1">--------------------------------------------------</span>
+<span class="n">MPSSE</span> <span class="k">mode</span> <span class="k">of</span> <span class="n">FTDI</span> <span class="n">based</span> <span class="n">devices</span>        <span class="n">yes</span> <span class="p">(</span><span class="n">auto</span><span class="p">)</span>
+<span class="n">Segger</span> <span class="n">J</span><span class="o">-</span><span class="n">Link</span> <span class="n">JTAG</span> <span class="n">Programmer</span>           <span class="n">yes</span> <span class="p">(</span><span class="n">auto</span><span class="p">)</span>
+<span class="n">ST</span><span class="o">-</span><span class="n">Link</span> <span class="n">JTAG</span> <span class="n">Programmer</span>                 <span class="n">yes</span> <span class="p">(</span><span class="n">auto</span><span class="p">)</span>
+<span class="n">TI</span> <span class="n">ICDI</span> <span class="n">JTAG</span> <span class="n">Programmer</span>                 <span class="n">yes</span> <span class="p">(</span><span class="n">auto</span><span class="p">)</span>
+<span class="n">Keil</span> <span class="n">ULINK</span> <span class="n">JTAG</span> <span class="n">Programmer</span>              <span class="n">yes</span> <span class="p">(</span><span class="n">auto</span><span class="p">)</span>
+<span class="n">Altera</span> <span class="n">USB</span><span class="o">-</span><span class="n">Blaster</span> <span class="n">II</span> <span class="n">Compatible</span>        <span class="n">yes</span> <span class="p">(</span><span class="n">auto</span><span class="p">)</span>
+<span class="n">Versaloon</span><span class="o">-</span><span class="n">Link</span> <span class="n">JTAG</span> <span class="n">Programmer</span>          <span class="n">yes</span> <span class="p">(</span><span class="n">auto</span><span class="p">)</span>
+<span class="n">OSBDM</span> <span class="p">(</span><span class="n">JTAG</span> <span class="k">only</span><span class="p">)</span> <span class="n">Programmer</span>            <span class="n">yes</span> <span class="p">(</span><span class="n">auto</span><span class="p">)</span>
+<span class="n">eStick</span><span class="o">/</span><span class="n">opendous</span> <span class="n">JTAG</span> <span class="n">Programmer</span>         <span class="n">yes</span> <span class="p">(</span><span class="n">auto</span><span class="p">)</span>
+<span class="n">Andes</span> <span class="n">JTAG</span> <span class="n">Programmer</span>                   <span class="n">yes</span> <span class="p">(</span><span class="n">auto</span><span class="p">)</span>
+<span class="n">USBProg</span> <span class="n">JTAG</span> <span class="n">Programmer</span>                 <span class="k">no</span>
+<span class="n">Raisonance</span> <span class="n">RLink</span> <span class="n">JTAG</span> <span class="n">Programmer</span>        <span class="k">no</span>
+<span class="n">Olimex</span> <span class="n">ARM</span><span class="o">-</span><span class="n">JTAG</span><span class="o">-</span><span class="n">EW</span> <span class="n">Programmer</span>           <span class="k">no</span>
+<span class="n">CMSIS</span><span class="o">-</span><span class="n">DAP</span> <span class="n">Compliant</span> <span class="n">Debugger</span>            <span class="n">yes</span> <span class="p">(</span><span class="n">auto</span><span class="p">)</span>
+</code></pre></div>
 
 
 <p>Then we just need to compile everything and install the openocd binary.</p>
-<div class="highlight"><pre><span></span>make
+<div class="highlight"><pre><span></span><code><span class="n">make</span>
 
-sudo make install
-</pre></div>
+<span class="n">sudo</span> <span class="n">make</span> <span class="n">install</span>
+</code></pre></div>
 
 
 <h2><code>udev</code> rules for USB-Blaster</h2>
@@ -210,57 +210,57 @@ WITH UBUNTU 14.04</a>. The USB-Blaster has multiple personalities (one for FPGA 
 one for ARM JTAG), the udev rule therefore needs to specify both 6010 and
 6810 as the targeted devices.</p>
 <p>Create /etc/udev/rules.d/51-usbblaster.rules with the following content:</p>
-<div class="highlight"><pre><span></span># For Altera USB-Blaster on SoCkit
-SUBSYSTEM==&quot;usb&quot;,\
-ENV{DEVTYPE}==&quot;usb_device&quot;,\
-ATTR{idVendor}==&quot;09fb&quot;,\
-ATTR{idProduct}==&quot;6010|6810&quot;,\
-MODE=&quot;0666&quot;,\
-NAME=&quot;bus/usb/$env{BUSNUM}/$env{DEVNUM}&quot;,\
-RUN+=&quot;/bin/chmod 0666 %c&quot;
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err"># For Altera USB-Blaster on SoCkit</span>
+<span class="err">SUBSYSTEM==&quot;usb&quot;,\</span>
+<span class="err">ENV{DEVTYPE}==&quot;usb_device&quot;,\</span>
+<span class="err">ATTR{idVendor}==&quot;09fb&quot;,\</span>
+<span class="err">ATTR{idProduct}==&quot;6010|6810&quot;,\</span>
+<span class="err">MODE=&quot;0666&quot;,\</span>
+<span class="err">NAME=&quot;bus/usb/$env{BUSNUM}/$env{DEVNUM}&quot;,\</span>
+<span class="err">RUN+=&quot;/bin/chmod 0666 %c&quot;</span>
+</code></pre></div>
 
 
 <p><code>udev</code> rules should be reloaded with the following command to take effect
 immediately:</p>
-<div class="highlight"><pre><span></span>sudo udevadm control --reload
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">sudo udevadm control --reload</span>
+</code></pre></div>
 
 
 <h2>First checks</h2>
 <p>Now we can try running Altera <code>jtagconfig</code> program to check if the permissions
 are OK. When the SoCkit board is attached, the output should look something
 like this:</p>
-<div class="highlight"><pre><span></span>➜  ~ ~/altera/16.0/quartus/bin/jtagconfig                                                                                            
-1) CV SoCKit [1-1.1]                          
-  02D020DD   5CSEBA6(.|ES)/5CSEMA6/..
-  4BA00477   SOCVHPS
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">➜  ~ ~/altera/16.0/quartus/bin/jtagconfig                                                                                            </span>
+<span class="err">1) CV SoCKit [1-1.1]                          </span>
+<span class="err">  02D020DD   5CSEBA6(.|ES)/5CSEMA6/..</span>
+<span class="err">  4BA00477   SOCVHPS</span>
+</code></pre></div>
 
 
 <p>Now we can also try running OpenOCD:</p>
-<div class="highlight"><pre><span></span>➜  ~ openocd -f interface/altera-usb-blaster2.cfg -f target/altera_fpgasoc.cfg
-Open On-Chip Debugger 0.10.0-dev-00324-g12ff09f (2016-06-26-19:19)
-Licensed under GNU GPL v2
-For bug reports, read
-http://openocd.org/doc/doxygen/bugs.html
-Warn : Adapter driver &#39;usb_blaster&#39; did not declare which transports it allows; assuming legacy JTAG-only
-Info : only one transport option; autoselect &#39;jtag&#39;
-adapter speed: 1000 kHz
-cycv_dbginit
-Info : Altera USB-Blaster II (uninitialized) found
-Info : Loading firmware...
-Info : Waiting for renumerate...
-Info : Waiting for renumerate...
-Info : Altera USB-Blaster II found (Firm. rev. = 1.36)
-Info : This adapter doesn&#39;t support configurable speed
-Info : JTAG tap: fpgasoc.dap tap/device found: 0x4ba00477 (mfg: 0x23b (ARM Ltd.), part: 0xba00, ver: 0x4)
-Info : JTAG tap: fpgasoc.fpga.tap tap/device found: 0x02d020dd (mfg: 0x06e (Altera), part: 0x2d02, ver: 0x0)
-Info : DAP transaction stalled (WAIT) - slowing down
-Info : DAP transaction stalled (WAIT) - slowing down
-Info : DAP transaction stalled (WAIT) - slowing down
-Info : fpgasoc.cpu.0: hardware has 6 breakpoints, 4 watchpoints
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">➜  ~ openocd -f interface/altera-usb-blaster2.cfg -f target/altera_fpgasoc.cfg</span>
+<span class="err">Open On-Chip Debugger 0.10.0-dev-00324-g12ff09f (2016-06-26-19:19)</span>
+<span class="err">Licensed under GNU GPL v2</span>
+<span class="err">For bug reports, read</span>
+<span class="c">http://openocd.org/doc/doxygen/bugs.html</span>
+<span class="err">Warn : Adapter driver &#39;usb_blaster&#39; did not declare which transports it allows; assuming legacy JTAG-only</span>
+<span class="err">Info : only one transport option; autoselect &#39;jtag&#39;</span>
+<span class="err">adapter speed: 1000 kHz</span>
+<span class="err">cycv_dbginit</span>
+<span class="err">Info : Altera USB-Blaster II (uninitialized) found</span>
+<span class="err">Info : Loading firmware...</span>
+<span class="err">Info : Waiting for renumerate...</span>
+<span class="err">Info : Waiting for renumerate...</span>
+<span class="err">Info : Altera USB-Blaster II found (Firm. rev. = 1.36)</span>
+<span class="err">Info : This adapter doesn&#39;t support configurable speed</span>
+<span class="err">Info : JTAG tap: fpgasoc.dap tap/device found: 0x4ba00477 (mfg: 0x23b (ARM Ltd.), part: 0xba00, ver: 0x4)</span>
+<span class="err">Info : JTAG tap: fpgasoc.fpga.tap tap/device found: 0x02d020dd (mfg: 0x06e (Altera), part: 0x2d02, ver: 0x0)</span>
+<span class="err">Info : DAP transaction stalled (WAIT) - slowing down</span>
+<span class="err">Info : DAP transaction stalled (WAIT) - slowing down</span>
+<span class="err">Info : DAP transaction stalled (WAIT) - slowing down</span>
+<span class="err">Info : fpgasoc.cpu.0: hardware has 6 breakpoints, 4 watchpoints</span>
+</code></pre></div>
 
 
 <p>This gives us information that ARM core was recognized, this is therefore the
@@ -282,20 +282,20 @@ created file in deploy directory is <code>zimage</code> file. This is a compress
 with all debugging symbols stripped out. It is optimized to be used in
 embedded environment. We need to find the original <code>vmlinux</code> image before the
 debugging symbols were stripped out:</p>
-<div class="highlight"><pre><span></span>➜  tmp git:(jethro) find . -name vmlinux                                       
-./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/
-linux-cyclone5-standard-build/arch/arm/boot/vmlinux
-./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/
-linux-cyclone5-standard-build/arch/arm/boot/compressed/vmlinux
-./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/
-linux-cyclone5-standard-build/vmlinux
-./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/
-linux-cyclone5-standard-build/arch/arm/boot/vmlinux
-./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/
-linux-cyclone5-standard-build/arch/arm/boot/compressed/vmlinux
-./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/
-linux-cyclone5-standard-build/vmlinux
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">➜  tmp git:(jethro) find . -name vmlinux                                       </span>
+<span class="err">./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/</span>
+<span class="err">linux-cyclone5-standard-build/arch/arm/boot/vmlinux</span>
+<span class="err">./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/</span>
+<span class="err">linux-cyclone5-standard-build/arch/arm/boot/compressed/vmlinux</span>
+<span class="err">./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/</span>
+<span class="err">linux-cyclone5-standard-build/vmlinux</span>
+<span class="err">./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/</span>
+<span class="err">linux-cyclone5-standard-build/arch/arm/boot/vmlinux</span>
+<span class="err">./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/</span>
+<span class="err">linux-cyclone5-standard-build/arch/arm/boot/compressed/vmlinux</span>
+<span class="err">./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/</span>
+<span class="err">linux-cyclone5-standard-build/vmlinux</span>
+</code></pre></div>
 
 
 <p>There are various images from various different runs (and different versions

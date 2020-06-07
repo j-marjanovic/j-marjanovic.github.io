@@ -113,18 +113,18 @@
 
 	</ul>
 <p>Category: <a href="../tag/theremin.html">Theremin</a>, </p>
-</div><!-- /.post-info -->          <div class="highlight"><pre><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+</div><!-- /.post-info -->          <div class="highlight"><pre><span></span><code><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Created on Sun Nov  2 14:54:35 2014</span>
 
 <span class="sd">@author: jan</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">scipy.constants</span> <span class="kn">as</span> <span class="nn">const</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">scipy.constants</span> <span class="k">as</span> <span class="nn">const</span>
 
 <span class="c1">#   b, y</span>
 <span class="c1"># A</span>
@@ -161,7 +161,7 @@
 <span class="c1">#   caculated</span>
 
 <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">Na</span><span class="p">,</span><span class="n">Nb</span><span class="p">))</span>
-<span class="n">fixed</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">False</span><span class="p">]</span><span class="o">*</span><span class="n">Nb</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Na</span><span class="p">)]</span>
+<span class="n">fixed</span> <span class="o">=</span> <span class="p">[[</span><span class="kc">False</span><span class="p">]</span><span class="o">*</span><span class="n">Nb</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Na</span><span class="p">)]</span>
 
 <span class="k">def</span> <span class="nf">placeObject</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">l</span><span class="p">,</span><span class="n">vert</span><span class="p">,</span><span class="n">V0</span><span class="p">):</span>
     <span class="k">global</span> <span class="n">V</span>
@@ -172,7 +172,7 @@
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Ny_start</span><span class="p">,</span> <span class="n">Ny_stop</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
         <span class="n">V</span><span class="p">[</span><span class="n">Nx</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">V0</span>
-        <span class="n">fixed</span><span class="p">[</span><span class="n">Nx</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">fixed</span><span class="p">[</span><span class="n">Nx</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">else</span><span class="p">:</span>
     <span class="n">Nx_start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="n">l</span><span class="o">/</span><span class="mf">2.0</span><span class="p">)</span><span class="o">/</span><span class="n">a</span><span class="o">*</span><span class="n">Na</span><span class="p">)</span>
     <span class="n">Nx_stop</span>  <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">x</span><span class="o">+</span><span class="n">l</span><span class="o">/</span><span class="mf">2.0</span><span class="p">)</span><span class="o">/</span><span class="n">a</span><span class="o">*</span><span class="n">Na</span><span class="p">)</span>
@@ -180,12 +180,12 @@
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nx_start</span><span class="p">,</span> <span class="n">Nx_stop</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
         <span class="n">V</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">Ny</span><span class="p">]</span> <span class="o">=</span> <span class="n">V0</span>            
-        <span class="n">fixed</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">Ny</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">fixed</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">Ny</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
 
-<span class="n">placeObject</span><span class="p">(</span><span class="n">x_ant</span><span class="p">,</span>  <span class="n">y_ant</span><span class="p">,</span>  <span class="n">l_ant</span><span class="p">,</span>  <span class="bp">True</span><span class="p">,</span>  <span class="n">V_ant</span><span class="p">)</span>
-<span class="n">placeObject</span><span class="p">(</span><span class="n">x_man</span><span class="p">,</span>  <span class="n">y_man</span><span class="p">,</span>  <span class="n">l_man</span><span class="p">,</span>  <span class="bp">True</span><span class="p">,</span>  <span class="n">V_man</span><span class="p">)</span>
-<span class="n">placeObject</span><span class="p">(</span><span class="n">x_hand</span><span class="p">,</span> <span class="n">y_hand</span><span class="p">,</span> <span class="n">l_hand</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="n">V_hand</span><span class="p">)</span>
+<span class="n">placeObject</span><span class="p">(</span><span class="n">x_ant</span><span class="p">,</span>  <span class="n">y_ant</span><span class="p">,</span>  <span class="n">l_ant</span><span class="p">,</span>  <span class="kc">True</span><span class="p">,</span>  <span class="n">V_ant</span><span class="p">)</span>
+<span class="n">placeObject</span><span class="p">(</span><span class="n">x_man</span><span class="p">,</span>  <span class="n">y_man</span><span class="p">,</span>  <span class="n">l_man</span><span class="p">,</span>  <span class="kc">True</span><span class="p">,</span>  <span class="n">V_man</span><span class="p">)</span>
+<span class="n">placeObject</span><span class="p">(</span><span class="n">x_hand</span><span class="p">,</span> <span class="n">y_hand</span><span class="p">,</span> <span class="n">l_hand</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">V_hand</span><span class="p">)</span>
 
 <span class="c1">###############################################################################</span>
 <span class="c1"># Calculation</span>
@@ -235,7 +235,7 @@
     <span class="n">ei</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Vprev</span> <span class="o">-</span> <span class="n">V</span><span class="p">)</span>
     <span class="n">e</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ei</span><span class="p">)</span>
     <span class="k">if</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ei</span><span class="o">/</span><span class="n">Na</span><span class="o">/</span><span class="n">Nb</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">_err_ppm</span><span class="o">*</span><span class="mf">1e-6</span><span class="p">):</span>
-    <span class="k">print</span> <span class="s2">&quot;Done&quot;</span>
+    <span class="nb">print</span> <span class="s2">&quot;Done&quot;</span>
     <span class="k">break</span>
 
 
@@ -277,14 +277,14 @@
 
 <span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">rstride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cstride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">rainbow</span><span class="p">,</span>
-    <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">antialiased</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">antialiased</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;C = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">C</span><span class="o">*</span><span class="mf">1e9</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; nF&quot;</span><span class="p">,</span>
     <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span>
     <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 
 <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Distance = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">((</span><span class="n">x_hand</span><span class="o">-</span><span class="n">l_hand</span><span class="o">/</span><span class="mf">2.0</span><span class="p">)</span> <span class="o">-</span> <span class="n">x_ant</span> <span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; cm&#39;</span><span class="p">)</span>
-</pre></div>
+</code></pre></div>
         </div><!-- /.entry-content -->
 <a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="janmarjanovic">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script><br/><br/>
 

@@ -151,7 +151,7 @@ it in a simple Python parser. MyHDL has a <em>intbv</em> data type which is very
 similar to vectors in Verilog and VHDL. However, there are some minor things
 which discouraged me from using it in my parser.</p>
 <p>Lets have a look at a modified version of the VerilogBits unit test:</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">unittest</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">unittest</span>
 <span class="kn">import</span> <span class="nn">myhdl</span>
 
 <span class="k">class</span> <span class="nc">Testmyhdlintbv</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
@@ -184,7 +184,7 @@ which discouraged me from using it in my parser.</p>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>This results are 3 failing tests: test_invalid_slice, test_slicing, and

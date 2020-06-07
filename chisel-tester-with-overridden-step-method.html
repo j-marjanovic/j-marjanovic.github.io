@@ -127,18 +127,18 @@ written in Chisel are shorter and thus more readable. </p>
 <p>Having one implicit clock domain is (in most cases) great, and everything is
 then clocked from this clock. This saves a lot of typing compared to the
 Verilog:</p>
-<div class="highlight"><pre><span></span><span class="k">always</span> <span class="p">@(</span><span class="k">posedge</span> <span class="n">clk</span><span class="p">)</span> <span class="k">begin</span><span class="o">:</span> <span class="n">proc_smth</span>
+<div class="highlight"><pre><span></span><code><span class="k">always</span> <span class="p">@(</span><span class="k">posedge</span> <span class="n">clk</span><span class="p">)</span> <span class="k">begin</span><span class="o">:</span> <span class="n">proc_smth</span>
   <span class="k">if</span> <span class="n">reset</span> <span class="k">begin</span>
     <span class="c1">// reset logic</span>
    <span class="k">end</span> <span class="k">else</span> <span class="k">begin</span>
     <span class="c1">// here comes the real useful stuff</span>
   <span class="k">end</span>
 <span class="k">end</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>and VHDL:</p>
-<div class="highlight"><pre><span></span><span class="nc">proc_smth</span><span class="o">:</span> <span class="k">process</span> <span class="p">(</span><span class="n">clk</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nc">proc_smth</span><span class="o">:</span> <span class="k">process</span> <span class="p">(</span><span class="n">clk</span><span class="p">)</span>
 <span class="k">begin</span>
   <span class="k">if</span> <span class="n">rising_edge</span><span class="p">(</span><span class="n">clk</span><span class="p">)</span> <span class="k">then</span>
     <span class="k">if</span> <span class="n">reset</span> <span class="o">=</span> <span class="sc">&#39;1&#39;</span> <span class="k">then</span>
@@ -148,7 +148,7 @@ Verilog:</p>
     <span class="k">end</span> <span class="k">if</span><span class="p">;</span>
   <span class="k">end</span> <span class="k">if</span><span class="p">;</span>
 <span class="k">end</span> <span class="k">process</span><span class="p">;</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>I would argue that half of the lines in a typical VHDL modules are not needed,
@@ -198,7 +198,7 @@ will consist of three logical units: DUT, Driver BFM and Monitor BFM. Both BFMs
 are updated every clock cycles, so that driver BFM can drive the input port of
 the DUT and monitor BFM can in parallel monitor the output port of the DUT.</p>
 <p>The core of this examples are the following couple of lines (from <a href="https://github.com/j-marjanovic/chisel-stuff/blob/master/example-1-override-step/src/test/scala/overrideStepExample/OverrideStepExampleTester.scala#L126">OverrideStepExampleTester.scala:126</a>):</p>
-<div class="highlight"><pre><span></span>  <span class="c1">//==========================================================================</span>
+<div class="highlight"><pre><span></span><code>  <span class="c1">//==========================================================================</span>
   <span class="c1">// step</span>
 
   <span class="k">val</span> <span class="n">rm</span> <span class="k">=</span> <span class="n">runtimeMirror</span><span class="o">(</span><span class="n">getClass</span><span class="o">.</span><span class="n">getClassLoader</span><span class="o">)</span>
@@ -218,7 +218,7 @@ the DUT and monitor BFM can in parallel monitor the output port of the DUT.</p>
       <span class="n">stepSingle</span>
     <span class="o">}</span>
   <span class="o">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>Through Scala's <a href="https://www.michaelpollmeier.com/fun-with-scalas-new-reflection-api-2-10">Reflection API</a>
@@ -229,32 +229,32 @@ to the ports as they desire, independent from each other.</p>
 them all the methods from <code>PeekPokeTester</code> which are needed during the
 operation of the BFMs.</p>
 <p>Running <code>sbt test</code> in <code>example-1-override-step</code>, we obtain the following result:</p>
-<div class="highlight"><pre><span></span>[info] [0.002] SEED 1539634207505
-[info] [0.023]     0 Test starting...
-[info] [0.271]     5 Driver: sent 0
-[info] [0.274]     6 Driver: sent 1
-[info] [0.278]     7 Monitor: received 1
-[info] [0.278]     7 Driver: sent 2
-[info] [0.289]     8 Monitor: received 2
-[info] [0.290]     8 Driver: sent 10
-[info] [0.310]     9 Monitor: received 3
-[info] [0.310]     9 Driver: sent 99
-[info] [0.314]    10 Monitor: received 11
-[info] [0.315]    10 Driver: sent 100
-[info] [0.324]    11 Monitor: received 100
-[info] [0.326]    11 Driver: sent 65534
-[info] [0.340]    12 Monitor: received 101
-[info] [0.340]    12 Driver: sent 65535
-[info] [0.344]    13 Monitor: received 65535
-[info] [0.348]    14 Monitor: received 0
-[info] [0.401]    23 Test finished.
-Enabling waves..
-Exit Code: 0
-[info] [0.409] RAN 23 CYCLES PASSED
-[info] OverrideStepExampleTest:
-[info] pipeline tester
-[info] - should compare expected and obtained response
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">0.002</span><span class="o">]</span><span class="w"> </span><span class="n">SEED</span><span class="w"> </span><span class="mi">1539634207505</span><span class="w"></span>
+<span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">0.023</span><span class="o">]</span><span class="w">     </span><span class="mi">0</span><span class="w"> </span><span class="n">Test</span><span class="w"> </span><span class="n">starting</span><span class="p">...</span><span class="w"></span>
+<span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">0.271</span><span class="o">]</span><span class="w">     </span><span class="mi">5</span><span class="w"> </span><span class="nl">Driver</span><span class="p">:</span><span class="w"> </span><span class="n">sent</span><span class="w"> </span><span class="mi">0</span><span class="w"></span>
+<span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">0.274</span><span class="o">]</span><span class="w">     </span><span class="mi">6</span><span class="w"> </span><span class="nl">Driver</span><span class="p">:</span><span class="w"> </span><span class="n">sent</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
+<span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">0.278</span><span class="o">]</span><span class="w">     </span><span class="mi">7</span><span class="w"> </span><span class="nl">Monitor</span><span class="p">:</span><span class="w"> </span><span class="n">received</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
+<span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">0.278</span><span class="o">]</span><span class="w">     </span><span class="mi">7</span><span class="w"> </span><span class="nl">Driver</span><span class="p">:</span><span class="w"> </span><span class="n">sent</span><span class="w"> </span><span class="mi">2</span><span class="w"></span>
+<span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">0.289</span><span class="o">]</span><span class="w">     </span><span class="mi">8</span><span class="w"> </span><span class="nl">Monitor</span><span class="p">:</span><span class="w"> </span><span class="n">received</span><span class="w"> </span><span class="mi">2</span><span class="w"></span>
+<span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">0.290</span><span class="o">]</span><span class="w">     </span><span class="mi">8</span><span class="w"> </span><span class="nl">Driver</span><span class="p">:</span><span class="w"> </span><span class="n">sent</span><span class="w"> </span><span class="mi">10</span><span class="w"></span>
+<span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">0.310</span><span class="o">]</span><span class="w">     </span><span class="mi">9</span><span class="w"> </span><span class="nl">Monitor</span><span class="p">:</span><span class="w"> </span><span class="n">received</span><span class="w"> </span><span class="mi">3</span><span class="w"></span>
+<span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">0.310</span><span class="o">]</span><span class="w">     </span><span class="mi">9</span><span class="w"> </span><span class="nl">Driver</span><span class="p">:</span><span class="w"> </span><span class="n">sent</span><span class="w"> </span><span class="mi">99</span><span class="w"></span>
+<span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">0.314</span><span class="o">]</span><span class="w">    </span><span class="mi">10</span><span class="w"> </span><span class="nl">Monitor</span><span class="p">:</span><span class="w"> </span><span class="n">received</span><span class="w"> </span><span class="mi">11</span><span class="w"></span>
+<span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">0.315</span><span class="o">]</span><span class="w">    </span><span class="mi">10</span><span class="w"> </span><span class="nl">Driver</span><span class="p">:</span><span class="w"> </span><span class="n">sent</span><span class="w"> </span><span class="mi">100</span><span class="w"></span>
+<span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">0.324</span><span class="o">]</span><span class="w">    </span><span class="mi">11</span><span class="w"> </span><span class="nl">Monitor</span><span class="p">:</span><span class="w"> </span><span class="n">received</span><span class="w"> </span><span class="mi">100</span><span class="w"></span>
+<span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">0.326</span><span class="o">]</span><span class="w">    </span><span class="mi">11</span><span class="w"> </span><span class="nl">Driver</span><span class="p">:</span><span class="w"> </span><span class="n">sent</span><span class="w"> </span><span class="mi">65534</span><span class="w"></span>
+<span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">0.340</span><span class="o">]</span><span class="w">    </span><span class="mi">12</span><span class="w"> </span><span class="nl">Monitor</span><span class="p">:</span><span class="w"> </span><span class="n">received</span><span class="w"> </span><span class="mi">101</span><span class="w"></span>
+<span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">0.340</span><span class="o">]</span><span class="w">    </span><span class="mi">12</span><span class="w"> </span><span class="nl">Driver</span><span class="p">:</span><span class="w"> </span><span class="n">sent</span><span class="w"> </span><span class="mi">65535</span><span class="w"></span>
+<span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">0.344</span><span class="o">]</span><span class="w">    </span><span class="mi">13</span><span class="w"> </span><span class="nl">Monitor</span><span class="p">:</span><span class="w"> </span><span class="n">received</span><span class="w"> </span><span class="mi">65535</span><span class="w"></span>
+<span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">0.348</span><span class="o">]</span><span class="w">    </span><span class="mi">14</span><span class="w"> </span><span class="nl">Monitor</span><span class="p">:</span><span class="w"> </span><span class="n">received</span><span class="w"> </span><span class="mi">0</span><span class="w"></span>
+<span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">0.401</span><span class="o">]</span><span class="w">    </span><span class="mi">23</span><span class="w"> </span><span class="n">Test</span><span class="w"> </span><span class="n">finished</span><span class="p">.</span><span class="w"></span>
+<span class="n">Enabling</span><span class="w"> </span><span class="n">waves</span><span class="p">..</span><span class="w"></span>
+<span class="k">Exit</span><span class="w"> </span><span class="nl">Code</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"></span>
+<span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">0.409</span><span class="o">]</span><span class="w"> </span><span class="n">RAN</span><span class="w"> </span><span class="mi">23</span><span class="w"> </span><span class="n">CYCLES</span><span class="w"> </span><span class="n">PASSED</span><span class="w"></span>
+<span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="nl">OverrideStepExampleTest</span><span class="p">:</span><span class="w"></span>
+<span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="n">pipeline</span><span class="w"> </span><span class="n">tester</span><span class="w"></span>
+<span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">should</span><span class="w"> </span><span class="n">compare</span><span class="w"> </span><span class="n">expected</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">obtained</span><span class="w"> </span><span class="n">response</span><span class="w"></span>
+</code></pre></div>
 
 
 <p>And this is the display of the waveforms from GTKWave:</p>

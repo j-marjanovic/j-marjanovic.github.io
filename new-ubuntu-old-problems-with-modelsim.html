@@ -130,10 +130,10 @@ Ubuntu is officially not supported.</strong></p>
 Edition Software from Quartus 19.1 package.</p>
 <p>When running <code>vsim</code> from <code>intelFPGA/19.1/modelsim_ase/bin</code> I get the
 following error message:</p>
-<div class="highlight"><pre><span></span>$ ./vsim
+<div class="highlight"><pre><span></span><code>$ ./vsim
 Error: cannot find <span class="s2">&quot;./../linux_rh60/vsim&quot;</span>
 $
-</pre></div>
+</code></pre></div>
 
 
 <p>From the path it is clear that ModelSim thinks it is running on RHEL 6. As
@@ -142,11 +142,11 @@ software on Arch Linux Wiki</a>,
 one needs to modify <code>vco</code> file and downgrade <code>freetype</code> library.</p>
 <p>Once this is settles (by the way, this used to be enough to make ModelSim work on
 Ubuntu 18.10) we get the following error:</p>
-<div class="highlight"><pre><span></span>$ ./vsim
+<div class="highlight"><pre><span></span><code>$ ./vsim
 Reading pref.tcl
 ./../linuxaloem/vish: symbol lookup error: /usr/lib/i386-linux-gnu/libfontconfig.so.1: undefined symbol: FT_Done_MM_Var
 ** Fatal: Read failure in vlm process <span class="o">(</span><span class="m">0</span>,0<span class="o">)</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>This message is new and it required me to do some investigation to get it fixed.</p>
@@ -156,50 +156,50 @@ called <code>FT_Done_MM_Var</code> and is unable to find it.</p>
 <p>To investigate further I cloned <code>fontconfig</code> source code from:
 https://gitlab.freedesktop.org/fontconfig/fontconfig.git</p>
 <p>A quick <code>grep</code> finds the following instances of the symbol in question:</p>
-<div class="highlight"><pre><span></span>$ grep -rn FT_Done_MM_Var .
+<div class="highlight"><pre><span></span><code>$ grep -rn FT_Done_MM_Var .
 ./README:119:      Use FT_Done_MM_Var <span class="k">if</span> available
 ./src/fcfreetype.c:2261:    FT_Done_MM_Var <span class="o">(</span>ftLibrary, mm_var<span class="o">)</span><span class="p">;</span>
 ./configure.ac:321:AC_CHECK_FUNCS<span class="o">(</span>FT_Get_BDF_Property FT_Get_PS_Font_Info FT_Has_PS_Glyph_Names FT_Get_X11_Font_Format FT_Done_MM_Var<span class="o">)</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>One <code>git blame</code> after we find the following commit which introduced this function:</p>
-<div class="highlight"><pre><span></span>commit 94683a1255c065a7f8e7fadee9de605f3eaf9ac7
-Author: Behdad Esfahbod &lt;behdad@behdad.org&gt;
-Date:   Mon Jan 8 09:55:41 2018 +0000
+<div class="highlight"><pre><span></span><code><span class="k">commit</span><span class="w"> </span><span class="mi">94683</span><span class="n">a1255c065a7f8e7fadee9de605f3eaf9ac7</span><span class="w"></span>
+<span class="nl">Author</span><span class="p">:</span><span class="w"> </span><span class="n">Behdad</span><span class="w"> </span><span class="n">Esfahbod</span><span class="w"> </span><span class="o">&lt;</span><span class="n">behdad</span><span class="nv">@behdad</span><span class="p">.</span><span class="n">org</span><span class="o">&gt;</span><span class="w"></span>
+<span class="nc">Date</span><span class="err">:</span><span class="w">   </span><span class="n">Mon</span><span class="w"> </span><span class="n">Jan</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="mi">09</span><span class="err">:</span><span class="mi">55</span><span class="err">:</span><span class="mi">41</span><span class="w"> </span><span class="mi">2018</span><span class="w"> </span><span class="o">+</span><span class="mi">0000</span><span class="w"></span>
 
-    Use FT_Done_MM_Var if available
-</pre></div>
+<span class="w">    </span><span class="k">Use</span><span class="w"> </span><span class="n">FT_Done_MM_Var</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">available</span><span class="w"></span>
+</code></pre></div>
 
 
 <p>And then we can find out that release <strong>2.12.92</strong> is the last one which does
 not contain this change.</p>
 <p>I checked out the code from release <strong>2.12.92</strong>:</p>
-<div class="highlight"><pre><span></span>git checkout -b 2.12.92 2.12.92
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">git checkout -b 2.12.92 2.12.92</span>
+</code></pre></div>
 
 
 <p>Installed the libraries needed:</p>
-<div class="highlight"><pre><span></span>sudo apt install libxml2-dev:i386 uuid-dev:i386
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">sudo apt install libxml2-dev:i386 uuid-dev:i386</span>
+</code></pre></div>
 
 
 <p>And used the following commands to compile and install an older version
 of <code>fontconfig</code> library:</p>
-<div class="highlight"><pre><span></span>aclocal -I m4
-autoconf
-libtoolize
-./autogen.sh
-CFLAGS=-m32 LDFLAGS=-L/home/jan/local/packages/freetype-2.4.7-32bit/lib ./configure --prefix=/home/jan/local/packages/fontconfig-2.12.92-32bit --enable-libxml2
-make
-make install
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">aclocal -I m4</span>
+<span class="err">autoconf</span>
+<span class="err">libtoolize</span>
+<span class="err">./autogen.sh</span>
+<span class="err">CFLAGS=-m32 LDFLAGS=-L/home/jan/local/packages/freetype-2.4.7-32bit/lib ./configure --prefix=/home/jan/local/packages/fontconfig-2.12.92-32bit --enable-libxml2</span>
+<span class="err">make</span>
+<span class="err">make install</span>
+</code></pre></div>
 
 
 <h1>Changes to vco</h1>
 <p>Finally, I needed to change <code>vco</code> in <code>intelFPGA/19.1/modelsim_ase/bin</code> folder
 to load the freshly-recompiled libraries:</p>
-<div class="highlight"><pre><span></span><span class="err">$</span> <span class="s s-Atom">diff</span> <span class="s s-Atom">vco</span> <span class="s s-Atom">vco</span><span class="p">.</span><span class="s s-Atom">orig</span>
+<div class="highlight"><pre><span></span><code><span class="err">$</span> <span class="s s-Atom">diff</span> <span class="s s-Atom">vco</span> <span class="s s-Atom">vco</span><span class="p">.</span><span class="s s-Atom">orig</span>
 <span class="mi">11</span><span class="p">,</span><span class="mi">13</span><span class="s s-Atom">d10</span>
 <span class="o">&lt;</span> <span class="s s-Atom">#</span> <span class="s s-Atom">added</span> <span class="s s-Atom">for</span> <span class="nv">Ubuntu</span> <span class="mf">19.04</span><span class="s s-Atom">:</span> <span class="s s-Atom">recompiled</span> <span class="s s-Atom">libraries</span>
 <span class="o">&lt;</span> <span class="s s-Atom">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="s s-Atom">=/home</span><span class="o">/</span><span class="s s-Atom">jan</span><span class="o">/</span><span class="s s-Atom">local</span><span class="o">/</span><span class="s s-Atom">packages</span><span class="o">/</span><span class="s s-Atom">freetype</span><span class="o">-</span><span class="mf">2.4.7</span><span class="o">-</span><span class="mi">32</span><span class="s s-Atom">bit</span><span class="o">/</span><span class="nn">lib</span><span class="p">:</span><span class="o">/</span><span class="s s-Atom">home</span><span class="o">/</span><span class="s s-Atom">jan</span><span class="o">/</span><span class="s s-Atom">local</span><span class="o">/</span><span class="s s-Atom">packages</span><span class="o">/</span><span class="s s-Atom">fontconfig</span><span class="o">-</span><span class="mf">2.12.92</span><span class="o">-</span><span class="mi">32</span><span class="s s-Atom">bit</span><span class="o">/</span><span class="nn">lib</span><span class="p">:</span><span class="err">$</span><span class="nv">LD_LIBRARY_PATH</span>
@@ -212,7 +212,7 @@ to load the freshly-recompiled libraries:</p>
 <span class="mi">213</span><span class="p">,</span><span class="mi">214</span><span class="s s-Atom">d208</span>
 <span class="o">&lt;</span>           <span class="s s-Atom">#</span> <span class="s s-Atom">added</span> <span class="s s-Atom">for</span> <span class="nv">Ubuntu</span> <span class="mf">19.04</span><span class="s s-Atom">:</span> <span class="s s-Atom">if</span> <span class="s s-Atom">kernel</span> <span class="s s-Atom">version</span> <span class="mf">5.</span><span class="s s-Atom">x</span> <span class="s s-Atom">then</span> <span class="s s-Atom">use</span> <span class="s s-Atom">linuxaloem</span>
 <span class="o">&lt;</span>           <span class="mf">5.</span><span class="p">[</span><span class="mi">0</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="s s-Atom">*</span><span class="p">)</span>         <span class="s s-Atom">vco=</span><span class="s2">&quot;linuxaloem&quot;</span> <span class="p">;;</span>
-</pre></div>
+</code></pre></div>
 
 
 <h1>Conclusion</h1>
