@@ -2,8 +2,6 @@
 
 [j-marjanovic.io](https://www.j-marjanovic.io)
 
-
-
 ## Needed software
 
 Install with pip:
@@ -12,6 +10,9 @@ Install with pip:
   * markdown
   * ghp-import
 
-Versions of packages which were OK:
+See `requirements-dev.txt`
 
-pelican-3.7.1, markdown-2.6.11, ghp-import-0.5.5
+## Pelican Plugins
+
+Plugins repository (https://github.com/getpelican/pelican-plugins) should be
+cloned alongside with this one (see `PLUGIN_PATHS` in `pelicanconf.py`).
