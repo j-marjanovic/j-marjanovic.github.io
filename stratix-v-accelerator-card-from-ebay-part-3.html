@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Stratix V accelerator card from eBay, part 3</title>
+        <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="shortcut icon" href="./theme/images/favicon.ico"/>
+        <link rel="stylesheet" href="./theme/css/main.css" type="text/css" />
+        <link href="www.j-marjanovic.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="j-marjanovic.io Atom Feed" />
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie.css"/>
+                <script src="./js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie6.css"/><![endif]-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="theme/jquery.cookiesdirective.js"></script>
+
+</head>
+
+<body id="index" class="home">
+<script type="text/javascript">
+	// Using $(document).ready never hurts
+	$(document).ready(function(){
+
+		// Cookie setting script wrapper
+		var cookieScripts = function () {
+			// Internal javascript called
+			console.log("Running");
+		
+			// Loading external javascript file
+			$.cookiesDirective.loadScript({
+				uri:'external.js',
+				appendTo: 'eantics'
+			});
+		}
+	
+		/* Call cookiesDirective, overriding any default params
+		
+			*** These are the defaults ***
+				explicitConsent: true,
+				position: 'top',
+				duration: 10,
+				limit: 0,
+				message: null,				
+				cookieScripts: null,
+				privacyPolicyUri: 'privacy.html',
+				scriptWrapper: function(){},	
+				fontFamily: 'helvetica',
+				fontColor: '#FFFFFF',
+				fontSize: '13px',
+				backgroundColor: '#000000',
+				backgroundOpacity: '80',
+				linkColor: '#CA0000'
+				
+		*/
+		
+		$.cookiesDirective({
+			privacyPolicyUri: 'myprivacypolicy.html',
+			explicitConsent: false,
+			position : 'bottom',
+			scriptWrapper: cookieScripts, 
+			cookieScripts: 'Google Analytics', 
+			backgroundColor: '#52B54A',
+			linkColor: '#ffffff'
+		});
+	});
+</script>
+
+	
+  <!-- <header id="banner" class="body"> -->
+  <!--               <h1><a href="./"><img src="http://www.launchyard.com/images/logo.png" /></a></h1> -->
+  <!--       </header> --> 
+
+  <div class="LaunchyardDetail" style="align:right;">
+    <!-- <p> -->
+    <!-- <img src="./theme/images/blue-pin.png" width="100" height="100" alt="Graph icon"> -->
+    <!-- </p> -->
+    <p><a id="sitesubtitle" href="./">j-marjanovic.io</a></p>
+
+	<br>
+    <p style="float: right; margin-right: 50px;"><a id="aboutlink" href="./pages/about.html">About</a></p>
+
+    <br>
+	<p style="float: right; margin-right: 50px;"><img src="./theme/images/icons/rss.png"> <a id="aboutlink" href="./feeds/jan-marjanovic.atom.xml">Atom feed</a></p>
+    <br>
+
+  </div>
+
+<section id="content" >
+    <div class="body">
+      <article>
+        <header>
+          <h1 class="entry-title">
+            <a href="./stratix-v-accelerator-card-from-ebay-part-3.html" rel="bookmark"
+               title="Permalink to Stratix V accelerator card from eBay, part 3">Stratix V accelerator card from eBay, part 3</a></h1>
+
+        </header>
+
+        <div class="entry-content">
+<div class="post-info">
+	<ul>
+        <li class="vcard author">
+                 by&nbsp;<a class="url fn" href="./author/jan-marjanovic.html">Jan Marjanovic</a>
+        </li>
+        <li class="published" title="2020-09-06T16:00:00+02:00">
+          on&nbsp;Sun 06 September 2020
+        </li>
+
+	</ul>
+
+</div><!-- /.post-info -->          <p>As mentioned in my <a href="https://j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html">previous blog post</a>, the next step would be
+to get the JTAG running in Quaruts. In this blog post I describe how I managed
+to develop a library as an interface between the FPGA board and Quartus, and
+demonstrate the developed interface to download the bitstream and to debug
+the Nios II soft-core processor.</p>
+<h1>Introduction</h1>
+<h2>HW overview</h2>
+<p>The Stratix V board contains a 4-pin USB port (with a non-standard connector),
+to which an <a href="https://www.ftdichip.com/Products/ICs/FT232H.htm">FT232H</a> is
+attached, containing <em>Multi-Protocol Synchronous Serial Engine (MPSSE)</em> which
+can be used to implement the JTAG protocol.</p>
+<p>I am a little bit surprised that the board includes the full JTAG programmer and
+not only the 10-pin JTAG header, which can be then used by the developers on
+their development setups. On the other hand, the cost of an FT232H is 2.70 EUR
+on Mouser for a reel, which is negligible compared to the cost of the board. I
+can also understand that having a JTAG debugger available on each board is
+valuable when monitoring the operating conditions (e.g. transceiver link quality
+with the
+<a href="https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/an/an605.pdf">EyeQ</a>)
+and to debug and investigate the synchronization issues between the servers in
+the deployment.</p>
+<p>I was not able to find more information about this particular USB/JTAG
+connection on the Open Compute Project website.</p>
+<h2>Quartus software suite</h2>
+<p>Intel® Quartus® provides several programs that are extremely useful for
+development for Intel/Altera FPGAs.</p>
+<ul>
+<li><strong>Quartus Programmer</strong> which, as the name suggests, allows
+  programming/configuring the FPGA devices over the JTAG chain, and it can also
+  program the non-volatile memories attached to the FPGAs.</li>
+<li><strong>System Console</strong> provides "visibility into your system" - one can use JTAG
+  to Avalon MM bridge to read and write the registers in the IPs, and
+  <em>Transceiver Toolkit</em> and <em>External Memory Interface Toolkits</em> both greatly
+  simplify the bringup and debug of transceivers and external memories</li>
+<li><strong>SignalTap</strong> is an embedded logic analyzer, useful for debugging the logic
+  in hardware, with the input from real devices</li>
+<li><strong>Nios II Debugger</strong> provides access to soft-core Nios II processor, and
+  it can be used to download the programs, to debug them through GDB, and to
+  obtain the output from the program over the <em>JTAG UART</em> IP</li>
+</ul>
+<p>To my knowledge OpenOCD does not provide all these features and Quartus also
+does not seem to be able to interface to OpenOCD.</p>
+<h2>OpenOCD</h2>
+<p>Nonetheless, OpenOCD can be used to scan the JTAG chain, and confirm
+that the FTDI really is connected to the JTAG port of the FPGA:</p>
+<div class="highlight"><pre><span></span><code>$ openocd -f interface/ftdi/um232h.cfg -c <span class="s2">&quot;adapter_khz 100; transport select jtag; jtag newtap auto0 tap -irlen 10 -expected-id 0x029070dd&quot;</span><span class="p">;</span>
+Open On-Chip Debugger <span class="m">0</span>.10.0
+Licensed under GNU GPL v2
+For bug reports, <span class="nb">read</span>
+    http://openocd.org/doc/doxygen/bugs.html
+adapter speed: <span class="m">100</span> kHz
+Info : clock speed <span class="m">100</span> kHz
+Info : JTAG tap: auto0.tap tap/device found: 0x029070dd <span class="o">(</span>mfg: 0x06e <span class="o">(</span>Altera<span class="o">)</span>, part: 0x2907, ver: 0x0<span class="o">)</span>
+Warn : gdb services need one or more targets defined
+</code></pre></div>
+
+
+<p>This gives hope that at least on the HW side, integrating the board with Quartus
+will be easy.</p>
+<h1>JTAG library</h1>
+<p>Some information on how to add a custom cable can be found on <a href="https://forums.intel.com/s/question/0D50P00003yyL2bSAE/bemicro-and-programming-under-linux">Intel
+forums</a>.
+At the startup, Quartus scans the <code>linux64</code> folder (if running on 64-bit Linux)
+and searches for the shared object files which start with the <code>libjtag_hw.</code> The
+shared object is then loaded, and a function called <code>get_supported_hardware</code> is
+called. This function returns a structure, containing function pointers for
+various operations that the programmer and other utilities can perform.</p>
+<p>To understand this (undocumented) interface a little bit better, I first
+implemented <a href="https://github.com/j-marjanovic/jtag-quartus-ft232h/blob/master/src/jtag_hw_dummy.cpp">a library with a dummy JTAG TAP
+controller</a>.
+This library can be copied or linked in the <code>linux64</code> folder, and then used in
+Quartus Programmer. The implementation of the JTAG pretends that it is a Stratix
+V device (by having the same <code>IDCODE</code>) and then discards all the bits which are
+downloaded to the device. If somebody has too much time, one can easily extend
+this to create a very complicated <code>.sof</code> to <code>.rbf</code> converter. Finally, the
+dummy device fakes the status register to communicate that the <code>CONF_DONE</code> is
+high at the end of the programming. For debugging purposes, the library prints
+extensive debug information over a UNIX socket.</p>
+<p><img alt="A dummy JTAG device being programmed in Quartus Programmer" src="./images/2020_fpga_card_part_3/jtag_dummy.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"></p>
+<p>Once this part in place, it is easy to imagine that combining the library
+of the dummy JTAG and the HW-related part of the OpenOCD is not so complicated.
+Since the OpenOCD is licensed under GPL v2, I have decided to re-use the code
+for MPSSE and FT232H and to also license my library under the same license.</p>
+<h2>Downloading the bitstream</h2>
+<p>Here is the documentation of the first victory in this convoluted JTAG bring-up
+process, the bitstream is successfully downloaded into the FPGA, and an LED on
+the board is blinking, indicating a total success.</p>
+<p><img alt="Stratix V being programmed over the on-board FT232H" src="./images/2020_fpga_card_part_3/jtag_ft232h.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"></p>
+<h2>JTAG to Avalon</h2>
+<p>To check if all functions of the JTAG cable are working, I have prepared a small
+IP (discussed below) and connected it to <a href="https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/ug/ug_embedded_ip.pdf">JTAG to Avalon Master
+Bridge</a>.
+This IP provides access to the Avalon interconnect over <strong>System Console</strong>.</p>
+<p>Shown here is a read of 12 words from a certain address in the Avalon MM memory
+space:</p>
+<div class="highlight"><pre><span></span><code><span class="o">%</span> <span class="k">set</span> jtag_master <span class="k">[</span><span class="nb">lindex</span> <span class="k">[</span><span class="nv">get_service_paths</span> master<span class="k">]</span> <span class="mi">0</span><span class="k">]</span>
+<span class="o">/</span><span class="nv">devices</span><span class="o">/</span><span class="mi">5</span>SGSMD5H<span class="k">(</span><span class="nv">1</span><span class="o">|</span><span class="mi">2</span><span class="o">|</span><span class="mi">3</span><span class="k">)</span><span class="o">|</span><span class="mi">5</span>SGSMD5K1<span class="o">|</span>..<span class="err">@</span><span class="mi">1</span><span class="err">#</span>bus-instance<span class="err">#</span>OTMA FT232H<span class="o">/</span><span class="k">(</span><span class="nv">link</span><span class="k">)</span><span class="o">/</span>JTAG<span class="o">/</span><span class="k">(</span><span class="nv">110</span><span class="o">:</span><span class="mi">132</span> v1 <span class="err">#</span><span class="mi">0</span><span class="k">)</span><span class="o">/</span>phy_0<span class="o">/</span>master
+<span class="o">%</span> <span class="nv">open_service</span> master <span class="nv">$jtag_master</span>
+
+<span class="o">%</span> <span class="nv">master_read_32</span> <span class="nv">$jtag_master</span> <span class="mh">0x1000</span> <span class="mi">12</span>
+<span class="nv">0xc10cc272</span> <span class="mh">0x00010000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x266ac4b1</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span>
+<span class="o">%</span> <span class="nv">master_read_32</span> <span class="nv">$jtag_master</span> <span class="mh">0x1000</span> <span class="mi">12</span>
+<span class="nv">0xc10cc272</span> <span class="mh">0x00010000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x266ac4ac</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span>
+<span class="o">%</span> <span class="nv">master_read_32</span> <span class="nv">$jtag_master</span> <span class="mh">0x1000</span> <span class="mi">12</span>
+<span class="nv">0xc10cc272</span> <span class="mh">0x00010000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x266ac4a8</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span>
+<span class="o">%</span> <span class="nv">master_read_32</span> <span class="nv">$jtag_master</span> <span class="mh">0x1000</span> <span class="mi">12</span>
+<span class="nv">0xc10cc272</span> <span class="mh">0x00010000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x266ac4a3</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span>
+</code></pre></div>
+
+
+<p>I will explain later what exactly are we seeing here, for now let's just accept
+that <em>JTAG to Avalon bridge</em> works, and it reads a magic number register
+(<code>0xc10cc272</code>), a version register (<code>0x00010000</code>), and the <code>meas_clk[5]</code> register
+reports a value between 644531368 Hz and 644531377 Hz.</p>
+<h2>Nios II</h2>
+<p>For a final test, I wanted to see if I can download a program into the Nios II
+instruction memory, run the program and observe the output over the JTAG UART
+interface.</p>
+<p>Also here there were no obstacles with the home-made JTAG driver, and
+I could successfully perform all tasks necessary to download and debug the
+Nios II core, as also presented on the screenshot below.</p>
+<p><img alt="A program being debugged over Nios II debugger over the on-board FT232H" src="./images/2020_fpga_card_part_3/nios_debugger.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"></p>
+<h1>Clock</h1>
+<p>The board contains an <a href="https://www.idt.com/us/en/document/dst/idt8n4q001-datasheet">IDT8N4Q001 programmable clock
+oscillator</a>, which
+is most likely used to generate the clocks needed for 40 Gigabit Ethernet (e.g.
+156.25 MHz) and maybe for other communication protocols on the QSFP slots. Since
+none of the currently available resources
+(<a href="https://github.com/wirebond/catapult_v2_pikes_peak">wirebond/catapult_v2_pikes_peak</a>
+and <a href="http://virtlab.occamlab.com/home/zapisnik/microsoft-catapult-v2">Microsoft's Catapult v2 (Pikes
+Peak)</a>)
+mentions where the IDT is connected to FPGA, I had to find out this myself.</p>
+<p>The oscillator on my board has a code <code>2059</code>, which according to <a href="https://www.idt.com/us/en/document/mau/femtoclock-ng-ceramic-package-xo-and-vcxo-ordering-information">the document
+from
+IDT</a>
+produces 644.53125 MHz for all values of <code>FSEL</code> in the default configuration.
+This matches the previously measured frequency at the input <code>CLK_R_REFCLK5</code>
+(pins <code>T7</code> and <code>T6</code>).</p>
+<h2>Clock counter</h2>
+<p>I have written a small IP to measure the frequency of several clocks from a
+known clock frequency. As a known frequency I have used the 125 MHz on-board
+oscillator.</p>
+<p><img alt="Clock-counter IP block diagram" src="./images/2020_fpga_card_part_3/clock_counter.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"></p>
+<p>The clock-counter IP generates a strobe signal with a frequency of 0.5 Hz (i.e.
+pulse width of 1 s). Each of the measured clocks counts with an independent
+counter. When a transition of the strobe signal is detected, the counter value
+is stored in a register (accessible on Avalon MM interface) and the counter
+value is reset to 0. The counter then continuos counting, until the next
+transition is detected and the same procedure is repeated.</p>
+<p>Since the counter is active for exactly a second (within a certain ppm range)
+before it gets stored in a register, the value stored in the register is the
+frequency of the measured clock, in Hertz.</p>
+<p>The clock-domain crossing for the registers is non-existent, the registers
+are loaded from one clock (from the measured clock) and read from the Avalon
+interface clocks. Since the register is updated only once per second (and
+thus the possibility that we read during an update is quite low) and since
+this is only used for diagnostics, not implementing a proper CDC can
+be tolerated.</p>
+<h2>IDT driver</h2>
+<p>I prepared <a href="https://github.com/j-marjanovic/otma-fpga-bringup/blob/25f084c1b9c3982f7a8b281c95cab5e36f978822/software/otma_bringup/src/IDT8NxQ001.c">a driver for the IDT
+oscillator</a>,
+which provides:</p>
+<ul>
+<li>a function to decode the bytes into a proper structure (can be used to inspect
+  the current configuration),</li>
+<li>a function to encode the structure in bytes (can be used to generate the bytes
+  to be written into the device),</li>
+<li>a function to configure all relevant fields (per channel) to obtain the
+  desired frequency</li>
+</ul>
+<p>and some other functions.</p>
+<p>The <a href="https://github.com/j-marjanovic/otma-fpga-bringup/blob/25f084c1b9c3982f7a8b281c95cab5e36f978822/software/otma_bringup/src/main.c">main
+program</a>
+configures 4 different frequencies, selects one of the four, and then goes into a
+loop where it prints the measured frequency once per second.</p>
+<p>Here is the output of the program:</p>
+<div class="highlight"><pre><span></span><code><span class="n">Clock</span> <span class="nl">counter</span><span class="p">:</span> <span class="n">ident</span> <span class="o">=</span> <span class="n">Oxcl0cc272</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="mh">0x00010000</span>
+<span class="n">IDT8NXQOO1</span> <span class="nl">config</span><span class="p">:</span>
+  <span class="nl">MINT</span>     <span class="p">:</span> <span class="mi">25</span> <span class="mi">25</span> <span class="mi">24</span> <span class="mi">25</span>
+  <span class="nl">MFRAC</span>    <span class="p">:</span> <span class="mo">000000</span> <span class="mo">000000</span> <span class="mo">000000</span> <span class="mo">00000</span>
+  <span class="nl">N</span>        <span class="p">:</span> <span class="mi">20</span> <span class="mi">16</span> <span class="mi">12</span> <span class="mi">08</span>
+  <span class="nl">P</span>        <span class="p">:</span> <span class="mo">00</span> <span class="mo">00</span> <span class="mo">00</span> <span class="mo">00</span>
+  <span class="nl">DSM_ENA</span>  <span class="p">:</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>
+  <span class="nl">LF</span>       <span class="p">:</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span>
+  <span class="nl">CP</span>       <span class="p">:</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span>
+  <span class="nl">FSEL</span>     <span class="p">:</span> <span class="mi">1</span>
+  <span class="nl">nPLL_BYP</span> <span class="p">:</span> <span class="mi">1</span>
+  <span class="nl">ADC_ENA</span>  <span class="p">:</span> <span class="mi">0</span>
+<span class="n">Finished</span> <span class="n">configuring</span> <span class="n">IDT</span> <span class="n">oscillator</span><span class="p">,</span> <span class="n">entering</span> <span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="n">loop</span><span class="p">...</span>
+<span class="n">Clock</span> <span class="n">frequency</span> <span class="p">[</span><span class="n">IDT</span> <span class="n">osc</span><span class="p">]</span><span class="o">:</span> <span class="mi">6250002</span> <span class="n">MHz</span>
+<span class="n">Clock</span> <span class="n">frequency</span> <span class="p">[</span><span class="n">IDT</span> <span class="n">osc</span><span class="p">]</span><span class="o">:</span> <span class="mi">103430663</span> <span class="n">MHz</span>
+<span class="n">Clock</span> <span class="n">frequency</span> <span class="p">[</span><span class="n">IDT</span> <span class="n">osc</span><span class="p">]</span><span class="o">:</span> <span class="mi">156250082</span> <span class="n">MHz</span>
+<span class="n">Clock</span> <span class="n">frequency</span> <span class="p">[</span><span class="n">IDT</span> <span class="n">osc</span><span class="p">]</span><span class="o">:</span> <span class="mi">156250082</span> <span class="n">MHz</span>
+<span class="n">Clock</span> <span class="n">frequency</span> <span class="p">[</span><span class="n">IDT</span> <span class="n">osc</span><span class="p">]</span><span class="o">:</span> <span class="mi">156250085</span> <span class="n">MHz</span>
+<span class="n">Clock</span> <span class="n">frequency</span> <span class="p">[</span><span class="n">IDT</span> <span class="n">osc</span><span class="p">]</span><span class="o">:</span> <span class="mi">156250086</span> <span class="n">MHz</span>
+<span class="n">Clock</span> <span class="n">frequency</span> <span class="p">[</span><span class="n">IDT</span> <span class="n">osc</span><span class="p">]</span><span class="o">:</span> <span class="mi">156250086</span> <span class="n">MHz</span>
+<span class="n">Clock</span> <span class="n">frequency</span> <span class="p">[</span><span class="n">IDT</span> <span class="n">osc</span><span class="p">]</span><span class="o">:</span> <span class="mi">156250085</span> <span class="n">MHz</span>
+<span class="n">Clock</span> <span class="n">frequency</span> <span class="p">[</span><span class="n">IDT</span> <span class="n">osc</span><span class="p">]</span><span class="o">:</span> <span class="mi">156250086</span> <span class="n">MHz</span>
+<span class="n">Clock</span> <span class="n">frequency</span> <span class="p">[</span><span class="n">IDT</span> <span class="n">osc</span><span class="p">]</span><span class="o">:</span> <span class="mi">156250084</span> <span class="n">MHz</span>
+<span class="n">Clock</span> <span class="n">frequency</span> <span class="p">[</span><span class="n">IDT</span> <span class="n">osc</span><span class="p">]</span><span class="o">:</span> <span class="mi">156250083</span> <span class="n">MHz</span>
+<span class="n">Clock</span> <span class="n">frequency</span> <span class="p">[</span><span class="n">IDT</span> <span class="n">osc</span><span class="p">]</span><span class="o">:</span> <span class="mi">156250082</span> <span class="n">MHz</span>
+<span class="n">Clock</span> <span class="n">frequency</span> <span class="p">[</span><span class="n">IDT</span> <span class="n">osc</span><span class="p">]</span><span class="o">:</span> <span class="mi">156250082</span> <span class="n">MHz</span>
+<span class="n">Clock</span> <span class="n">frequency</span> <span class="p">[</span><span class="n">IDT</span> <span class="n">osc</span><span class="p">]</span><span class="o">:</span> <span class="mi">156250082</span> <span class="n">MHz</span>
+<span class="n">Clock</span> <span class="n">frequency</span> <span class="p">[</span><span class="n">IDT</span> <span class="n">osc</span><span class="p">]</span><span class="o">:</span> <span class="mi">156250081</span> <span class="n">MHz</span>
+<span class="n">Clock</span> <span class="n">frequency</span> <span class="p">[</span><span class="n">IDT</span> <span class="n">osc</span><span class="p">]</span><span class="o">:</span> <span class="mi">156250084</span> <span class="n">MHz</span>
+<span class="p">[...]</span>
+</code></pre></div>
+
+
+<p>We see that after the measurement has stabilized, we are receiving the clock
+which we have configured, and we see that both the reference clock (125 MHz to
+generate the strobe signal) and the measured clock have a low wander and a low
+offset.</p>
+<h1>Conclusion and future plans</h1>
+<p>I have managed to prepare a setup that will allow me to develop and debug the
+Stratix V FPGA directly from Quartus. I am satisfied that I could develop a
+software solution and use the on-board FTDI chip, and I did not have to solder
+wires for the JTAG to the board.</p>
+<p>With the access to useful tools in Quartus (e.g. SignalTap, Console, Nios II
+debugger, Transceiver toolkit, ...) I believe bringing up the rest of the board
+will be much easier.</p>
+<p>Finally, to validate that the library for the JTAG cable runs reliably, I have
+used it to develop a small program that can configure the on-board oscillator
+to a desired frequency, in my case 156.25 MHz. I plan to use this for a test
+of the transceivers connected to the QSFP slots.</p>
+<hr>
+<p>All trademarks and registered trademarks are the property of their respective
+owners.</p>
+        </div><!-- /.entry-content -->
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="janmarjanovic">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script><br/><br/>
+
+      </article>
+    </div>
+</section>
+        <section id="extras" >
+        
+        </section><!-- /#extras -->
+	
+        <footer id="contentinfo" >
+                <address id="about" class="vcard ">
+                Proudly powered by <a href="https://getpelican.com/" target="_blank">Pelican</a>, which takes
+                great advantage of <a href="https://python.org" target="_blank">Python</a>.
+		
+                </address><!-- /#about -->
+		
+
+                
+        </footer><!-- /#contentinfo -->
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-56555055-1', 'auto');
+  ga('send', 'pageview');
+
+</script></body>
+</html>

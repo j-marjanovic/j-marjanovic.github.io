@@ -1,5 +1,235 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io - FPGA</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/fpga.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2020-06-07T16:00:00+02:00</updated><entry><title>Stratix V accelerator card from eBay, part 2</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html" rel="alternate"></link><published>2020-06-07T16:00:00+02:00</published><updated>2020-06-07T16:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-06-07:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html</id><summary type="html">&lt;p&gt;In my previous blog post I have explored the FPGA card I have purchased on eBay,
+<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io - FPGA</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/fpga.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2020-09-06T16:00:00+02:00</updated><entry><title>Stratix V accelerator card from eBay, part 3</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-3.html" rel="alternate"></link><published>2020-09-06T16:00:00+02:00</published><updated>2020-09-06T16:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-09-06:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-3.html</id><summary type="html">&lt;p&gt;As mentioned in my &lt;a href="https://j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html"&gt;previous blog post&lt;/a&gt;, the next step would be
+to get the JTAG running in Quaruts. In this blog post I describe how I managed
+to develop a library as an interface between the FPGA board and Quartus, and
+demonstrate the developed interface to download the bitstream …&lt;/p&gt;</summary><content type="html">&lt;p&gt;As mentioned in my &lt;a href="https://j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html"&gt;previous blog post&lt;/a&gt;, the next step would be
+to get the JTAG running in Quaruts. In this blog post I describe how I managed
+to develop a library as an interface between the FPGA board and Quartus, and
+demonstrate the developed interface to download the bitstream and to debug
+the Nios II soft-core processor.&lt;/p&gt;
+&lt;h1&gt;Introduction&lt;/h1&gt;
+&lt;h2&gt;HW overview&lt;/h2&gt;
+&lt;p&gt;The Stratix V board contains a 4-pin USB port (with a non-standard connector),
+to which an &lt;a href="https://www.ftdichip.com/Products/ICs/FT232H.htm"&gt;FT232H&lt;/a&gt; is
+attached, containing &lt;em&gt;Multi-Protocol Synchronous Serial Engine (MPSSE)&lt;/em&gt; which
+can be used to implement the JTAG protocol.&lt;/p&gt;
+&lt;p&gt;I am a little bit surprised that the board includes the full JTAG programmer and
+not only the 10-pin JTAG header, which can be then used by the developers on
+their development setups. On the other hand, the cost of an FT232H is 2.70 EUR
+on Mouser for a reel, which is negligible compared to the cost of the board. I
+can also understand that having a JTAG debugger available on each board is
+valuable when monitoring the operating conditions (e.g. transceiver link quality
+with the
+&lt;a href="https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/an/an605.pdf"&gt;EyeQ&lt;/a&gt;)
+and to debug and investigate the synchronization issues between the servers in
+the deployment.&lt;/p&gt;
+&lt;p&gt;I was not able to find more information about this particular USB/JTAG
+connection on the Open Compute Project website.&lt;/p&gt;
+&lt;h2&gt;Quartus software suite&lt;/h2&gt;
+&lt;p&gt;Intel® Quartus® provides several programs that are extremely useful for
+development for Intel/Altera FPGAs.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Quartus Programmer&lt;/strong&gt; which, as the name suggests, allows
+  programming/configuring the FPGA devices over the JTAG chain, and it can also
+  program the non-volatile memories attached to the FPGAs.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;System Console&lt;/strong&gt; provides "visibility into your system" - one can use JTAG
+  to Avalon MM bridge to read and write the registers in the IPs, and
+  &lt;em&gt;Transceiver Toolkit&lt;/em&gt; and &lt;em&gt;External Memory Interface Toolkits&lt;/em&gt; both greatly
+  simplify the bringup and debug of transceivers and external memories&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;SignalTap&lt;/strong&gt; is an embedded logic analyzer, useful for debugging the logic
+  in hardware, with the input from real devices&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Nios II Debugger&lt;/strong&gt; provides access to soft-core Nios II processor, and
+  it can be used to download the programs, to debug them through GDB, and to
+  obtain the output from the program over the &lt;em&gt;JTAG UART&lt;/em&gt; IP&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To my knowledge OpenOCD does not provide all these features and Quartus also
+does not seem to be able to interface to OpenOCD.&lt;/p&gt;
+&lt;h2&gt;OpenOCD&lt;/h2&gt;
+&lt;p&gt;Nonetheless, OpenOCD can be used to scan the JTAG chain, and confirm
+that the FTDI really is connected to the JTAG port of the FPGA:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ openocd -f interface/ftdi/um232h.cfg -c &lt;span class="s2"&gt;&amp;quot;adapter_khz 100; transport select jtag; jtag newtap auto0 tap -irlen 10 -expected-id 0x029070dd&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+Open On-Chip Debugger &lt;span class="m"&gt;0&lt;/span&gt;.10.0
+Licensed under GNU GPL v2
+For bug reports, &lt;span class="nb"&gt;read&lt;/span&gt;
+    http://openocd.org/doc/doxygen/bugs.html
+adapter speed: &lt;span class="m"&gt;100&lt;/span&gt; kHz
+Info : clock speed &lt;span class="m"&gt;100&lt;/span&gt; kHz
+Info : JTAG tap: auto0.tap tap/device found: 0x029070dd &lt;span class="o"&gt;(&lt;/span&gt;mfg: 0x06e &lt;span class="o"&gt;(&lt;/span&gt;Altera&lt;span class="o"&gt;)&lt;/span&gt;, part: 0x2907, ver: 0x0&lt;span class="o"&gt;)&lt;/span&gt;
+Warn : gdb services need one or more targets defined
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This gives hope that at least on the HW side, integrating the board with Quartus
+will be easy.&lt;/p&gt;
+&lt;h1&gt;JTAG library&lt;/h1&gt;
+&lt;p&gt;Some information on how to add a custom cable can be found on &lt;a href="https://forums.intel.com/s/question/0D50P00003yyL2bSAE/bemicro-and-programming-under-linux"&gt;Intel
+forums&lt;/a&gt;.
+At the startup, Quartus scans the &lt;code&gt;linux64&lt;/code&gt; folder (if running on 64-bit Linux)
+and searches for the shared object files which start with the &lt;code&gt;libjtag_hw.&lt;/code&gt; The
+shared object is then loaded, and a function called &lt;code&gt;get_supported_hardware&lt;/code&gt; is
+called. This function returns a structure, containing function pointers for
+various operations that the programmer and other utilities can perform.&lt;/p&gt;
+&lt;p&gt;To understand this (undocumented) interface a little bit better, I first
+implemented &lt;a href="https://github.com/j-marjanovic/jtag-quartus-ft232h/blob/master/src/jtag_hw_dummy.cpp"&gt;a library with a dummy JTAG TAP
+controller&lt;/a&gt;.
+This library can be copied or linked in the &lt;code&gt;linux64&lt;/code&gt; folder, and then used in
+Quartus Programmer. The implementation of the JTAG pretends that it is a Stratix
+V device (by having the same &lt;code&gt;IDCODE&lt;/code&gt;) and then discards all the bits which are
+downloaded to the device. If somebody has too much time, one can easily extend
+this to create a very complicated &lt;code&gt;.sof&lt;/code&gt; to &lt;code&gt;.rbf&lt;/code&gt; converter. Finally, the
+dummy device fakes the status register to communicate that the &lt;code&gt;CONF_DONE&lt;/code&gt; is
+high at the end of the programming. For debugging purposes, the library prints
+extensive debug information over a UNIX socket.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="A dummy JTAG device being programmed in Quartus Programmer" src="www.j-marjanovic.io/images/2020_fpga_card_part_3/jtag_dummy.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;Once this part in place, it is easy to imagine that combining the library
+of the dummy JTAG and the HW-related part of the OpenOCD is not so complicated.
+Since the OpenOCD is licensed under GPL v2, I have decided to re-use the code
+for MPSSE and FT232H and to also license my library under the same license.&lt;/p&gt;
+&lt;h2&gt;Downloading the bitstream&lt;/h2&gt;
+&lt;p&gt;Here is the documentation of the first victory in this convoluted JTAG bring-up
+process, the bitstream is successfully downloaded into the FPGA, and an LED on
+the board is blinking, indicating a total success.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Stratix V being programmed over the on-board FT232H" src="www.j-marjanovic.io/images/2020_fpga_card_part_3/jtag_ft232h.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;h2&gt;JTAG to Avalon&lt;/h2&gt;
+&lt;p&gt;To check if all functions of the JTAG cable are working, I have prepared a small
+IP (discussed below) and connected it to &lt;a href="https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/ug/ug_embedded_ip.pdf"&gt;JTAG to Avalon Master
+Bridge&lt;/a&gt;.
+This IP provides access to the Avalon interconnect over &lt;strong&gt;System Console&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Shown here is a read of 12 words from a certain address in the Avalon MM memory
+space:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt; jtag_master &lt;span class="k"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;lindex&lt;/span&gt; &lt;span class="k"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;get_service_paths&lt;/span&gt; master&lt;span class="k"&gt;]&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="k"&gt;]&lt;/span&gt;
+&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nv"&gt;devices&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;SGSMD5H&lt;span class="k"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;1&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;SGSMD5K1&lt;span class="o"&gt;|&lt;/span&gt;..&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="err"&gt;#&lt;/span&gt;bus-instance&lt;span class="err"&gt;#&lt;/span&gt;OTMA FT232H&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="k"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;link&lt;/span&gt;&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;JTAG&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="k"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;110&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;132&lt;/span&gt; v1 &lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;phy_0&lt;span class="o"&gt;/&lt;/span&gt;master
+&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="nv"&gt;open_service&lt;/span&gt; master &lt;span class="nv"&gt;$jtag_master&lt;/span&gt;
+
+&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="nv"&gt;master_read_32&lt;/span&gt; &lt;span class="nv"&gt;$jtag_master&lt;/span&gt; &lt;span class="mh"&gt;0x1000&lt;/span&gt; &lt;span class="mi"&gt;12&lt;/span&gt;
+&lt;span class="nv"&gt;0xc10cc272&lt;/span&gt; &lt;span class="mh"&gt;0x00010000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x266ac4b1&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="nv"&gt;master_read_32&lt;/span&gt; &lt;span class="nv"&gt;$jtag_master&lt;/span&gt; &lt;span class="mh"&gt;0x1000&lt;/span&gt; &lt;span class="mi"&gt;12&lt;/span&gt;
+&lt;span class="nv"&gt;0xc10cc272&lt;/span&gt; &lt;span class="mh"&gt;0x00010000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x266ac4ac&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="nv"&gt;master_read_32&lt;/span&gt; &lt;span class="nv"&gt;$jtag_master&lt;/span&gt; &lt;span class="mh"&gt;0x1000&lt;/span&gt; &lt;span class="mi"&gt;12&lt;/span&gt;
+&lt;span class="nv"&gt;0xc10cc272&lt;/span&gt; &lt;span class="mh"&gt;0x00010000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x266ac4a8&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="nv"&gt;master_read_32&lt;/span&gt; &lt;span class="nv"&gt;$jtag_master&lt;/span&gt; &lt;span class="mh"&gt;0x1000&lt;/span&gt; &lt;span class="mi"&gt;12&lt;/span&gt;
+&lt;span class="nv"&gt;0xc10cc272&lt;/span&gt; &lt;span class="mh"&gt;0x00010000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x266ac4a3&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;I will explain later what exactly are we seeing here, for now let's just accept
+that &lt;em&gt;JTAG to Avalon bridge&lt;/em&gt; works, and it reads a magic number register
+(&lt;code&gt;0xc10cc272&lt;/code&gt;), a version register (&lt;code&gt;0x00010000&lt;/code&gt;), and the &lt;code&gt;meas_clk[5]&lt;/code&gt; register
+reports a value between 644531368 Hz and 644531377 Hz.&lt;/p&gt;
+&lt;h2&gt;Nios II&lt;/h2&gt;
+&lt;p&gt;For a final test, I wanted to see if I can download a program into the Nios II
+instruction memory, run the program and observe the output over the JTAG UART
+interface.&lt;/p&gt;
+&lt;p&gt;Also here there were no obstacles with the home-made JTAG driver, and
+I could successfully perform all tasks necessary to download and debug the
+Nios II core, as also presented on the screenshot below.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="A program being debugged over Nios II debugger over the on-board FT232H" src="www.j-marjanovic.io/images/2020_fpga_card_part_3/nios_debugger.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;h1&gt;Clock&lt;/h1&gt;
+&lt;p&gt;The board contains an &lt;a href="https://www.idt.com/us/en/document/dst/idt8n4q001-datasheet"&gt;IDT8N4Q001 programmable clock
+oscillator&lt;/a&gt;, which
+is most likely used to generate the clocks needed for 40 Gigabit Ethernet (e.g.
+156.25 MHz) and maybe for other communication protocols on the QSFP slots. Since
+none of the currently available resources
+(&lt;a href="https://github.com/wirebond/catapult_v2_pikes_peak"&gt;wirebond/catapult_v2_pikes_peak&lt;/a&gt;
+and &lt;a href="http://virtlab.occamlab.com/home/zapisnik/microsoft-catapult-v2"&gt;Microsoft's Catapult v2 (Pikes
+Peak)&lt;/a&gt;)
+mentions where the IDT is connected to FPGA, I had to find out this myself.&lt;/p&gt;
+&lt;p&gt;The oscillator on my board has a code &lt;code&gt;2059&lt;/code&gt;, which according to &lt;a href="https://www.idt.com/us/en/document/mau/femtoclock-ng-ceramic-package-xo-and-vcxo-ordering-information"&gt;the document
+from
+IDT&lt;/a&gt;
+produces 644.53125 MHz for all values of &lt;code&gt;FSEL&lt;/code&gt; in the default configuration.
+This matches the previously measured frequency at the input &lt;code&gt;CLK_R_REFCLK5&lt;/code&gt;
+(pins &lt;code&gt;T7&lt;/code&gt; and &lt;code&gt;T6&lt;/code&gt;).&lt;/p&gt;
+&lt;h2&gt;Clock counter&lt;/h2&gt;
+&lt;p&gt;I have written a small IP to measure the frequency of several clocks from a
+known clock frequency. As a known frequency I have used the 125 MHz on-board
+oscillator.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Clock-counter IP block diagram" src="www.j-marjanovic.io/images/2020_fpga_card_part_3/clock_counter.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;The clock-counter IP generates a strobe signal with a frequency of 0.5 Hz (i.e.
+pulse width of 1 s). Each of the measured clocks counts with an independent
+counter. When a transition of the strobe signal is detected, the counter value
+is stored in a register (accessible on Avalon MM interface) and the counter
+value is reset to 0. The counter then continuos counting, until the next
+transition is detected and the same procedure is repeated.&lt;/p&gt;
+&lt;p&gt;Since the counter is active for exactly a second (within a certain ppm range)
+before it gets stored in a register, the value stored in the register is the
+frequency of the measured clock, in Hertz.&lt;/p&gt;
+&lt;p&gt;The clock-domain crossing for the registers is non-existent, the registers
+are loaded from one clock (from the measured clock) and read from the Avalon
+interface clocks. Since the register is updated only once per second (and
+thus the possibility that we read during an update is quite low) and since
+this is only used for diagnostics, not implementing a proper CDC can
+be tolerated.&lt;/p&gt;
+&lt;h2&gt;IDT driver&lt;/h2&gt;
+&lt;p&gt;I prepared &lt;a href="https://github.com/j-marjanovic/otma-fpga-bringup/blob/25f084c1b9c3982f7a8b281c95cab5e36f978822/software/otma_bringup/src/IDT8NxQ001.c"&gt;a driver for the IDT
+oscillator&lt;/a&gt;,
+which provides:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;a function to decode the bytes into a proper structure (can be used to inspect
+  the current configuration),&lt;/li&gt;
+&lt;li&gt;a function to encode the structure in bytes (can be used to generate the bytes
+  to be written into the device),&lt;/li&gt;
+&lt;li&gt;a function to configure all relevant fields (per channel) to obtain the
+  desired frequency&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;and some other functions.&lt;/p&gt;
+&lt;p&gt;The &lt;a href="https://github.com/j-marjanovic/otma-fpga-bringup/blob/25f084c1b9c3982f7a8b281c95cab5e36f978822/software/otma_bringup/src/main.c"&gt;main
+program&lt;/a&gt;
+configures 4 different frequencies, selects one of the four, and then goes into a
+loop where it prints the measured frequency once per second.&lt;/p&gt;
+&lt;p&gt;Here is the output of the program:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;Clock&lt;/span&gt; &lt;span class="nl"&gt;counter&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;ident&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Oxcl0cc272&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;version&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mh"&gt;0x00010000&lt;/span&gt;
+&lt;span class="n"&gt;IDT8NXQOO1&lt;/span&gt; &lt;span class="nl"&gt;config&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="nl"&gt;MINT&lt;/span&gt;     &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;25&lt;/span&gt; &lt;span class="mi"&gt;25&lt;/span&gt; &lt;span class="mi"&gt;24&lt;/span&gt; &lt;span class="mi"&gt;25&lt;/span&gt;
+  &lt;span class="nl"&gt;MFRAC&lt;/span&gt;    &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mo"&gt;000000&lt;/span&gt; &lt;span class="mo"&gt;000000&lt;/span&gt; &lt;span class="mo"&gt;000000&lt;/span&gt; &lt;span class="mo"&gt;00000&lt;/span&gt;
+  &lt;span class="nl"&gt;N&lt;/span&gt;        &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;20&lt;/span&gt; &lt;span class="mi"&gt;16&lt;/span&gt; &lt;span class="mi"&gt;12&lt;/span&gt; &lt;span class="mi"&gt;08&lt;/span&gt;
+  &lt;span class="nl"&gt;P&lt;/span&gt;        &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mo"&gt;00&lt;/span&gt; &lt;span class="mo"&gt;00&lt;/span&gt; &lt;span class="mo"&gt;00&lt;/span&gt; &lt;span class="mo"&gt;00&lt;/span&gt;
+  &lt;span class="nl"&gt;DSM_ENA&lt;/span&gt;  &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+  &lt;span class="nl"&gt;LF&lt;/span&gt;       &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+  &lt;span class="nl"&gt;CP&lt;/span&gt;       &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;
+  &lt;span class="nl"&gt;FSEL&lt;/span&gt;     &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+  &lt;span class="nl"&gt;nPLL_BYP&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+  &lt;span class="nl"&gt;ADC_ENA&lt;/span&gt;  &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+&lt;span class="n"&gt;Finished&lt;/span&gt; &lt;span class="n"&gt;configuring&lt;/span&gt; &lt;span class="n"&gt;IDT&lt;/span&gt; &lt;span class="n"&gt;oscillator&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;entering&lt;/span&gt; &lt;span class="k"&gt;while&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;loop&lt;/span&gt;&lt;span class="p"&gt;...&lt;/span&gt;
+&lt;span class="n"&gt;Clock&lt;/span&gt; &lt;span class="n"&gt;frequency&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;IDT&lt;/span&gt; &lt;span class="n"&gt;osc&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;6250002&lt;/span&gt; &lt;span class="n"&gt;MHz&lt;/span&gt;
+&lt;span class="n"&gt;Clock&lt;/span&gt; &lt;span class="n"&gt;frequency&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;IDT&lt;/span&gt; &lt;span class="n"&gt;osc&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;103430663&lt;/span&gt; &lt;span class="n"&gt;MHz&lt;/span&gt;
+&lt;span class="n"&gt;Clock&lt;/span&gt; &lt;span class="n"&gt;frequency&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;IDT&lt;/span&gt; &lt;span class="n"&gt;osc&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;156250082&lt;/span&gt; &lt;span class="n"&gt;MHz&lt;/span&gt;
+&lt;span class="n"&gt;Clock&lt;/span&gt; &lt;span class="n"&gt;frequency&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;IDT&lt;/span&gt; &lt;span class="n"&gt;osc&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;156250082&lt;/span&gt; &lt;span class="n"&gt;MHz&lt;/span&gt;
+&lt;span class="n"&gt;Clock&lt;/span&gt; &lt;span class="n"&gt;frequency&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;IDT&lt;/span&gt; &lt;span class="n"&gt;osc&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;156250085&lt;/span&gt; &lt;span class="n"&gt;MHz&lt;/span&gt;
+&lt;span class="n"&gt;Clock&lt;/span&gt; &lt;span class="n"&gt;frequency&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;IDT&lt;/span&gt; &lt;span class="n"&gt;osc&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;156250086&lt;/span&gt; &lt;span class="n"&gt;MHz&lt;/span&gt;
+&lt;span class="n"&gt;Clock&lt;/span&gt; &lt;span class="n"&gt;frequency&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;IDT&lt;/span&gt; &lt;span class="n"&gt;osc&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;156250086&lt;/span&gt; &lt;span class="n"&gt;MHz&lt;/span&gt;
+&lt;span class="n"&gt;Clock&lt;/span&gt; &lt;span class="n"&gt;frequency&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;IDT&lt;/span&gt; &lt;span class="n"&gt;osc&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;156250085&lt;/span&gt; &lt;span class="n"&gt;MHz&lt;/span&gt;
+&lt;span class="n"&gt;Clock&lt;/span&gt; &lt;span class="n"&gt;frequency&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;IDT&lt;/span&gt; &lt;span class="n"&gt;osc&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;156250086&lt;/span&gt; &lt;span class="n"&gt;MHz&lt;/span&gt;
+&lt;span class="n"&gt;Clock&lt;/span&gt; &lt;span class="n"&gt;frequency&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;IDT&lt;/span&gt; &lt;span class="n"&gt;osc&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;156250084&lt;/span&gt; &lt;span class="n"&gt;MHz&lt;/span&gt;
+&lt;span class="n"&gt;Clock&lt;/span&gt; &lt;span class="n"&gt;frequency&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;IDT&lt;/span&gt; &lt;span class="n"&gt;osc&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;156250083&lt;/span&gt; &lt;span class="n"&gt;MHz&lt;/span&gt;
+&lt;span class="n"&gt;Clock&lt;/span&gt; &lt;span class="n"&gt;frequency&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;IDT&lt;/span&gt; &lt;span class="n"&gt;osc&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;156250082&lt;/span&gt; &lt;span class="n"&gt;MHz&lt;/span&gt;
+&lt;span class="n"&gt;Clock&lt;/span&gt; &lt;span class="n"&gt;frequency&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;IDT&lt;/span&gt; &lt;span class="n"&gt;osc&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;156250082&lt;/span&gt; &lt;span class="n"&gt;MHz&lt;/span&gt;
+&lt;span class="n"&gt;Clock&lt;/span&gt; &lt;span class="n"&gt;frequency&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;IDT&lt;/span&gt; &lt;span class="n"&gt;osc&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;156250082&lt;/span&gt; &lt;span class="n"&gt;MHz&lt;/span&gt;
+&lt;span class="n"&gt;Clock&lt;/span&gt; &lt;span class="n"&gt;frequency&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;IDT&lt;/span&gt; &lt;span class="n"&gt;osc&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;156250081&lt;/span&gt; &lt;span class="n"&gt;MHz&lt;/span&gt;
+&lt;span class="n"&gt;Clock&lt;/span&gt; &lt;span class="n"&gt;frequency&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;IDT&lt;/span&gt; &lt;span class="n"&gt;osc&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;156250084&lt;/span&gt; &lt;span class="n"&gt;MHz&lt;/span&gt;
+&lt;span class="p"&gt;[...]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We see that after the measurement has stabilized, we are receiving the clock
+which we have configured, and we see that both the reference clock (125 MHz to
+generate the strobe signal) and the measured clock have a low wander and a low
+offset.&lt;/p&gt;
+&lt;h1&gt;Conclusion and future plans&lt;/h1&gt;
+&lt;p&gt;I have managed to prepare a setup that will allow me to develop and debug the
+Stratix V FPGA directly from Quartus. I am satisfied that I could develop a
+software solution and use the on-board FTDI chip, and I did not have to solder
+wires for the JTAG to the board.&lt;/p&gt;
+&lt;p&gt;With the access to useful tools in Quartus (e.g. SignalTap, Console, Nios II
+debugger, Transceiver toolkit, ...) I believe bringing up the rest of the board
+will be much easier.&lt;/p&gt;
+&lt;p&gt;Finally, to validate that the library for the JTAG cable runs reliably, I have
+used it to develop a small program that can configure the on-board oscillator
+to a desired frequency, in my case 156.25 MHz. I plan to use this for a test
+of the transceivers connected to the QSFP slots.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;All trademarks and registered trademarks are the property of their respective
+owners.&lt;/p&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay, part 2</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html" rel="alternate"></link><published>2020-06-07T16:00:00+02:00</published><updated>2020-06-07T16:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-06-07:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html</id><summary type="html">&lt;p&gt;In my previous blog post I have explored the FPGA card I have purchased on eBay,
 and in this post I will present an adapter card which I have developed. The
 adapter provides PCI Express connection between a normal card-edge slot and the
 FPGA card, as well as the access …&lt;/p&gt;</summary><content type="html">&lt;p&gt;In my previous blog post I have explored the FPGA card I have purchased on eBay,
