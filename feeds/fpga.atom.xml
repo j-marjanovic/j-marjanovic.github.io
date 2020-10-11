@@ -1,5 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io - FPGA</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/fpga.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2020-09-06T16:00:00+02:00</updated><entry><title>Stratix V accelerator card from eBay, part 3</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-3.html" rel="alternate"></link><published>2020-09-06T16:00:00+02:00</published><updated>2020-09-06T16:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-09-06:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-3.html</id><summary type="html">&lt;p&gt;As mentioned in my &lt;a href="https://j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html"&gt;previous blog post&lt;/a&gt;, the next step would be
+<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io - FPGA</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/fpga.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2020-10-11T16:00:00+02:00</updated><entry><title>Stratix V accelerator card from eBay, part 4</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-4.html" rel="alternate"></link><published>2020-10-11T16:00:00+02:00</published><updated>2020-10-11T16:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-10-11:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-4.html</id><summary type="html">&lt;p&gt;In the part 4 of the Odyssey with the Startix V board from the eBay, I explore
+the QSFP+ port and establish a 40 Gigabit Ethernet connection to a computer
+with an Intel X710 40GbE network adapter.&lt;/p&gt;
+&lt;h1&gt;HW overview&lt;/h1&gt;
+&lt;p&gt;Since this board was designed to run in a datacenter, the …&lt;/p&gt;</summary><content type="html">&lt;p&gt;In the part 4 of the Odyssey with the Startix V board from the eBay, I explore
+the QSFP+ port and establish a 40 Gigabit Ethernet connection to a computer
+with an Intel X710 40GbE network adapter.&lt;/p&gt;
+&lt;h1&gt;HW overview&lt;/h1&gt;
+&lt;p&gt;Since this board was designed to run in a datacenter, the connectivity is of
+major importance. The board can connect to the host CPU over PCIe x16
+connection, and can communicate with other boards and external world over 2
+QSFP+ connectors.&lt;/p&gt;
+&lt;p&gt;The transceivers in the &lt;a href="https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/hb/stratix-v/stx5_51001.pdf"&gt;Stratix V
+GS&lt;/a&gt;
+can operate at 14.1 Gbps, which means that the board can run 40 Gigabit Ethernet
+(4x10.3125 Gbps), InfiniBand FDR (56 Gbps = 4x14.0 Gbps) and other fast
+protocols.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Stratix V board with QSFP cable" src="www.j-marjanovic.io/images/2020_fpga_card_part_4/qsfp_cable.jpg" style="width:80%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;h1&gt;QSFP+ management interface&lt;/h1&gt;
+&lt;p&gt;As described in &lt;a href="https://members.snia.org/document/dl/25896"&gt;SFF-8436: Specification for QSFP+ 4X 10 Gb/s Pluggable
+Transceiver&lt;/a&gt;, the QSFP module
+contains a relatively simple management interface, accessible over an I2C bus.&lt;/p&gt;
+&lt;p&gt;First I &lt;a href="https://github.com/j-marjanovic/otma-fpga-bringup/blob/master/software/otma_bringup/src/mini_i2cdetect.c"&gt;implemented a mini equivalent to &lt;code&gt;i2cdetect&lt;/code&gt;&lt;/a&gt; to check if I am probing a
+correct I2C bus. As expected, an I2C device with address 0x50 replies to our
+request:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt; 0000 |          -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
+&lt;span class="err"&gt; 0010 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
+&lt;span class="err"&gt; 0020 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
+&lt;span class="err"&gt; 0030 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
+&lt;span class="err"&gt; 0040 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
+&lt;span class="err"&gt; 0050 | 50 -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
+&lt;span class="err"&gt; 0060 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
+&lt;span class="err"&gt; 0070 | -- -- -- -- -- -- --&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We can then continue by dumping the content of the module EEPROM:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;rc = 0 | 0d 02 06 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 0d 00 23 08 00 00 00 00 00 00 00 05 8d 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 00 00 02 a0 4d 65 6c 6c 61 6e 6f 78 20 20 20 20&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 20 20 20 20 0f 00 02 c9 36 37 30 37 35 39 2d 42&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 32 33 20 20 20 20 20 20 41 31 04 06 09 00 46 27&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 00 00 00 00 36 43 32 32 31 32 30 37 36 58 20 20&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 20 20 20 20 31 32 30 33 32 37 20 20 00 00 00 64&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 02 00 00 30 00 00&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The cable is correctly identified as Mellanox 670759-B23 cable.&lt;/p&gt;
+&lt;h1&gt;40G Ethernet MAC&lt;/h1&gt;
+&lt;p&gt;To implement the physical layer of the Ethernet protocol I used &lt;a href="https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/ug/ug_40_100gbe.pdf"&gt;40- and
+100-Gbps Ethernet MAC and PHY
+MegaCore&lt;/a&gt;.
+Without an appropriate license this IP can be evaluated for an hour, which is
+not a lot, but enough to test the hardware capabilities of the FPGA board.&lt;/p&gt;
+&lt;p&gt;To clock the transceiver part I have used the 644.53125 MHz on-board oscillator
+which I have explored in detail in &lt;a href="https://j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-3.html"&gt;my previous
+post&lt;/a&gt;.
+The application part is clocked at 312.5 MHz, generated from the same 644 MHz
+oscillator.&lt;/p&gt;
+&lt;p&gt;In the Qsys I have added a &lt;a href="http://www.altera.com/literature/ug/xcvr_user_guide.pdf"&gt;Transceiver Reconfiguration
+Controller&lt;/a&gt; and
+connected it to a &lt;em&gt;JTAG to Avalon Master Bridge&lt;/em&gt;, so that I can perform Eye Scan
+measurements and change other transceiver configurations.&lt;/p&gt;
+&lt;p&gt;With everything in place, I have programmed the bitstream to the FPGA, and the
+&lt;code&gt;dmesg&lt;/code&gt; output in Linux on the other side of the link reported some good news,
+the link is up:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;[  615.469842] i40e 0000:01:00.0 enp1s0: NIC Link is Up, 40 Gbps Full Duplex, Flow Control: None&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;Eye scan&lt;/h1&gt;
+&lt;p&gt;Once the link is established, we can use &lt;a href="https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/an/an605.pdf"&gt;Transceiver Toolkit
+EyeQ&lt;/a&gt;
+to verify the link quality on the receiver. EyeQ circuitry uses an additional
+data sampler to sample the receiving data at a time and voltage offset, and
+compares those to the one received from the center of the data eye. With
+this method, it can determine BER (Bit Error Rate) for each point in the 2D
+eye diagram.&lt;/p&gt;
+&lt;p&gt;Shown in figures below are the results from eye scan on all 4 lanes.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Eye scan on channel 0" src="www.j-marjanovic.io/images/2020_fpga_card_part_4/eye_rx0.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Eye scan on channel 1" src="www.j-marjanovic.io/images/2020_fpga_card_part_4/eye_rx1.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Eye scan on channel 2" src="www.j-marjanovic.io/images/2020_fpga_card_part_4/eye_rx2.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Eye scan on channel 3" src="www.j-marjanovic.io/images/2020_fpga_card_part_4/eye_rx3.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;We can see that the eyes are not open very wide, but on the other hand this is
+an expected result with a relatively high data rate and a passive coper cable.
+Anyway, the eyes seems to be open wide enough to provide reliable transmission
+of the data.&lt;/p&gt;
+&lt;h1&gt;Logic Analyzer&lt;/h1&gt;
+&lt;p&gt;At this point we can use &lt;em&gt;SystemTap II Logic Analyzer&lt;/em&gt; to capture the received
+packets from the 40G Ethernet MAC interface.&lt;/p&gt;
+&lt;p&gt;Shown in figure below is the capture with the SignalTap, with the data from an
+ARP packet, send from the PC when we want to ping an address.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="ARP request captured with SignalTap" src="www.j-marjanovic.io/images/2020_fpga_card_part_4/arp.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;An experienced reader will recognize a broadcast MAC address (&lt;code&gt;0xFFFFFFFFFF&lt;/code&gt;),
+ARP Ether Type (&lt;code&gt;0x0806&lt;/code&gt;), and some other elements in the ARP packet.&lt;/p&gt;
+&lt;h1&gt;Summary&lt;/h1&gt;
+&lt;p&gt;In this short blog post I have explored the 40 Gigabit Ethernet on the Stratix V
+board. I have managed to establish a link to a computer, and verify the signal
+integrity of the received signals.&lt;/p&gt;
+&lt;p&gt;For the next post I will prepare a minimal UDP/IPv4 core, and transfer some
+UDP packets between the computer and the FPGA.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;All trademarks and registered trademarks are the property of their respective
+owners.&lt;/p&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay, part 3</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-3.html" rel="alternate"></link><published>2020-09-06T16:00:00+02:00</published><updated>2020-09-06T16:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-09-06:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-3.html</id><summary type="html">&lt;p&gt;As mentioned in my &lt;a href="https://j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html"&gt;previous blog post&lt;/a&gt;, the next step would be
 to get the JTAG running in Quaruts. In this blog post I describe how I managed
 to develop a library as an interface between the FPGA board and Quartus, and
 demonstrate the developed interface to download the bitstream …&lt;/p&gt;</summary><content type="html">&lt;p&gt;As mentioned in my &lt;a href="https://j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html"&gt;previous blog post&lt;/a&gt;, the next step would be
