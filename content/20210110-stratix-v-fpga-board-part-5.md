@@ -45,7 +45,7 @@ with an oscilloscope (without physically modifying the board).
 There are a couple of vias for DQ and DQS visible under the 5th IC which can be probed with an
 oscilloscope, but this is only a small portion of the interface. A different approach is needed.
 
-## Configuration Flash (EPCS/EPCSQ)
+## Configuration Flash (EPCS/EPCQ)
 
 The board contains an on-board Flash which is used to configure the FPGA upon boot. We already know
 that the board configures itself and exposes the PCIe endpoint, so we know that the Flash was not
