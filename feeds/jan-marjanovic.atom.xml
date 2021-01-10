@@ -1,5 +1,650 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io - Jan Marjanovic</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/jan-marjanovic.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2020-10-11T16:00:00+02:00</updated><entry><title>Stratix V accelerator card from eBay, part 4</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-4.html" rel="alternate"></link><published>2020-10-11T16:00:00+02:00</published><updated>2020-10-11T16:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-10-11:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-4.html</id><summary type="html">&lt;p&gt;In the part 4 of the Odyssey with the Startix V board from the eBay, I explore
+<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io - Jan Marjanovic</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/jan-marjanovic.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2021-01-10T10:00:00+01:00</updated><entry><title>Stratix V accelerator card from eBay, part 5</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-5.html" rel="alternate"></link><published>2021-01-10T10:00:00+01:00</published><updated>2021-01-10T10:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2021-01-10:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-5.html</id><summary type="html">&lt;p&gt;The last piece of the puzzle on the Stratix V board is the DDR3 memory pinout. Once this is
+figured out, I can finally start using the board for my developments. It is obvious that this is not
+the most simple way to get a cheap FPGA development board, but …&lt;/p&gt;</summary><content type="html">&lt;p&gt;The last piece of the puzzle on the Stratix V board is the DDR3 memory pinout. Once this is
+figured out, I can finally start using the board for my developments. It is obvious that this is not
+the most simple way to get a cheap FPGA development board, but I generally enjoy the challenges and
+also took this opportunity to learn something new. Being able to use a board without proper
+documentation is a valuable skill.&lt;/p&gt;
+&lt;h1&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;Looking at the board from the bottom, we note that the board has 4 ICs on the bottom side and
+presumably 5 ICs on the top side. The markings on the chips indicate that this is H5TC4G83BFR-PBA -
+a 4 Gb (512M x 8) DDR3 IC. With a total of 9 ICs, the total interface width is 72-bit, which can be
+used as a 64-bit interface with ECC.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="FPGA and 9 DDR3 ICs" src="www.j-marjanovic.io/images/2021_fpga_card_part_5/fpga_ddr3_ics.jpg" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;Looking at the presentation &lt;a href="https://indico.cern.ch/event/822126/contributions/3500184/attachments/1906428/3148591/Catapult_FastML_Fermilab_2019.pdf"&gt;"Heterogeneous Computing @ Microsoft" from A. Putnam and K.
+Ovtcharov&lt;/a&gt;
+we can see the board without the heatsink which confirms that there are 5 DDR3 ICs on the top side.
+Another important detail that can be derived from this picture is the orientation of the FPGA; the
+memory interface is next to the upper right corner, which would correspond to the banks 8A - 8D.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Stratix V board from the top side" src="www.j-marjanovic.io/images/2021_fpga_card_part_5/fpga_orientation.jpg" style="width:40%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;From other sources we also know that there is a 125 MHz clock being feed into the pin &lt;strong&gt;M23&lt;/strong&gt; (in the
+IO bank 8D), and a dedicated high-quality clock is a must for a fast DDR3 interface.&lt;/p&gt;
+&lt;h1&gt;Strategy&lt;/h1&gt;
+&lt;p&gt;The DDR3 memory uses Dynamic On-Die Termination (ODT) for the data (DQ) and data strobe (DQS) pins
+but uses external resistors for termination on the address and control lines. On the Stratix V
+board, we can observe these resistors under the 5th DDR3 chip on the bottom side of the board.&lt;/p&gt;
+&lt;p&gt;Since tracks and vias are also somehow visible, figuring out the pinout between the FPGA and
+external resistors would already give us a starting point.&lt;/p&gt;
+&lt;p&gt;The data, data strobe, and data mask (DM) pins do not have any external termination resistors, and
+since all but 1 IC are placed in the clamshell topology, it would be also impossible to probe it
+with an oscilloscope (without physically modifying the board).&lt;/p&gt;
+&lt;p&gt;There are a couple of vias for DQ and DQS visible under the 5th IC which can be probed with an
+oscilloscope, but this is only a small portion of the interface. A different approach is needed.&lt;/p&gt;
+&lt;h2&gt;Configuration Flash (EPCS/EPCSQ)&lt;/h2&gt;
+&lt;p&gt;The board contains an on-board Flash which is used to configure the FPGA upon boot. We already know
+that the board configures itself and exposes the PCIe endpoint, so we know that the Flash was not
+erased as a part of the disposal process. It is very likely that the DDR3 controller is also a part
+of the bitstream.&lt;/p&gt;
+&lt;p&gt;Altera provides a method to &lt;a href="https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/an/an556.pdf"&gt;encrypt the bitstream with a 256-bit AES
+algorithm&lt;/a&gt;,
+with the key which is either stored in the fuses inside the device or in a volatile memory, backed
+by a battery.&lt;/p&gt;
+&lt;p&gt;Since the boards were never meant to be distributed to customers and were originally only used
+inside the data center, and since the management of the keys and setting up the provisioning
+workflow are non-trivial tasks, I would assume/hope that the bitstream stored in the Flash
+memory is not encrypted.&lt;/p&gt;
+&lt;p&gt;If the bitstream is not encrypted, then it should be possible to extract the pinout from the
+bitstream. Since the data pins in a DDR3 memory interface can be swapped around freely (one only
+needs to observe that the grouping between the data strobe and data), it is most likely enough to
+classify the I/O standard of the pins in question.&lt;/p&gt;
+&lt;p&gt;For &lt;code&gt;DQ&lt;/code&gt; pins we can expect bidir SSTL, for &lt;code&gt;DM&lt;/code&gt; SSTL output, for &lt;code&gt;DQS&lt;/code&gt; differential bidir SSTL, ...&lt;/p&gt;
+&lt;h1&gt;HW inspection&lt;/h1&gt;
+&lt;p&gt;We start our exploration by inspecting the hardware itself. One can find some &lt;a href="http://virtlab.occamlab.com/home/zapisnik/microsoft-catapult-v2"&gt;notes from VirtLab&lt;/a&gt; where a couple of pins are already mapped; this offers a good start.&lt;/p&gt;
+&lt;p&gt;I prepared a small FPGA project where pins are transmitting their location as an UART message - e.g.
+pin K21 will continuously transmit "K21 ". This allows quick determination of which pins are
+connected to which resistors with an oscilloscope.&lt;/p&gt;
+&lt;p&gt;Annotated on the picture below are the FPGA pins which can be detected on the termination resistors
+and vias. I have used color-coding to indicate the voltage level; the signals annotated in cyan
+have driven the output from rail to rail, which means that there is no external termination while
+with the signals in red the effect of the external termination can be observed in the signal level.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Annotated termination resistors and vias" src="www.j-marjanovic.io/images/2021_fpga_card_part_5/ddr3_pinout1.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;The annotation can be then transferred to the DDR3 chip pinout - we can see that we have managed
+to determine all address and control pins and a couple of data and data strobe pins. This will
+be useful as a validation for our future steps.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Annotated DDR3 IC pinout" src="www.j-marjanovic.io/images/2021_fpga_card_part_5/ddr3_pinout2.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;h1&gt;Reverse engineering the bitstream&lt;/h1&gt;
+&lt;p&gt;At this point we have obtained every piece of information from the HW we can (without more intrusive
+procedures such as desoldering the DDR3 chips away). Now it is time to have look at the bitstream
+for Startix V.&lt;/p&gt;
+&lt;p&gt;The collection of scripts and other resources is available on my GitHub in a repository
+&lt;a href="https://github.com/j-marjanovic/otma-pin-re"&gt;otma-pin-re&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;JIC format&lt;/h2&gt;
+&lt;p&gt;JIC stands for &lt;a href="https://www.intel.com/content/www/us/en/programmable/quartushelp/17.0/reference/glossary/def_jic.htm"&gt;JTAG Indirect Configuration
+file&lt;/a&gt;
+which contains both the data to configure the EPCS/EPSQ device itself and the actual FPGA bitstream.
+Using Quartus Programmer one can dump the content from the EPCS or EPCQ into the JIC format.&lt;/p&gt;
+&lt;p&gt;Wirebond on GitHub already did this and stored the result
+&lt;a href="https://github.com/wirebond/catapult_v2_pikes_peak/tree/master/fpga/factory_fw"&gt;here&lt;/a&gt;. I have used
+this file for my analysis.&lt;/p&gt;
+&lt;h2&gt;EPCQ content&lt;/h2&gt;
+&lt;p&gt;As one of the first steps I have plotted the bit density, i.e. how many bits are set in a 1024-bit
+block. 1024 is an arbitrary number, chosen to make plotting simple/fast.&lt;/p&gt;
+&lt;p&gt;Shown in the figure below are four different JIC files. On the first subplot we have a JIC file
+which I have generated from a DDR3 example design. On the second subplot there is a JIC file from
+the on-board EPCQ and on the third subplot are two JIC files (one with an offset for the FPGA
+bitstream) where the compression was enabled.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Bit density of factory.jic" src="www.j-marjanovic.io/images/2021_fpga_card_part_5/jic_factory.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;We can see that the bitstream from the EPCQ (&lt;code&gt;factory.jic&lt;/code&gt;) contains two compressed FPGA images -
+the first one immediately after the header and the second one at the half of the memory. Presumably,
+the first image is a recovery image (since it is smaller in size) and the second one is an
+application image.&lt;/p&gt;
+&lt;h3&gt;Checksum&lt;/h3&gt;
+&lt;p&gt;Zooming in at the beginning of the bitstream we can note an increase in bit density
+every 1188 bits. This is presumably a checksum.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Checksum in the JIC file can be noted visually" src="www.j-marjanovic.io/images/2021_fpga_card_part_5/jic_checksum.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;Explored in the notebook
+&lt;a href="https://github.com/j-marjanovic/otma-pin-re/blob/master/scripts/bitstream_analysis/02_crc_checksum.ipynb"&gt;bitstream_analysis/02_crc_checksum.ipynb&lt;/a&gt;
+is the checksum calculation. It can be confirmed that the checksum is calculated with CRC16 with
+Modbus polynomial, as it is mentioned in &lt;a href="https://www.emsec.ruhr-uni-bochum.de/media/attachments/files/2014/11/MA_Swierczynski.pdf"&gt;P. Swierczynski: Security Analysis of the Bitstream
+Encryption Scheme of Altera
+FPGAs&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Being able to calculate a checksum on the data can serve as a confirmation
+that one is correctly able to interpret the raw data. This will become
+especially important once we try to decompress the bitstream.&lt;/p&gt;
+&lt;h3&gt;Compression&lt;/h3&gt;
+&lt;p&gt;To save the space in the Flash memory, the bitstream in the EPCQ is compressed
+- this can be observed from the increased density in the plots in the previous
+section.&lt;/p&gt;
+&lt;p&gt;The algorithm for compression (and decompression) is described in the &lt;a href="https://patents.google.com/patent/US6525678"&gt;US patent
+6525678&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To give an example, here are two excerpts, the first one from the uncompressed bitstream and the
+second one from the compressed.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;227550 | 00 00 b6 f9 81 8b 00 00 2f e8 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;227560 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;*&lt;/span&gt;
+&lt;span class="err"&gt;2279f0 | 00 00 00 00 00 00 b6 f9 81 8b 00 00 2f e8 00 00&lt;/span&gt;
+&lt;span class="err"&gt;227a00 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;*&lt;/span&gt;
+&lt;span class="err"&gt;227e90 | 00 00 00 00 00 00 00 00 00 00 b6 f9 81 8b 00 00&lt;/span&gt;
+&lt;span class="err"&gt;227ea0 | 2f e8 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;225900 | 00 00 6f 9b ff 81 8b f0 2f e8 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;225910 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;*&lt;/span&gt;
+&lt;span class="err"&gt;225a30 | 00 6f 9b ff 81 8b f0 2f e8 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;225a40 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;*&lt;/span&gt;
+&lt;span class="err"&gt;225b60 | 6f 9b ff 81 8b f0 2f e8 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;225b70 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We see that the non-compressed bitstream contains a sequence &lt;code&gt;b6&lt;/code&gt;, &lt;code&gt;f9&lt;/code&gt;, ... after a long string of
+zeros. In the compressed bitstream the long string of zeros is interrupted by an &lt;code&gt;f&lt;/code&gt; (which
+indicates that the next 4 elements should be copied from the compressed bitstream) and followed by
+&lt;code&gt;b6&lt;/code&gt;, &lt;code&gt;f9&lt;/code&gt; (as in the original bitstream). The checksum is calculated after the decompression.&lt;/p&gt;
+&lt;p&gt;With this out of the way, we have a full bitstream where we can start identifying individual
+features.&lt;/p&gt;
+&lt;h2&gt;Weak pull-up bit&lt;/h2&gt;
+&lt;p&gt;One of the most simple changes regarding an IO pin is turning the weak pull-up resistor on and off.&lt;/p&gt;
+&lt;p&gt;I have explored the effect of changing the value of the weak pull-up resistor in the notebook
+&lt;a href="https://github.com/j-marjanovic/otma-pin-re/blob/master/scripts/extract_pin_addr/test_01-extract_pin_addr.ipynb"&gt;extract_pin_addr/test_01-extract_pin_addr.ipynb&lt;/a&gt;.
+In one of the graphs, we can determine the address of the bit responsible for the weak pull-up, and
+the corresponding checksum bits.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Weak Pull-Up configuration bit" src="www.j-marjanovic.io/images/2021_fpga_card_part_5/extract_pu.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;With the confirmation that a pull-up is controlled by a single bit, I have decided to use this bit
+as a reference address for the rest of the configuration bits. For the classification I use bits
+at addresses relative to the pull-up bit, i.e. the pull-up bit has an address 0.&lt;/p&gt;
+&lt;p&gt;In the notebook
+&lt;a href="https://github.com/j-marjanovic/otma-pin-re/blob/master/scripts/extract_pin_addr/01_get_pu_addr.ipynb"&gt;extract_pin_addr/01_get_pu_addr.ipynb&lt;/a&gt;
+I have then determined the address of the weak pull-up bit for all pins in the banks 8A-8D. Those addresses
+are then (manually) copied to
+&lt;a href="https://github.com/j-marjanovic/otma-pin-re/blob/master/scripts/extract_pin_addr/knowledge.py"&gt;knowledge.py&lt;/a&gt;,
+which is then used in subsequent notebooks.&lt;/p&gt;
+&lt;h2&gt;Pin configuration&lt;/h2&gt;
+&lt;p&gt;The next step is to determine which bits are relevant for the I/O standard on the pin. I have
+prepared a lot of bitstreams with pins in different configurations, and then in the notebook
+ &lt;a href="https://github.com/j-marjanovic/otma-pin-re/blob/master/scripts/extract_pin_addr/03_extract_io_std.ipynb"&gt;extract_pin_addr/03_extract_io_std.ipynb&lt;/a&gt;
+extracted all the bits which are relevant for the IO standard.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="I/O standard configuration bits" src="www.j-marjanovic.io/images/2021_fpga_card_part_5/extract_io_std.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;h2&gt;Classifier&lt;/h2&gt;
+&lt;p&gt;Once I have managed to get a vector of values that are relevant for the I/O pin standard, I have
+started to build a classifier. In the first attempt I let the classifier itself figure out which
+bits are relevant for which features, but I had better success with a hand-crafted classifier,
+presented in the notebook
+&lt;a href="https://github.com/j-marjanovic/otma-pin-re/blob/master/scripts/extract_pin_addr/05_classification_manual.ipynb"&gt;extract_pin_addr/05_classification_manual.ipynb&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;Validation&lt;/h2&gt;
+&lt;p&gt;I have prepared a small project with an 8-bit DDR3 interface and let the classifier classify the
+pins. I have purposely places also some address and control pins in the same bank, and left some
+of the pins disabled. The classifier correctly classifies all the pins, the results are presented in the
+notebook
+&lt;a href="https://github.com/j-marjanovic/otma-pin-re/blob/master/scripts/extract_pin_addr/06_validation.ipynb"&gt;extract_pin_addr/06_validation.ipynb&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Classification&lt;/h2&gt;
+&lt;p&gt;At this point we can run the classifier on the decompressed image from the on-board Flash. Since
+there are two images (a recovery image and an application image) available, I have decompressed both
+and called them &lt;code&gt;factory_decompress0.jic&lt;/code&gt; and &lt;code&gt;factory_decompress1.jic&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;I then ran the classifier on the second image and was amazed by the results. The &lt;a href="https://github.com/j-marjanovic/otma-pin-re/blob/master/scripts/extract_pin_addr/07_application.ipynb"&gt;classifier&lt;/a&gt; managed to find:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;exactly all 72 &lt;code&gt;DQ&lt;/code&gt; pins&lt;/li&gt;
+&lt;li&gt;17 (out of 18) &lt;code&gt;DQS&lt;/code&gt; and &lt;code&gt;DQSn&lt;/code&gt; pins,&lt;/li&gt;
+&lt;li&gt;10 &lt;code&gt;DM&lt;/code&gt; pins (9 + something which is counted as a &lt;code&gt;DM&lt;/code&gt; but it is something else),&lt;/li&gt;
+&lt;li&gt;25 address and control pins (out of 25), and&lt;/li&gt;
+&lt;li&gt;5 unknown pins&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;At this point one could investigate why, for example, one of the DQS pins is not detected and improve
+the classifier to correctly detect all pins, but I have decided to go ahead and clean-up the results
+manually.&lt;/p&gt;
+&lt;h2&gt;Clean-up&lt;/h2&gt;
+&lt;p&gt;The clean-up was quite straightforward, since one can base the corrections on the pinout which was
+determined by physically probing vias and resistors in one of the previous paragraphs.&lt;/p&gt;
+&lt;p&gt;Out of 5 unknown pins, two were &lt;code&gt;CK&lt;/code&gt; and &lt;code&gt;CKn&lt;/code&gt;, one was the missing &lt;code&gt;DQSn&lt;/code&gt; pin, one was the 125 MHz
+clock and one was the &lt;code&gt;RZQ&lt;/code&gt; pin. One of the pins which was incorrectly classified as &lt;code&gt;DM&lt;/code&gt; pin was
+actually a reset pin (L20).&lt;/p&gt;
+&lt;p&gt;The full table with the final pinout (&lt;code&gt;DQ&lt;/code&gt; pins are omitted for brevity, check the last notebook)
+is presented below.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align="left"&gt;pin&lt;/th&gt;
+&lt;th align="left"&gt;dbg&lt;/th&gt;
+&lt;th align="left"&gt;class&lt;/th&gt;
+&lt;th align="left"&gt;addr&lt;/th&gt;
+&lt;th align="left"&gt;control&lt;/th&gt;
+&lt;th align="left"&gt;data&lt;/th&gt;
+&lt;th align="left"&gt;misc&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;J27&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;A0&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;J21&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;A1&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;J29&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;A2&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;L28&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;A3&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;P26&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;A4&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;M26&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;A5&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;N25&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;A6&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;P25&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;A7&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;N22&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;A8&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;N26&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;A9&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;K27&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;A10&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;L27&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;A11&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;N27&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;A12&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;M27&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;A13&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;N21&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;A14&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;K28&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;A15&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;J28&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;BA0&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;K21&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;BA1&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;L26&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;BA2&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;L24&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;CASn&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;J23&lt;/td&gt;
+&lt;td align="left"&gt;inp=1, out=1, pu=0, io_std='Scls1', term=0, diff=1&lt;/td&gt;
+&lt;td align="left"&gt;?&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;CK&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;J24&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=1&lt;/td&gt;
+&lt;td align="left"&gt;?&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;CKn&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;K24&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;CKE&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;N23&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;CSn&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;M21&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;ODT&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;L21&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;RASn&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;L20&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='S', term=1, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;DM&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;reset&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;P23&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='Scls1', term=0, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;addr&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;WEn&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;N33&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='S', term=1, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;DM&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;DM0&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;T31&lt;/td&gt;
+&lt;td align="left"&gt;inp=1, out=1, pu=0, io_std='S', term=1, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;DQ&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;DQ0&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;P34&lt;/td&gt;
+&lt;td align="left"&gt;inp=1, out=1, pu=0, io_std='S', term=1, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;DQ&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;DQ1&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;N34&lt;/td&gt;
+&lt;td align="left"&gt;inp=1, out=1, pu=0, io_std='S', term=1, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;DQ&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;DQ4&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;M33&lt;/td&gt;
+&lt;td align="left"&gt;inp=1, out=1, pu=0, io_std='S', term=1, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;DQ&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;DQ5&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;L34&lt;/td&gt;
+&lt;td align="left"&gt;inp=1, out=1, pu=0, io_std='S', term=1, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;DQ&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;DQ7&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;N32&lt;/td&gt;
+&lt;td align="left"&gt;inp=1, out=1, pu=0, io_std='S', term=1, diff=1&lt;/td&gt;
+&lt;td align="left"&gt;DQS&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;DQS0&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;M32&lt;/td&gt;
+&lt;td align="left"&gt;inp=1, out=1, pu=0, io_std='S', term=1, diff=1&lt;/td&gt;
+&lt;td align="left"&gt;DQS&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;DQS0n&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;M23&lt;/td&gt;
+&lt;td align="left"&gt;inp=1, out=0, pu=0, io_std='2V5', term=None, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;?&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;125 MHz clk&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;E23&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='S', term=1, diff=1&lt;/td&gt;
+&lt;td align="left"&gt;?&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;DQS2n&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;B34&lt;/td&gt;
+&lt;td align="left"&gt;inp=1, out=0, pu=0, io_std='2V5', term=None, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;?&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;RZQ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;D21&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='S', term=1, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;DM&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;D22&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='S', term=1, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;DM&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;D25&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='S', term=1, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;DM&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;E27&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='S', term=1, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;DM&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;4&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;D28&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='S', term=1, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;DM&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;5&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;E30&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='S', term=1, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;DM&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;C34&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='S', term=1, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;DM&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;7&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;H34&lt;/td&gt;
+&lt;td align="left"&gt;inp=0, out=1, pu=0, io_std='S', term=1, diff=0&lt;/td&gt;
+&lt;td align="left"&gt;DM&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;&lt;/td&gt;
+&lt;td align="left"&gt;8&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h1&gt;Summary&lt;/h1&gt;
+&lt;p&gt;In this blog post I have presented the procedure to obtain the DDR3 pinout from the Stratix V board.
+I have not yet tested the pinout on the real hardware, but I am pretty confident that it should work
+- I will leave this for the next post.&lt;/p&gt;
+&lt;p&gt;In general, the procedure was relatively straightforward, but had some obstacles on the way,
+for example compression, the not-completely-regular structure of the bitstream, and the checksums.
+I was also quite lucky that the bitstream itself was not encrypted, although it is understandable
+why this was not the case.&lt;/p&gt;
+&lt;p&gt;In the next blog post I plan to verify that the pinout presented here is accurate and perform
+some memory tests.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;All trademarks and registered trademarks are the property of their respective owners.&lt;/p&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay, part 4</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-4.html" rel="alternate"></link><published>2020-10-11T16:00:00+02:00</published><updated>2020-10-11T16:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-10-11:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-4.html</id><summary type="html">&lt;p&gt;In the part 4 of the Odyssey with the Startix V board from the eBay, I explore
 the QSFP+ port and establish a 40 Gigabit Ethernet connection to a computer
 with an Intel X710 40GbE network adapter.&lt;/p&gt;
 &lt;h1&gt;HW overview&lt;/h1&gt;
