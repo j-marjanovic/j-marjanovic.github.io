@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Stratix V accelerator card from eBay, part 6</title>
+        <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="shortcut icon" href="./theme/images/favicon.ico"/>
+        <link rel="stylesheet" href="./theme/css/main.css" type="text/css" />
+        <link href="www.j-marjanovic.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="j-marjanovic.io Atom Feed" />
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie.css"/>
+                <script src="./js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie6.css"/><![endif]-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="theme/jquery.cookiesdirective.js"></script>
+
+</head>
+
+<body id="index" class="home">
+<script type="text/javascript">
+	// Using $(document).ready never hurts
+	$(document).ready(function(){
+
+		// Cookie setting script wrapper
+		var cookieScripts = function () {
+			// Internal javascript called
+			console.log("Running");
+		
+			// Loading external javascript file
+			$.cookiesDirective.loadScript({
+				uri:'external.js',
+				appendTo: 'eantics'
+			});
+		}
+	
+		/* Call cookiesDirective, overriding any default params
+		
+			*** These are the defaults ***
+				explicitConsent: true,
+				position: 'top',
+				duration: 10,
+				limit: 0,
+				message: null,				
+				cookieScripts: null,
+				privacyPolicyUri: 'privacy.html',
+				scriptWrapper: function(){},	
+				fontFamily: 'helvetica',
+				fontColor: '#FFFFFF',
+				fontSize: '13px',
+				backgroundColor: '#000000',
+				backgroundOpacity: '80',
+				linkColor: '#CA0000'
+				
+		*/
+		
+		$.cookiesDirective({
+			privacyPolicyUri: 'myprivacypolicy.html',
+			explicitConsent: false,
+			position : 'bottom',
+			scriptWrapper: cookieScripts, 
+			cookieScripts: 'Google Analytics', 
+			backgroundColor: '#52B54A',
+			linkColor: '#ffffff'
+		});
+	});
+</script>
+
+	
+  <!-- <header id="banner" class="body"> -->
+  <!--               <h1><a href="./"><img src="http://www.launchyard.com/images/logo.png" /></a></h1> -->
+  <!--       </header> --> 
+
+  <div class="LaunchyardDetail" style="align:right;">
+    <!-- <p> -->
+    <!-- <img src="./theme/images/blue-pin.png" width="100" height="100" alt="Graph icon"> -->
+    <!-- </p> -->
+    <p><a id="sitesubtitle" href="./">j-marjanovic.io</a></p>
+
+	<br>
+    <p style="float: right; margin-right: 50px;"><a id="aboutlink" href="./pages/about.html">About</a></p>
+
+    <br>
+	<p style="float: right; margin-right: 50px;"><img src="./theme/images/icons/rss.png"> <a id="aboutlink" href="./feeds/jan-marjanovic.atom.xml">Atom feed</a></p>
+    <br>
+
+  </div>
+
+<section id="content" >
+    <div class="body">
+      <article>
+        <header>
+          <h1 class="entry-title">
+            <a href="./stratix-v-accelerator-card-from-ebay-part-6.html" rel="bookmark"
+               title="Permalink to Stratix V accelerator card from eBay, part 6">Stratix V accelerator card from eBay, part 6</a></h1>
+
+        </header>
+
+        <div class="entry-content">
+<div class="post-info">
+	<ul>
+        <li class="vcard author">
+                 by&nbsp;<a class="url fn" href="./author/jan-marjanovic.html">Jan Marjanovic</a>
+        </li>
+        <li class="published" title="2021-02-28T13:00:00+01:00">
+          on&nbsp;Sun 28 February 2021
+        </li>
+
+	</ul>
+
+</div><!-- /.post-info -->          <p>In my <a href="./stratix-v-accelerator-card-from-ebay-part-5.html">last blog post</a> I
+have presented a method to extract the DDR3 pinout from the bitstream, obtained
+from the on-board Flash. In this post I will use the information obtained from
+the bitstream to instantiate a DDR3 memory controller and measure its
+performance.</p>
+<h1>DDR3 SDRAM Controller with UniPHY</h1>
+<p>Once the pinout was obtained from the bitstream and the DDR3 part number was
+identified from the markings on the board, instantiating the DDR3 controller was
+relatively straightforward. To speed up the development, I first started with
+just only <a href="https://github.com/j-marjanovic/otma-fpga-bringup/commit/ca66f8ec1a54b9ec2a499152ac7027b3861588ad">1 DDR3 chip (8-bit
+width)</a>.</p>
+<p>The first sign of the success were the LEDs indicating that the DDR3
+initialization controller has finished its job and that the calibration
+(of the delay chains) was successfully completed.</p>
+<p><img alt="LEDs indicating a success of the DDR3 controller initialization procedure" src="./images/2021_fpga_card_part_6/ddr3_calib_done.jpg" style="width:60%; display: block; margin-left: auto; margin-right: auto;"></p>
+<h1>EMIF Debug Toolkit</h1>
+<p>As mentioned in <a href="./stratix-v-accelerator-card-from-ebay-part-3.html">part 3</a> of
+this series, I have spent quite some time making the JTAG work. OpenOCD was able
+to detect the device in the JTAG chain, but I wanted to have a native
+integration with Intel tools.</p>
+<p>The efforts have now paid off, as I was able to use <a href="https://www.intel.com/content/www/us/en/programmable/quartushelp/13.0/mergedProjects/program/syscon/syscon_about_emi_toolkit.htm">External Memory InterFace
+Debug
+Toolkit</a>
+to inspect the calibration results and obtain other internal data from the DDR3
+memory controller.</p>
+<h2>Single bank</h2>
+<p>Presented in the following two figures are the so-called margin reports for the
+read and write cycles. At the start-up, the controller performs a series of
+reads and writes, and measures the data valid window. This information can be
+then retrieved over the JTAG (with EMIF Debug Toolkit).</p>
+<p><img alt="Margin report for single bank read" src="./images/2021_fpga_card_part_6/single_bank_read.png" style="width:30%; display: block; margin-left: auto; margin-right: auto;"></p>
+<p><img alt="Margin report for single bank write" src="./images/2021_fpga_card_part_6/single_bank_write.png" style="width:30%; display: block; margin-left: auto; margin-right: auto;"></p>
+<h2>Full interface</h2>
+<p>Once it was clear that the interface works correctly (and that the
+reverse-engineering procedure described in my previous blog post works),
+I extended the interface to the <a href="https://github.com/j-marjanovic/otma-fpga-bringup/commit/59328a21fda38882297f030fe3ed7cc28ba5b509">full 72-bits and enabled the ECC</a>.</p>
+<p><img alt="Margin report for full interface read" src="./images/2021_fpga_card_part_6/full_if_read.png" style="width:30%; display: block; margin-left: auto; margin-right: auto;"></p>
+<p><img alt="Margin report for full interface write" src="./images/2021_fpga_card_part_6/full_if_write.png" style="width:30%; display: block; margin-left: auto; margin-right: auto;"></p>
+<p>The margin report from the EMIF Debug Toolkit unfortunately do not convey
+information on whether the results are as expected for the DDR3 interface. The
+data valid window is also not presented in a misleading way, with the Unit
+Interval (UI) being indicated to be 1400 ps, while in reality it is only 625 ps
+(for the operation at 1600 MT/s).</p>
+<p>In a presentation of a Cyclone 10 board with a DDR3 memory controller, Intel
+shows a similar result to the one achieved on the Stratix V board. From this I
+would assume that the DDR3 interface is configured correctly.</p>
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/nLEcunXRTrs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<h1>Memory Checker IP</h1>
+<p>At this point we know that all data and control pins are working correctly, but
+we have not yet really tested if the address decoding works properly.</p>
+<p>For this task I have developed a small IP core, called <a href="https://github.com/j-marjanovic/chisel-stuff/tree/master/example-9-mem-checker">Memory
+Checker</a>.
+It has an Avalon-MM master interface that can be connected to the DDR3 memory
+controller. The IP can be instructed to either populate the memory with one of
+the 8 patterns ("all 0s", "all 1s", "walking 1", "walking 0", "alternate",
+"8-bit counter", "32-bit counter", "128-bit counter") or to read the content
+back and check the content of the memory against the expected value. The results
+of the checker are made available to software through the control interface.</p>
+<p>Initially I wanted to use the AXI interface on this core (to make it compatible)
+with both Intel and Xilinx tools, but unfortunately I could not make the bursts
+work in the Intel Platform Designer (previously known as Qsys) with the
+AXI-to-Avalon adapter.</p>
+<p>Memory Checker IP in its natural habitat, connected to the DDR3 memory controller:</p>
+<p><img alt="Memory Checker" src="./images/2021_fpga_card_part_6/mem_checker_ip.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"></p>
+<h2>Driver</h2>
+<p>The IP also provides <a href="https://github.com/j-marjanovic/chisel-stuff/blob/master/example-9-mem-checker/ip_cores/mem_checker/mem_checker_sw.tcl">a driver</a>,
+which gets automatically included in the BSP. The function <code>mem_check()</code> performs
+the memory check and outputs the information on the <code>stdout</code>.</p>
+<h2>Output</h2>
+<p>The output from the memory test procedure is presented below. The main
+function first confirms that it is talking to the right IP (by comparing
+the expected and the real value of the ID register), then retrieves the
+configuration of the IP (Avalon-MM interface width, burst length)
+and then continues with the test procedure for all eight test modes.
+After each test is complete, the result (PASS or FAIL) is printed, and
+the throughput is presented.</p>
+<p>To test the entire 4GB of RAM, the entire procedure takes only several seconds,
+which is significantly faster than the SW-based memory test, provided as
+a part of Nios example design.</p>
+<div class="highlight"><pre><span></span><code><span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span> <span class="o">=================================================</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span> <span class="n">IP</span> <span class="kt">id</span> <span class="o">=</span> <span class="mh">0x3e3c8ec8</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="mi">10003</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span> <span class="n">Avalon</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">64</span> <span class="n">bytes</span><span class="p">,</span> <span class="n">burst</span> <span class="n">len</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span> <span class="n">mode</span> <span class="o">=</span> <span class="n">all</span> <span class="mi">0</span><span class="n">s</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">results</span> <span class="o">=</span> <span class="n">PASS</span> <span class="p">(</span><span class="mi">67108860</span> <span class="o">/</span> <span class="mi">67108860</span><span class="p">)</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">write</span> <span class="n">throughput</span> <span class="o">=</span> <span class="mi">7816</span> <span class="n">MB</span><span class="o">/</span><span class="n">s</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">read</span> <span class="n">throughput</span> <span class="o">=</span> <span class="mi">9662</span> <span class="n">MB</span><span class="o">/</span><span class="n">s</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span> <span class="n">mode</span> <span class="o">=</span> <span class="n">all</span> <span class="mi">1</span><span class="n">s</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">results</span> <span class="o">=</span> <span class="n">PASS</span> <span class="p">(</span><span class="mi">67108860</span> <span class="o">/</span> <span class="mi">67108860</span><span class="p">)</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">write</span> <span class="n">throughput</span> <span class="o">=</span> <span class="mi">7816</span> <span class="n">MB</span><span class="o">/</span><span class="n">s</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">read</span> <span class="n">throughput</span> <span class="o">=</span> <span class="mi">9662</span> <span class="n">MB</span><span class="o">/</span><span class="n">s</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span> <span class="n">mode</span> <span class="o">=</span> <span class="n">walking</span> <span class="mi">1</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">results</span> <span class="o">=</span> <span class="n">PASS</span> <span class="p">(</span><span class="mi">67108860</span> <span class="o">/</span> <span class="mi">67108860</span><span class="p">)</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">write</span> <span class="n">throughput</span> <span class="o">=</span> <span class="mi">7816</span> <span class="n">MB</span><span class="o">/</span><span class="n">s</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">read</span> <span class="n">throughput</span> <span class="o">=</span> <span class="mi">9662</span> <span class="n">MB</span><span class="o">/</span><span class="n">s</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span> <span class="n">mode</span> <span class="o">=</span> <span class="n">walking</span> <span class="mi">0</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">results</span> <span class="o">=</span> <span class="n">PASS</span> <span class="p">(</span><span class="mi">67108860</span> <span class="o">/</span> <span class="mi">67108860</span><span class="p">)</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">write</span> <span class="n">throughput</span> <span class="o">=</span> <span class="mi">7816</span> <span class="n">MB</span><span class="o">/</span><span class="n">s</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">read</span> <span class="n">throughput</span> <span class="o">=</span> <span class="mi">9662</span> <span class="n">MB</span><span class="o">/</span><span class="n">s</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span> <span class="n">mode</span> <span class="o">=</span> <span class="n">alternate</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">results</span> <span class="o">=</span> <span class="n">PASS</span> <span class="p">(</span><span class="mi">67108860</span> <span class="o">/</span> <span class="mi">67108860</span><span class="p">)</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">write</span> <span class="n">throughput</span> <span class="o">=</span> <span class="mi">7816</span> <span class="n">MB</span><span class="o">/</span><span class="n">s</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">read</span> <span class="n">throughput</span> <span class="o">=</span> <span class="mi">9662</span> <span class="n">MB</span><span class="o">/</span><span class="n">s</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span> <span class="n">mode</span> <span class="o">=</span> <span class="mi">8</span><span class="o">-</span><span class="n">bit</span> <span class="n">counter</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">results</span> <span class="o">=</span> <span class="n">PASS</span> <span class="p">(</span><span class="mi">67108860</span> <span class="o">/</span> <span class="mi">67108860</span><span class="p">)</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">write</span> <span class="n">throughput</span> <span class="o">=</span> <span class="mi">7816</span> <span class="n">MB</span><span class="o">/</span><span class="n">s</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">read</span> <span class="n">throughput</span> <span class="o">=</span> <span class="mi">9662</span> <span class="n">MB</span><span class="o">/</span><span class="n">s</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span> <span class="n">mode</span> <span class="o">=</span> <span class="mi">32</span><span class="o">-</span><span class="n">bit</span> <span class="n">counter</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">results</span> <span class="o">=</span> <span class="n">PASS</span> <span class="p">(</span><span class="mi">67108860</span> <span class="o">/</span> <span class="mi">67108860</span><span class="p">)</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">write</span> <span class="n">throughput</span> <span class="o">=</span> <span class="mi">7816</span> <span class="n">MB</span><span class="o">/</span><span class="n">s</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">read</span> <span class="n">throughput</span> <span class="o">=</span> <span class="mi">9662</span> <span class="n">MB</span><span class="o">/</span><span class="n">s</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span> <span class="n">mode</span> <span class="o">=</span> <span class="mi">128</span><span class="o">-</span><span class="n">bit</span> <span class="n">counter</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">results</span> <span class="o">=</span> <span class="n">PASS</span> <span class="p">(</span><span class="mi">67108860</span> <span class="o">/</span> <span class="mi">67108860</span><span class="p">)</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">write</span> <span class="n">throughput</span> <span class="o">=</span> <span class="mi">7816</span> <span class="n">MB</span><span class="o">/</span><span class="n">s</span>
+<span class="p">[</span><span class="n">mem</span> <span class="n">check</span><span class="p">]</span>   <span class="n">read</span> <span class="n">throughput</span> <span class="o">=</span> <span class="mi">9662</span> <span class="n">MB</span><span class="o">/</span><span class="n">s</span>
+</code></pre></div>
+
+
+<h1>Performance</h1>
+<p>Although the performance of the HW-accelerated memory test is several times
+better than the SW-based memory test, I still wanted to see the throughput which
+can be achieved and how it compares to the full bus throughput (i.e. theoretical
+maximum).</p>
+<p>From my <a href="https://indico.desy.de/event/23131/contributions/49392/attachments/31928/39944/ard_st3_gigevision.pdf">previous experience with Xilinx DDR4 controller</a> I expected to achieve the DDR4 bus utilization of
+around 80%.</p>
+<p>Show in the figure below is the read and write throughput for different burst
+lengths.</p>
+<p><img alt="DDR3 throughput" src="./images/2021_fpga_card_part_6/plot_ddr3_perf.png" style="width:80%; display: block; margin-left: auto; margin-right: auto;"></p>
+<p>It can be noted that the read throughput reaches a reasonable level at the large
+bursts. Quite surprisingly, the write level does not reach a reasonable level,
+it only reaches 60% of the full bus throughput, and it is also not affected by
+the burst length.</p>
+<p>To investigate this further, I have taken two captures of the Avalon interface,
+once for the burst length of 4 and once for the burst length of 128.</p>
+<p>Burst length 4:</p>
+<p><img alt="Avalon interface between Memory Checker and DDR3 controller" src="./images/2021_fpga_card_part_6/burst_4_full.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"></p>
+<p>Burst length 128:</p>
+<p><img alt="Avalon interface between Memory Checker and DDR3 controller" src="./images/2021_fpga_card_part_6/burst_128.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"></p>
+<p>With these captures I can calculate what is the interface utilization, i.e. for
+what percentage of cycles was <code>waitrequest</code> signal also being asserted when the
+<code>write</code> signal was being asserted. This number is roughly 60% for both cases,
+thus confirming the write throughput measurements from the Memory Checker IP.</p>
+<h1>Conclusion</h1>
+<p>In this blog post I have used the knowledge obtained from reverse-engineering
+the bitstream and instantiated the DDR3 controller. To verify the functionality
+of the controller and the board itself (it was purchased of eBay for 40 USD
+after all), I have used Intel tools (EMIF Debug Toolkit) and developed a Memory
+Checker IP. The test successfully ran overnight and did not detect any errors.</p>
+<hr>
+<p>All trademarks and registered trademarks are the property of their respective owners.</p>
+        </div><!-- /.entry-content -->
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="janmarjanovic">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script><br/><br/>
+
+      </article>
+    </div>
+</section>
+        <section id="extras" >
+        
+        </section><!-- /#extras -->
+	
+        <footer id="contentinfo" >
+                <address id="about" class="vcard ">
+                Proudly powered by <a href="https://getpelican.com/" target="_blank">Pelican</a>, which takes
+                great advantage of <a href="https://python.org" target="_blank">Python</a>.
+		
+                </address><!-- /#about -->
+		
+
+                
+        </footer><!-- /#contentinfo -->
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-56555055-1', 'auto');
+  ga('send', 'pageview');
+
+</script></body>
+</html>
