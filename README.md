@@ -16,3 +16,7 @@ See `requirements-dev.txt`
 
 Plugins repository (https://github.com/getpelican/pelican-plugins) should be
 cloned alongside with this one (see `PLUGIN_PATHS` in `pelicanconf.py`).
+
+###
+
+- pelican-embed-tweet

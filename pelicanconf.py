@@ -13,8 +13,8 @@ TIMEZONE = 'Europe/Berlin'
 DEFAULT_LANG = u'en'
 LOCALE = ('en_US.UTF-8')
 
-PLUGIN_PATHS = ['../pelican-plugins']
-PLUGINS = ["render_math"]
+PLUGIN_PATHS = ['../pelican-plugins', "../pelican-embed-tweet"]
+PLUGINS = ["render_math", "pelican.plugins.embed_tweet"]
 
 # Feed generation is usually not desired when developing
 #FEED_ALL_ATOM = None
@@ -38,7 +38,6 @@ SOCIAL = (('Twitter', 'https://twitter.com/janmarjanovic'),
 TWITTER_USERNAME = 'janmarjanovic'
 
 DEFAULT_PAGINATION = 10
-
 
 
 # Uncomment following line if you want document-relative URLs when developing
