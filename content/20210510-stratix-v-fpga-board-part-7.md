@@ -231,7 +231,7 @@ transceiver receives lane number 9. At this point one can look again at the
 board, and realize that the upper 8 lanes are connected to the PCIe Hard IP in
 the FPGA.
 
-TODO: annotated
+![Card with annotated FPGA]({static}/images/2021_fpga_card_part_7/annotated.jpg){: style="width:70%; display: block; margin-left: auto; margin-right: auto;"}
 
 This explains why we see lane 8 on the first transceiver, and also explains
 why the link does not get established.
