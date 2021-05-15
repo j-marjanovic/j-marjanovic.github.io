@@ -42,11 +42,10 @@ and Vivado Synthesis
 now support initialization of the register from &lt;code&gt;initial&lt;/code&gt; block.&lt;/p&gt;
 &lt;p&gt;Vivado Synthesis Guidelines go even further and suggest using &lt;code&gt;inital&lt;/code&gt; instead
 of reset:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;Avoid operational set/reset logic whenever possible. There may be other,&lt;/span&gt;
-&lt;span class="err"&gt;less expensive, ways to achieve the desired effect, such as taking&lt;/span&gt;
-&lt;span class="err"&gt;advantage of the circuit global reset by defining an initial content.&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Avoid operational set/reset logic whenever possible. There may be other,
+less expensive, ways to achieve the desired effect, such as taking
+advantage of the circuit global reset by defining an initial content.
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h2&gt;Tip #18&lt;/h2&gt;
 &lt;p&gt;A small typo on page 81, in SystemVerilog &lt;code&gt;logic&lt;/code&gt; is a 4-state type which
@@ -71,7 +70,6 @@ to different delays from IO pins to registers.&lt;/p&gt;
 should be:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;initial&lt;/span&gt; &lt;span class="n"&gt;shift4&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;init2&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="mh"&gt;2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;   &lt;span class="c1"&gt;// result is 8&amp;#39;hE0&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Note that result after shift operation should be 8'hE0 (-32) instead of 8'h0E.&lt;/p&gt;
 &lt;h2&gt;Tip #27&lt;/h2&gt;
@@ -178,9 +176,8 @@ since it often provides a way to find the post-synthesis nets. The &lt;code&gt;k
 attribute could also be combined with &lt;code&gt;debug&lt;/code&gt; attribute for easier identification
 of signals.&lt;/p&gt;
 &lt;p&gt;Verilog example:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c"&gt;(* keep = &amp;quot;true&amp;quot;, mark_debug = &amp;quot;true&amp;quot; *)&lt;/span&gt; &lt;span class="n"&gt;wire&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;19&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="n"&gt;signal_to_be_dbged&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;keep&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;true&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mark_debug&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;true&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;wire&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;19&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="n"&gt;signal_to_be_dbged&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h2&gt;Tip #90&lt;/h2&gt;
 &lt;p&gt;UCF constants are completely out of date, and were replaced by an equivalent of
@@ -196,7 +193,7 @@ of the entire project directly from the source code in the repository.&lt;/p&gt;
 &lt;p&gt;Another tools which could be added to this list is &lt;a href="http://www.ohwr.org/projects/hdl-make"&gt;hdlmake&lt;/a&gt;
 which is meant to be an equivalent of Make for FPGA projects. Currently it is
 not able to tackle more complex compilation procedures, such as re-compiling
-vendor IP cores or handling Vivado Block Diagrams.&lt;/p&gt;</content><category term="Projects"></category><category term="FPGA"></category><category term="Xilinx"></category></entry><entry><title>HDL data type for Python parser implementations</title><link href="www.j-marjanovic.io/hdl-data-type-for-python-parser-implementations.html" rel="alternate"></link><published>2015-11-15T22:00:00+01:00</published><updated>2015-11-15T22:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2015-11-15:www.j-marjanovic.io/hdl-data-type-for-python-parser-implementations.html</id><summary type="html">&lt;p&gt;Recently I had to implement a parser for the PCIe protocol. The data was
+vendor IP cores or handling Vivado Block Diagrams.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Projects"></category><category term="FPGA"></category><category term="Xilinx"></category></entry><entry><title>HDL data type for Python parser implementations</title><link href="www.j-marjanovic.io/hdl-data-type-for-python-parser-implementations.html" rel="alternate"></link><published>2015-11-15T22:00:00+01:00</published><updated>2015-11-15T22:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2015-11-15:www.j-marjanovic.io/hdl-data-type-for-python-parser-implementations.html</id><summary type="html">&lt;p&gt;Recently I had to implement a parser for the PCIe protocol. The data was
 captured with Xilinx ChipScope and saved as TSV (tab-separated value) text file.
 I wanted to implement a parser in Python, my favorite language for this kind of
 tasks. I have stumbled to a problem when I …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Recently I had to implement a parser for the PCIe protocol. The data was
@@ -272,7 +269,6 @@ which discouraged me from using it in my parser.&lt;/p&gt;
     &lt;span class="n"&gt;unittest&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;This results are 3 failing tests: test_invalid_slice, test_slicing, and
 test_unpack. test_invalid_slice fails because taking a slice wider than a vector
 width produces fills the missing bits with zero. This is similar to
@@ -296,7 +292,7 @@ more sense to use the same notation in both languages.&lt;/p&gt;
 (duh), but the Python with the generators, list comprehensions and dictionaries
 (well, SystemVerilog does have associative array) is much more elegant language.
 The ability to test commands on-the-fly in the interpreter is also much
-welcomed.&lt;/p&gt;</content><category term="Projects"></category><category term="Python"></category><category term="Verilog"></category><category term="FPGA"></category><category term="HDL"></category></entry><entry><title>Compilation of Linux kernel for Raspberry Pi</title><link href="www.j-marjanovic.io/compilation-of-linux-kernel-for-raspberry-pi.html" rel="alternate"></link><published>2015-03-01T19:00:00+01:00</published><updated>2015-03-01T19:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2015-03-01:www.j-marjanovic.io/compilation-of-linux-kernel-for-raspberry-pi.html</id><summary type="html">&lt;p&gt;Yesterday I got my Raspberry Pi 2, the evolution of the legendary Raspberry Pi. 
+welcomed.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Projects"></category><category term="Python"></category><category term="Verilog"></category><category term="FPGA"></category><category term="HDL"></category></entry><entry><title>Compilation of Linux kernel for Raspberry Pi</title><link href="www.j-marjanovic.io/compilation-of-linux-kernel-for-raspberry-pi.html" rel="alternate"></link><published>2015-03-01T19:00:00+01:00</published><updated>2015-03-01T19:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2015-03-01:www.j-marjanovic.io/compilation-of-linux-kernel-for-raspberry-pi.html</id><summary type="html">&lt;p&gt;Yesterday I got my Raspberry Pi 2, the evolution of the legendary Raspberry Pi. 
 The evolution is the right word to describe what has changed compared to 
 the previous version. The processor it is now a quad-core, it runs faster,
 it has got a newer instruction set (ARMv7) and the …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Yesterday I got my Raspberry Pi 2, the evolution of the legendary Raspberry Pi. 
@@ -321,7 +317,6 @@ like:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;apt-get install linux-headers-&lt;span class="k"&gt;$(&lt;/span&gt;uname -r&lt;span class="k"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;The above command will install the headers the headers for the currently running 
 kernel. It copies the header files to /usr/src and creates link in /lib/modules/,
 this gives the user tools needed to compile kernel modules.&lt;/p&gt;
@@ -333,7 +328,7 @@ get a kernel image, the &lt;em&gt;kbuild&lt;/em&gt; system did not work. In Thom
 &lt;p&gt;Initially I wanted to get the headers in the same way as I would on Ubuntu, by
 using apt (Advanced Packaging Tool). Searching for available packages did not
 show the package needed (the Raspbian was running the 3.18.7-v7+ kernel).&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;pi@raspberrypi ~ $&lt;/span&gt; sudo aptitude search linux-headers
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;pi@raspberrypi ~ $ &lt;/span&gt;sudo aptitude search linux-headers
 &lt;span class="go"&gt;v   linux-headers                                   -                                                           &lt;/span&gt;
 &lt;span class="go"&gt;p   linux-headers-3.10-3-all                        - All header files for Linux 3.10 (meta-package)            &lt;/span&gt;
 &lt;span class="go"&gt;p   linux-headers-3.10-3-all-armhf                  - All header files for Linux 3.10 (meta-package)            &lt;/span&gt;
@@ -360,7 +355,6 @@ show the package needed (the Raspbian was running the 3.18.7-v7+ kernel).&lt;/p&
 &lt;span class="go"&gt;p   linux-headers-rpi-rpfv                          - This metapackage will pull in the headers for the raspbian&lt;/span&gt;
 &lt;span class="go"&gt;p   linux-headers-rpi2-rpfv                         - This metapackage will pull in the headers for the raspbian&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;I tried my luck with &lt;em&gt;linux-headers-rpi2-rpfv&lt;/em&gt; which installed headers for
 kernel 3.18.0. That might sound close enough, but Linux refuses modules which
@@ -425,7 +419,6 @@ shows nothing promising:&lt;/p&gt;
 &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt; 4246.604593&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c1"&gt;---[ end trace 8e4bd0982f9f1fd0 ]---&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;It basically says that there was an error trying to access the wrong part of the
 memory from the &lt;em&gt;insmod&lt;/em&gt; process.&lt;/p&gt;
 &lt;p&gt;At this point I decided to stop experimenting with this approach. I was getting
@@ -454,7 +447,7 @@ module and to load it in kernel (debug message from kernel):&lt;/p&gt;
 &lt;span class="go"&gt;[   38.324796] &lt;/span&gt;
 &lt;span class="go"&gt;[   38.324808]   built: Mar  1 2015 11:38:10&lt;/span&gt;
 &lt;span class="go"&gt;[   38.324818] ============================================&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content><category term="Projects"></category><category term="Linux"></category><category term="Raspberry Pi"></category></entry><entry><title>Lattice iCEcube2 on Ubuntu 14.04</title><link href="www.j-marjanovic.io/lattice-icecube2-on-ubuntu-1404.html" rel="alternate"></link><published>2015-03-01T19:00:00+01:00</published><updated>2015-03-01T19:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2015-03-01:www.j-marjanovic.io/lattice-icecube2-on-ubuntu-1404.html</id><summary type="html">&lt;p&gt;/home/jan/opt/lscc/iCEcube2.2014.12/synpbase/bin/synplify_pro: 186: [: unexpected operator
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Projects"></category><category term="Linux"></category><category term="Raspberry Pi"></category></entry><entry><title>Lattice iCEcube2 on Ubuntu 14.04</title><link href="www.j-marjanovic.io/lattice-icecube2-on-ubuntu-1404.html" rel="alternate"></link><published>2015-03-01T19:00:00+01:00</published><updated>2015-03-01T19:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2015-03-01:www.j-marjanovic.io/lattice-icecube2-on-ubuntu-1404.html</id><summary type="html">&lt;p&gt;/home/jan/opt/lscc/iCEcube2.2014.12/synpbase/bin/synplify_pro: 186: [: unexpected operator
 /home/jan/opt/lscc/iCEcube2.2014.12/synpbase/bin/synplify_pro: 200: [: !=: argument expected
 /home/jan/opt/lscc/iCEcube2.2014.12/synpbase/bin/c_hdl: 186: [: unexpected operator
 /home/jan/opt/lscc/iCEcube2.2014.12/synpbase/bin/c_hdl: 200 …&lt;/p&gt;</summary><content type="html">&lt;p&gt;/home/jan/opt/lscc/iCEcube2.2014.12/synpbase/bin/synplify_pro: 186: [: unexpected operator
@@ -473,7 +466,7 @@ sed: couldn't edit config: not a regular file
 jan@jan-ThinkPad-T510 ~/opt/lscc/iCEcube2.2014.12/synpbase/bin
  % &lt;/p&gt;
 &lt;p&gt;for file in $(ls -la | grep -E '^[^d]' | awk -F "/" '{print $NF}' ); do echo $file; done &lt;/p&gt;
-&lt;p&gt;for file in $(ls -la | tail -n +2 | grep -E '^[^d]' | awk '{print $NF}' ); do sed -i 's/\/bin\/sh/\/bin\/bash/g' $file; done &lt;/p&gt;</content><category term="Projects"></category><category term="Lattice"></category><category term="iCE40"></category><category term="Linux"></category><category term="Ubuntu"></category></entry><entry><title>Lattice iCE40 configuration using Raspberry Pi</title><link href="www.j-marjanovic.io/lattice-ice40-configuration-using-raspberry-pi.html" rel="alternate"></link><published>2015-01-18T22:00:00+01:00</published><updated>2015-01-18T22:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2015-01-18:www.j-marjanovic.io/lattice-ice40-configuration-using-raspberry-pi.html</id><summary type="html">&lt;p&gt;As I mentioned in previous post, I started playing around with Lattice iCE40 FPGA. 
+&lt;p&gt;for file in $(ls -la | tail -n +2 | grep -E '^[^d]' | awk '{print $NF}' ); do sed -i 's/\/bin\/sh/\/bin\/bash/g' $file; done &lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Projects"></category><category term="Lattice"></category><category term="iCE40"></category><category term="Linux"></category><category term="Ubuntu"></category></entry><entry><title>Lattice iCE40 configuration using Raspberry Pi</title><link href="www.j-marjanovic.io/lattice-ice40-configuration-using-raspberry-pi.html" rel="alternate"></link><published>2015-01-18T22:00:00+01:00</published><updated>2015-01-18T22:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2015-01-18:www.j-marjanovic.io/lattice-ice40-configuration-using-raspberry-pi.html</id><summary type="html">&lt;p&gt;As I mentioned in previous post, I started playing around with Lattice iCE40 FPGA. 
 In the last post I did a quick overview of the 
 iCE40 tools. The iCEcube2 cannot compete with Xilinx ISE and Altera Quartus II, 
 not to mention the Vivado, but since this is a low-cost FPGA …&lt;/p&gt;</summary><content type="html">&lt;p&gt;As I mentioned in previous post, I started playing around with Lattice iCE40 FPGA. 
@@ -509,7 +502,7 @@ in iCEcube2. &lt;/p&gt;
 
 &lt;p&gt;This is the output (well, the real output it is the configured board which blinks the LEDs while
 the DONE led is lit):&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;pi@raspberrypi ~/Jan/ice40/test1 $&lt;/span&gt; sudo bash conf_FPGA.sh proto1_top_bitmap.bin
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;pi@raspberrypi ~/Jan/ice40/test1 $ &lt;/span&gt;sudo bash conf_FPGA.sh proto1_top_bitmap.bin
 &lt;span class="go"&gt;GPIO 25 not exported, trying to export...&lt;/span&gt;
 
 &lt;span class="go"&gt;spidev does not exist&lt;/span&gt;
@@ -532,14 +525,13 @@ the DONE led is lit):&lt;/p&gt;
 &lt;span class="go"&gt;1&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;I find this type of configuration very useful when the FPGA is not the main
 chip in the system (when there is as in the previous example an RPi). The 
 configuration file can be stored on Raspberry Pi SD card and at each start-up
 the FPGA gets programmed. The image update can be done very easily and there 
 is no way a user can brick the FPGA (which can easily happen if the FPGA writes
 the configuration image and boots from its Flash, in this case two images 
-(factory and user) are recommended).&lt;/p&gt;</content><category term="Projects"></category><category term="Lattice"></category><category term="iCE40"></category><category term="FPGA"></category><category term="Raspberry Pi"></category><category term="bash"></category></entry><entry><title>My first encounter with Lattice Semiconductor</title><link href="www.j-marjanovic.io/my-first-encounter-with-lattice-semiconductor.html" rel="alternate"></link><published>2014-12-24T20:00:00+01:00</published><updated>2014-12-24T20:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-12-24:www.j-marjanovic.io/my-first-encounter-with-lattice-semiconductor.html</id><summary type="html">&lt;p&gt;The FPGA market is one of those classical markets where there are two players 
+(factory and user) are recommended).&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Projects"></category><category term="Lattice"></category><category term="iCE40"></category><category term="FPGA"></category><category term="Raspberry Pi"></category><category term="bash"></category></entry><entry><title>My first encounter with Lattice Semiconductor</title><link href="www.j-marjanovic.io/my-first-encounter-with-lattice-semiconductor.html" rel="alternate"></link><published>2014-12-24T20:00:00+01:00</published><updated>2014-12-24T20:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-12-24:www.j-marjanovic.io/my-first-encounter-with-lattice-semiconductor.html</id><summary type="html">&lt;p&gt;The FPGA market is one of those classical markets where there are two players 
 who have nearly 100% market share, e.g. PC processors (Intel and AMD), graphic
 cards (NVIDIA and ATI), ... The two mayor players on the FPGA market are Xilinx
 and Altera. Both of this two companies follows …&lt;/p&gt;</summary><content type="html">&lt;p&gt;The FPGA market is one of those classical markets where there are two players 
@@ -583,16 +575,14 @@ when the licence manager was unable to find network adapter MAC address:&lt;/p&g
 &lt;span class="s s-Atom"&gt;available&lt;/span&gt; &lt;span class="s s-Atom"&gt;at&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;www.macrovision.com&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;The problem is that the FLEXnet software searches for the MAC address of the eth*
 interface, while Centos uses completely different naming. Being familiar with the
 problem, I used a trick to create a new interface named eth0 (you should replace
 the x's with desired MAC address):&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;modprobe dummy&lt;/span&gt;
-&lt;span class="err"&gt;ip link set name eth0 dev dummy0&lt;/span&gt;
-&lt;span class="err"&gt;ifconfig eth0 hw ether xx:xx:xx:xx:xx:xx&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;modprobe dummy
+ip link set name eth0 dev dummy0
+ifconfig eth0 hw ether xx:xx:xx:xx:xx:xx
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;After setting everything up, a view on the iCEcube2 showed before me.&lt;/p&gt;
 &lt;p&gt;&lt;img alt="iCEcube2" src="www.j-marjanovic.io/images/icestudio.png"&gt;&lt;/p&gt;
@@ -609,20 +599,19 @@ very user friendly approach.&lt;/p&gt;
 &lt;span class="n"&gt;tools&lt;/span&gt; &lt;span class="n"&gt;are&lt;/span&gt; &lt;span class="n"&gt;only&lt;/span&gt; &lt;span class="n"&gt;available&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;windows&lt;/span&gt; &lt;span class="n"&gt;platform&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Well this is it for now, i need to switch to Windows. Merry Christmas to everybody!&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;All trademarks and registered trademarks are the property of their respective owners.&lt;/p&gt;</content><category term="Projects"></category><category term="Lattice"></category><category term="iCE40"></category><category term="FPGA"></category></entry><entry><title>Theremin First Demo</title><link href="www.j-marjanovic.io/theremin-first-demo.html" rel="alternate"></link><published>2014-11-18T23:00:00+01:00</published><updated>2014-11-18T23:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-18:www.j-marjanovic.io/theremin-first-demo.html</id><content type="html">&lt;p&gt;During the weekend I was able to take some time to do first test of the theremin.
+&lt;p&gt;All trademarks and registered trademarks are the property of their respective owners.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Projects"></category><category term="Lattice"></category><category term="iCE40"></category><category term="FPGA"></category></entry><entry><title>Theremin First Demo</title><link href="www.j-marjanovic.io/theremin-first-demo.html" rel="alternate"></link><published>2014-11-18T23:00:00+01:00</published><updated>2014-11-18T23:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-18:www.j-marjanovic.io/theremin-first-demo.html</id><content type="html">&lt;p&gt;During the weekend I was able to take some time to do first test of the theremin.
 Here are two recordings of my friend Luka playing.&lt;/p&gt;
 &lt;iframe width="100%" height="450" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/177559922&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;visual=true"&gt;&lt;/iframe&gt;
 
 &lt;iframe width="100%" height="450" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/177561150&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;visual=true"&gt;&lt;/iframe&gt;
 
 &lt;p&gt;There are some more articles explaining how digital theremin works coming,
- remember to check out my blog.&lt;/p&gt;</content><category term="Projects"></category><category term="Theremin"></category></entry><entry><title>I just got a Nintendo 64</title><link href="www.j-marjanovic.io/i-just-got-a-nintendo-64.html" rel="alternate"></link><published>2014-11-16T18:00:00+01:00</published><updated>2014-11-16T18:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-16:www.j-marjanovic.io/i-just-got-a-nintendo-64.html</id><content type="html">&lt;p&gt;I just got a Nintendo 64, my friend Rok was kind enough to lend it.&lt;/p&gt;
+ remember to check out my blog.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Projects"></category><category term="Theremin"></category></entry><entry><title>I just got a Nintendo 64</title><link href="www.j-marjanovic.io/i-just-got-a-nintendo-64.html" rel="alternate"></link><published>2014-11-16T18:00:00+01:00</published><updated>2014-11-16T18:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-16:www.j-marjanovic.io/i-just-got-a-nintendo-64.html</id><content type="html">&lt;p&gt;I just got a Nintendo 64, my friend Rok was kind enough to lend it.&lt;/p&gt;
 &lt;p style="width:700px; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Nintendo 64" src="www.j-marjanovic.io/images/N64.png"&gt;&lt;/p&gt;
 &lt;p&gt;I have an interesting project in mind, I will keep you updated.
-Rok will for sure be the first one to get the alpha version.&lt;/p&gt;</content><category term="Projects"></category><category term="Nintendo 64"></category></entry><entry><title>Theremin Antenna Measurements</title><link href="www.j-marjanovic.io/theremin-antenna-measurements.html" rel="alternate"></link><published>2014-11-09T09:00:00+01:00</published><updated>2014-11-09T09:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-09:www.j-marjanovic.io/theremin-antenna-measurements.html</id><summary type="html">&lt;p&gt;Last week I briefly explained how theremin works. I also presented my idea to develop a 
+Rok will for sure be the first one to get the alpha version.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Projects"></category><category term="Nintendo 64"></category></entry><entry><title>Theremin Antenna Measurements</title><link href="www.j-marjanovic.io/theremin-antenna-measurements.html" rel="alternate"></link><published>2014-11-09T09:00:00+01:00</published><updated>2014-11-09T09:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-09:www.j-marjanovic.io/theremin-antenna-measurements.html</id><summary type="html">&lt;p&gt;Last week I briefly explained how theremin works. I also presented my idea to develop a 
 digital version, using FPGA as a detector of distance between hand and antenna.&lt;/p&gt;
 &lt;p&gt;You have probably already heard a joke about theory and practice. &lt;/p&gt;
 &lt;blockquote&gt;
@@ -668,7 +657,7 @@ from mains is also being picked up.&lt;/p&gt;
 improve.&lt;/p&gt;
 &lt;p&gt;I will write another article on filtering in FPGA, meanwhile let's enjoy much improved 
 results:&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Time constant with filtering" src="www.j-marjanovic.io/images/theremin_antenna_filtered.png"&gt;&lt;/p&gt;</content><category term="Projects"></category><category term="Theremin"></category></entry><entry><title>Theremin Basics</title><link href="www.j-marjanovic.io/theremin-basics.html" rel="alternate"></link><published>2014-11-06T22:00:00+01:00</published><updated>2014-11-06T22:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-06:www.j-marjanovic.io/theremin-basics.html</id><summary type="html">&lt;p&gt;Theremin, a first electronic instrument. Leon Theremin invented it in 1928. 
+&lt;p&gt;&lt;img alt="Time constant with filtering" src="www.j-marjanovic.io/images/theremin_antenna_filtered.png"&gt;&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Projects"></category><category term="Theremin"></category></entry><entry><title>Theremin Basics</title><link href="www.j-marjanovic.io/theremin-basics.html" rel="alternate"></link><published>2014-11-06T22:00:00+01:00</published><updated>2014-11-06T22:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-06:www.j-marjanovic.io/theremin-basics.html</id><summary type="html">&lt;p&gt;Theremin, a first electronic instrument. Leon Theremin invented it in 1928. 
 Try to imagine people seeing somebody waving hand in the middle or the air
 and producing an extraterrestrial sounds. Theremin, should be considered a 
 true pioneer of electronic music.&lt;/p&gt;
@@ -706,4 +695,4 @@ between hand and antenna)  will result in longer time and a smaller
 capacitance (longer distance between hand and antenna) will result in shorter
 time. This difference will generate a different pitch.&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Theremin settling time" src="www.j-marjanovic.io/images/theremin_settling_time.png"&gt;&lt;/p&gt;
-&lt;p&gt;This is all for this part, stay tuned for more.&lt;/p&gt;</content><category term="Projects"></category><category term="Theremin"></category></entry></feed>
+&lt;p&gt;This is all for this part, stay tuned for more.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Projects"></category><category term="Theremin"></category></entry></feed>

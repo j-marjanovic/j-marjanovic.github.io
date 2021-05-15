@@ -146,7 +146,7 @@ in iCEcube2. </p>
 
 <p>This is the output (well, the real output it is the configured board which blinks the LEDs while
 the DONE led is lit):</p>
-<div class="highlight"><pre><span></span><code><span class="gp">pi@raspberrypi ~/Jan/ice40/test1 $</span> sudo bash conf_FPGA.sh proto1_top_bitmap.bin
+<div class="highlight"><pre><span></span><code><span class="gp">pi@raspberrypi ~/Jan/ice40/test1 $ </span>sudo bash conf_FPGA.sh proto1_top_bitmap.bin
 <span class="go">GPIO 25 not exported, trying to export...</span>
 
 <span class="go">spidev does not exist</span>
@@ -169,14 +169,13 @@ the DONE led is lit):</p>
 <span class="go">1</span>
 </code></pre></div>
 
-
 <p>I find this type of configuration very useful when the FPGA is not the main
 chip in the system (when there is as in the previous example an RPi). The 
 configuration file can be stored on Raspberry Pi SD card and at each start-up
 the FPGA gets programmed. The image update can be done very easily and there 
 is no way a user can brick the FPGA (which can easily happen if the FPGA writes
 the configuration image and boots from its Flash, in this case two images 
-(factory and user) are recommended).</p>
+(factory and user) are recommended).</p><script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
         </div><!-- /.entry-content -->
 <a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="janmarjanovic">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script><br/><br/>
 

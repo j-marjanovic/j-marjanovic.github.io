@@ -135,7 +135,6 @@ Error: cannot find <span class="s2">&quot;./../linux_rh60/vsim&quot;</span>
 $
 </code></pre></div>
 
-
 <p>From the path it is clear that ModelSim thinks it is running on RHEL 6. As
 described in an extensive <a href="https://wiki.archlinux.org/index.php/Altera_Design_Software#ModelSim-Altera_Edition">Wiki entry on Altera
 software on Arch Linux Wiki</a>,
@@ -145,9 +144,8 @@ Ubuntu 18.10) we get the following error:</p>
 <div class="highlight"><pre><span></span><code>$ ./vsim
 Reading pref.tcl
 ./../linuxaloem/vish: symbol lookup error: /usr/lib/i386-linux-gnu/libfontconfig.so.1: undefined symbol: FT_Done_MM_Var
-** Fatal: Read failure in vlm process <span class="o">(</span><span class="m">0</span>,0<span class="o">)</span>
+** Fatal: Read failure <span class="k">in</span> vlm process <span class="o">(</span><span class="m">0</span>,0<span class="o">)</span>
 </code></pre></div>
-
 
 <p>This message is new and it required me to do some investigation to get it fixed.</p>
 <h1>Downgrading fontconfig</h1>
@@ -162,7 +160,6 @@ https://gitlab.freedesktop.org/fontconfig/fontconfig.git</p>
 ./configure.ac:321:AC_CHECK_FUNCS<span class="o">(</span>FT_Get_BDF_Property FT_Get_PS_Font_Info FT_Has_PS_Glyph_Names FT_Get_X11_Font_Format FT_Done_MM_Var<span class="o">)</span>
 </code></pre></div>
 
-
 <p>One <code>git blame</code> after we find the following commit which introduced this function:</p>
 <div class="highlight"><pre><span></span><code><span class="k">commit</span><span class="w"> </span><span class="mi">94683</span><span class="n">a1255c065a7f8e7fadee9de605f3eaf9ac7</span><span class="w"></span>
 <span class="nl">Author</span><span class="p">:</span><span class="w"> </span><span class="n">Behdad</span><span class="w"> </span><span class="n">Esfahbod</span><span class="w"> </span><span class="o">&lt;</span><span class="n">behdad</span><span class="nv">@behdad</span><span class="p">.</span><span class="n">org</span><span class="o">&gt;</span><span class="w"></span>
@@ -171,30 +168,26 @@ https://gitlab.freedesktop.org/fontconfig/fontconfig.git</p>
 <span class="w">    </span><span class="k">Use</span><span class="w"> </span><span class="n">FT_Done_MM_Var</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">available</span><span class="w"></span>
 </code></pre></div>
 
-
 <p>And then we can find out that release <strong>2.12.92</strong> is the last one which does
 not contain this change.</p>
 <p>I checked out the code from release <strong>2.12.92</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="err">git checkout -b 2.12.92 2.12.92</span>
+<div class="highlight"><pre><span></span><code>git checkout -b 2.12.92 2.12.92
 </code></pre></div>
-
 
 <p>Installed the libraries needed:</p>
-<div class="highlight"><pre><span></span><code><span class="err">sudo apt install libxml2-dev:i386 uuid-dev:i386</span>
+<div class="highlight"><pre><span></span><code>sudo apt install libxml2-dev:i386 uuid-dev:i386
 </code></pre></div>
-
 
 <p>And used the following commands to compile and install an older version
 of <code>fontconfig</code> library:</p>
-<div class="highlight"><pre><span></span><code><span class="err">aclocal -I m4</span>
-<span class="err">autoconf</span>
-<span class="err">libtoolize</span>
-<span class="err">./autogen.sh</span>
-<span class="err">CFLAGS=-m32 LDFLAGS=-L/home/jan/local/packages/freetype-2.4.7-32bit/lib ./configure --prefix=/home/jan/local/packages/fontconfig-2.12.92-32bit --enable-libxml2</span>
-<span class="err">make</span>
-<span class="err">make install</span>
+<div class="highlight"><pre><span></span><code><span class="n">aclocal</span> <span class="o">-</span><span class="n">I</span> <span class="n">m4</span>
+<span class="n">autoconf</span>
+<span class="n">libtoolize</span>
+<span class="o">./</span><span class="n">autogen</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">CFLAGS</span><span class="o">=-</span><span class="n">m32</span> <span class="n">LDFLAGS</span><span class="o">=-</span><span class="n">L</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">jan</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">packages</span><span class="o">/</span><span class="n">freetype</span><span class="o">-</span><span class="mf">2.4</span><span class="o">.</span><span class="mi">7</span><span class="o">-</span><span class="mi">32</span><span class="n">bit</span><span class="o">/</span><span class="n">lib</span> <span class="o">./</span><span class="n">configure</span> <span class="o">--</span><span class="n">prefix</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">jan</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">packages</span><span class="o">/</span><span class="n">fontconfig</span><span class="o">-</span><span class="mf">2.12</span><span class="o">.</span><span class="mi">92</span><span class="o">-</span><span class="mi">32</span><span class="n">bit</span> <span class="o">--</span><span class="n">enable</span><span class="o">-</span><span class="n">libxml2</span>
+<span class="n">make</span>
+<span class="n">make</span> <span class="n">install</span>
 </code></pre></div>
-
 
 <h1>Changes to vco</h1>
 <p>Finally, I needed to change <code>vco</code> in <code>intelFPGA/19.1/modelsim_ase/bin</code> folder
@@ -214,11 +207,10 @@ to load the freshly-recompiled libraries:</p>
 <span class="o">&lt;</span>           <span class="mf">5.</span><span class="p">[</span><span class="mi">0</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="s s-Atom">*</span><span class="p">)</span>         <span class="s s-Atom">vco=</span><span class="s2">&quot;linuxaloem&quot;</span> <span class="p">;;</span>
 </code></pre></div>
 
-
 <h1>Conclusion</h1>
 <p>Ta-da, ModelSim now works on Ubuntu 19.04. The font styles are a little bit
 broken, but being humble is a good characteristic, and we won't ask too much.</p>
-<p style="width:80%; display: block; margin-left: auto; margin-right: auto;"><img alt="ModelSim up and running" src="./images/modelsim_on_ubuntu19-04.png"></p>
+<p style="width:80%; display: block; margin-left: auto; margin-right: auto;"><img alt="ModelSim up and running" src="./images/modelsim_on_ubuntu19-04.png"></p><script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
         </div><!-- /.entry-content -->
 <a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="janmarjanovic">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script><br/><br/>
 

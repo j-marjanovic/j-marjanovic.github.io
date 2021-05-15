@@ -136,7 +136,6 @@ Verilog:</p>
 <span class="k">end</span>
 </code></pre></div>
 
-
 <p>and VHDL:</p>
 <div class="highlight"><pre><span></span><code><span class="nc">proc_smth</span><span class="o">:</span> <span class="k">process</span> <span class="p">(</span><span class="n">clk</span><span class="p">)</span>
 <span class="k">begin</span>
@@ -149,7 +148,6 @@ Verilog:</p>
   <span class="k">end</span> <span class="k">if</span><span class="p">;</span>
 <span class="k">end</span> <span class="k">process</span><span class="p">;</span>
 </code></pre></div>
-
 
 <p>I would argue that half of the lines in a typical VHDL modules are not needed,
 as demonstrated in previous example. A typical module for me would be some DSP
@@ -201,25 +199,24 @@ the DUT and monitor BFM can in parallel monitor the output port of the DUT.</p>
 <div class="highlight"><pre><span></span><code>  <span class="c1">//==========================================================================</span>
   <span class="c1">// step</span>
 
-  <span class="k">val</span> <span class="n">rm</span> <span class="k">=</span> <span class="n">runtimeMirror</span><span class="o">(</span><span class="n">getClass</span><span class="o">.</span><span class="n">getClassLoader</span><span class="o">)</span>
-  <span class="k">val</span> <span class="n">im</span> <span class="k">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">reflect</span><span class="o">(</span><span class="k">this</span><span class="o">)</span>
-  <span class="k">val</span> <span class="n">members</span> <span class="k">=</span> <span class="n">im</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">typeSignature</span><span class="o">.</span><span class="n">members</span>
-  <span class="k">def</span> <span class="n">bfms</span> <span class="k">=</span> <span class="n">members</span><span class="o">.</span><span class="n">filter</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">typeSignature</span> <span class="o">&lt;:&lt;</span> <span class="n">typeOf</span><span class="o">[</span><span class="kt">ChiselBfm</span><span class="o">])</span>
+  <span class="kd">val</span> <span class="n">rm</span> <span class="o">=</span> <span class="n">runtimeMirror</span><span class="p">(</span><span class="n">getClass</span><span class="p">.</span><span class="n">getClassLoader</span><span class="p">)</span>
+  <span class="kd">val</span> <span class="n">im</span> <span class="o">=</span> <span class="n">rm</span><span class="p">.</span><span class="n">reflect</span><span class="p">(</span><span class="bp">this</span><span class="p">)</span>
+  <span class="kd">val</span> <span class="n">members</span> <span class="o">=</span> <span class="n">im</span><span class="p">.</span><span class="n">symbol</span><span class="p">.</span><span class="n">typeSignature</span><span class="p">.</span><span class="n">members</span>
+  <span class="k">def</span> <span class="nf">bfms</span> <span class="o">=</span> <span class="n">members</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">typeSignature</span> <span class="o">&lt;:&lt;</span> <span class="n">typeOf</span><span class="p">[</span><span class="nc">ChiselBfm</span><span class="p">])</span>
 
-  <span class="k">def</span> <span class="n">stepSingle</span><span class="o">()</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
-    <span class="k">for</span> <span class="o">(</span><span class="n">bfm</span> <span class="k">&lt;-</span> <span class="n">bfms</span><span class="o">)</span> <span class="o">{</span>
-      <span class="n">im</span><span class="o">.</span><span class="n">reflectField</span><span class="o">(</span><span class="n">bfm</span><span class="o">.</span><span class="n">asTerm</span><span class="o">).</span><span class="n">get</span><span class="o">.</span><span class="n">asInstanceOf</span><span class="o">[</span><span class="kt">ChiselBfm</span><span class="o">].</span><span class="n">update</span><span class="o">(</span><span class="n">t</span><span class="o">)</span>
-    <span class="o">}</span>
-    <span class="k">super</span><span class="o">.</span><span class="n">step</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
-  <span class="o">}</span>
+  <span class="k">def</span> <span class="nf">stepSingle</span><span class="p">():</span> <span class="nc">Unit</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">bfm</span> <span class="o">&lt;-</span> <span class="n">bfms</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">im</span><span class="p">.</span><span class="n">reflectField</span><span class="p">(</span><span class="n">bfm</span><span class="p">.</span><span class="n">asTerm</span><span class="p">).</span><span class="n">get</span><span class="p">.</span><span class="k">asInstanceOf</span><span class="p">[</span><span class="nc">ChiselBfm</span><span class="p">].</span><span class="n">update</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="bp">super</span><span class="p">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="p">}</span>
 
-  <span class="k">override</span> <span class="k">def</span> <span class="n">step</span><span class="o">(</span><span class="n">n</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
-    <span class="k">for</span><span class="o">(</span><span class="k">_</span> <span class="k">&lt;-</span> <span class="mi">0</span> <span class="n">until</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">override</span> <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nc">Int</span><span class="p">):</span> <span class="nc">Unit</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">_</span> <span class="o">&lt;-</span> <span class="mi">0</span> <span class="n">until</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
       <span class="n">stepSingle</span>
-    <span class="o">}</span>
-  <span class="o">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
 </code></pre></div>
-
 
 <p>Through Scala's <a href="https://www.michaelpollmeier.com/fun-with-scalas-new-reflection-api-2-10">Reflection API</a>
 we are able to find all instances of classes which have a trait of <code>ChiselBfm</code>,
@@ -256,7 +253,6 @@ operation of the BFMs.</p>
 <span class="o">[</span><span class="n">info</span><span class="o">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">should</span><span class="w"> </span><span class="n">compare</span><span class="w"> </span><span class="n">expected</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">obtained</span><span class="w"> </span><span class="n">response</span><span class="w"></span>
 </code></pre></div>
 
-
 <p>And this is the display of the waveforms from GTKWave:</p>
 <p><img alt="GTKWave display" src="./images/chisel_override_clock.png"></p>
 <p>It can be noted that both Driver and Monitor are able to perform their tasks
@@ -266,7 +262,7 @@ in parallel.</p>
 this particular case (when DUT has only one input and one output port), one
 could also use <code>OrderedDecoupledHWIOTester</code>, but it should be obvious that the
 method presented here provides more control and flexibility in more complex
-cases.</p>
+cases.</p><script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
         </div><!-- /.entry-content -->
 <a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="janmarjanovic">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script><br/><br/>
 

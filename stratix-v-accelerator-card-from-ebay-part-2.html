@@ -154,7 +154,6 @@ address:</p>
 70: -- -- -- -- -- -- -- 77         
 </code></pre></div>
 
-
 <p>We see the EEPROM at the address 0x51, and another two devices at addresses 0x4C
 and 0x77 - I would assume that these are some kind of sensors and/or regulators.</p>
 <h2>IPMI FRU</h2>
@@ -195,7 +194,6 @@ ProductArea:
   checksum: 241 (OK) 
 </code></pre></div>
 
-
 <p>From my understanding of the IPMI standard, the Chassis information should
 not be present on this card:</p>
 <blockquote>
@@ -232,7 +230,6 @@ one can also note the Microsoft card:</p>
 04:00.0 USB controller: NEC Corporation uPD720200 USB 3.0 Host Controller (rev 04)
 05:03.0 FireWire (IEEE 1394): LSI Corporation FW322/323 [TrueFire] 1394a Controller (rev 70)
 </code></pre></div>
-
 
 <p>Using <code>lspci -vv</code> to get more information, we see that the link is established
 at 2.5 GT/s (probably too many connectors in series to go faster) and at
@@ -299,7 +296,6 @@ x1 width (as expected, since we only pass one lane through the USB cable):</p>
         HeaderLog: 00000000 00000000 00000000 00000000
 </code></pre></div>
 
-
 <h1>Summary and outlook</h1>
 <p>The adapter card did its job and provided access to the I2C bus and a connection
 to the PCI Express. I have managed to parse the content of the EEPROM (and
@@ -315,7 +311,7 @@ to be more careful next time and double-check everything.</p>
 know that it can be used with OpenOCD, but I would imagine that one can somehow
 also make it talk to Quartus directly.</p>
 <hr>
-<p>All trademarks and registered trademarks are the property of their respective owners.</p>
+<p>All trademarks and registered trademarks are the property of their respective owners.</p><script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
         </div><!-- /.entry-content -->
 <a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="janmarjanovic">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script><br/><br/>
 

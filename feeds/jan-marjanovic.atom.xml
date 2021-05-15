@@ -1,5 +1,385 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io - Jan Marjanovic</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/jan-marjanovic.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2021-02-28T13:00:00+01:00</updated><entry><title>Stratix V accelerator card from eBay, part 6</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-6.html" rel="alternate"></link><published>2021-02-28T13:00:00+01:00</published><updated>2021-02-28T13:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2021-02-28:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-6.html</id><summary type="html">&lt;p&gt;In my &lt;a href="./stratix-v-accelerator-card-from-ebay-part-5.html"&gt;last blog post&lt;/a&gt; I
+<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io - Jan Marjanovic</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/jan-marjanovic.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2021-05-15T13:30:00+02:00</updated><entry><title>Stratix V accelerator card from eBay, part 7</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-7.html" rel="alternate"></link><published>2021-05-15T13:30:00+02:00</published><updated>2021-05-15T13:30:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2021-05-15:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-7.html</id><summary type="html">&lt;p&gt;The reverse engineering of the FPGA accelerator card from eBay is progressing
+well and documenting the DDR3 interface was a huge step forward. However, there
+is still one important part of the board which is not fully uncovered, the PCI
+Express® interface.&lt;/p&gt;
+&lt;h1&gt;Hardware&lt;/h1&gt;
+&lt;h2&gt;Pikes Peak&lt;/h2&gt;
+&lt;p&gt;Pikes Peak is a Stratix …&lt;/p&gt;</summary><content type="html">&lt;p&gt;The reverse engineering of the FPGA accelerator card from eBay is progressing
+well and documenting the DDR3 interface was a huge step forward. However, there
+is still one important part of the board which is not fully uncovered, the PCI
+Express® interface.&lt;/p&gt;
+&lt;h1&gt;Hardware&lt;/h1&gt;
+&lt;h2&gt;Pikes Peak&lt;/h2&gt;
+&lt;p&gt;Pikes Peak is a Stratix® V-based FPGA accelerator conforming to &lt;a href="https://www.opencompute.org/documents/microsoft-ocs-v2-tray-mezzanine"&gt;Open CloudServer
+OCS Tray Mezzanine
+Specification&lt;/a&gt;.
+It connects to the motherboard with a 160-pin connector which provides power,
+management, and a 16-lane-wide PCIe interface. With the resistors on the
+&lt;code&gt;PCIE_CFG_ID&lt;/code&gt;, Pikes Peak indicates 2 x8 bifurcation.&lt;/p&gt;
+&lt;p&gt;I have explored the various details of this board in previous posts on my blog.
+Important for today's discussion is &lt;a href="stratix-v-accelerator-card-from-ebay-part-2.html"&gt;the part
+2&lt;/a&gt;, where using a &lt;a href="https://github.com/j-marjanovic/ocs-tray-mezzanine-adapter"&gt;custom HW
+adapter&lt;/a&gt; I was able
+to establish the connection between the PC and the FPGA using the factory image
+on the board (stored in on-board Flash).&lt;/p&gt;
+&lt;p&gt;The part number of the device (&lt;code&gt;5SGSD5&lt;/code&gt;) indicates that it contains &lt;a href="https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/hb/stratix-v/stx5_51001.pdf"&gt;one
+PCIe hard IP block&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;At that time I have assumed that one link of 8 PCIe lanes is connected to
+the PCIe hard IP block and that another x8 link is connected to 8 transceivers
+on the other side of the device, maybe with the PCIe IP implemented in logic.
+Later we will explore why this assumption is not correct.&lt;/p&gt;
+&lt;h2&gt;Storey Peak&lt;/h2&gt;
+&lt;p&gt;Storey Peak contains (roughly) the same components as Pikes Peak but in a
+"normal" PCIe card form factor. For me, as a hobbyist who is not very keen on
+designing custom HW and prefers to stay in the FPGA domain, this form factor is
+much more convenient.&lt;/p&gt;
+&lt;p&gt;I have presented the main components of this board in a series of tweets a
+couple of weeks ago:&lt;/p&gt;
+&lt;p&gt;&lt;blockquote class="twitter-tweet" align="center"&gt;&lt;a href="https://twitter.com/janmarjanovic/status/1383876145821589505"&gt;Tweet of janmarjanovic/1383876145821589505&lt;/a&gt;&lt;/blockquote&gt;&lt;/p&gt;
+&lt;p&gt;An attentive reader will note the difference between the PCIe devices IDs on
+Storey Peak and Pikes Peak: Store Peak reports &lt;code&gt;0xb101&lt;/code&gt; while Pikes Peak reports
+&lt;code&gt;0xb100&lt;/code&gt;.&lt;/p&gt;
+&lt;h1&gt;First test&lt;/h1&gt;
+&lt;p&gt;I have
+&lt;a href="https://github.com/j-marjanovic/otma-fpga-bringup/commit/da95ff009cd1d9d0664b099894da73b6e59f4eae"&gt;instantiated&lt;/a&gt;
+the &lt;em&gt;Avalon-MM Stratix V Hard IP for PCI Express&lt;/em&gt; and connected it to a couple
+of peripherals (GPIO, System ID) to provide a minimal example for access
+from the computer. I have also connected the Hard IP status interface to the
+Nios II processor, which allows me to query the status of the PCIe link over the
+JTAG. There is only 1 location where the PCIe lanes can be connected in a
+normal &lt;code&gt;5SGSD5&lt;/code&gt; (annotated in light pink in the image below), so I connected the
+PCIe lanes there.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="PCIe pin locations" src="www.j-marjanovic.io/images/2021_fpga_card_part_7/pcie_pins.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;h2&gt;First test with Pikes Peak&lt;/h2&gt;
+&lt;p&gt;Once everything was set up I have connected the Pikes Peak board through the x1
+extender to one of the slots in my DELL PowerEdge R720.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Pikes Peak in a server" src="www.j-marjanovic.io/images/2021_fpga_card_part_7/pp_in_server.jpg" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;The "OTMA adapter" does not properly connect the reset pin to the Pikes Peak
+connector, and I had to manually issue a reset command after power-up. Below
+is the output from the CLI running on the Nios II processor in FPGA:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;init done
+
+pp_sp_example &amp;gt; pcie status
+pcie:
+  id = 2c1e57a7
+  version = 10000
+  status.cur speed   = 0
+  status.LTTSM state = 0
+  status.lane act    = 0
+  status.DL up       = 0
+
+pp_sp_example &amp;gt; clks
+Clock counter: ident = 0xc10cc272, version = 0x10000
+Clock frequency [0] =  124.999 MHz
+Clock frequency [1] =  644.531 MHz
+Clock frequency [2] =   99.998 MHz
+Clock frequency [3] =   99.998 MHz
+Clock frequency [4] =    0.000 MHz
+Clock frequency [5] =    0.000 MHz
+Clock frequency [6] =    0.000 MHz
+Clock frequency [7] =    0.000 MHz
+
+pp_sp_example &amp;gt; pcie reset
+pcie: asserting reset...
+pcie: deasserted reset...
+pcie: reset deasserted
+
+pp_sp_example &amp;gt; pcie status
+pcie:
+  id = 2c1e57a7
+  version = 10000
+  status.cur speed   = 2
+  status.LTTSM state = f
+  status.lane act    = 1
+  status.DL up       = 0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;We see that clocks 2 and 3 are both 100 MHz, which indicates that the PCIe clock
+distribution works correctly, and after the reset the link reports:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;current speed: 5 GT/s&lt;/strong&gt; - maximum supported by the IP in this configuration&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;LTSSM state: L0&lt;/strong&gt; - this is the state in which the state machine should be&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;lane active: 1&lt;/strong&gt; - as expected, the USB cable contains only one high-speed differential lane&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This is all looks very promising; once the PC boots I am also able to get the
+same information from the &lt;code&gt;lspci&lt;/code&gt; utility:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ sudo lspci -s 03:00 -vv
+03:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)
+    Subsystem: Device 01a2:0001
+    Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+    Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast &amp;gt;TAbort- &amp;lt;TAbort- &amp;lt;MAbort- &amp;gt;SERR- &amp;lt;PERR- INTx-
+    Latency: 0, Cache Line Size: 64 bytes
+    Interrupt: pin A routed to IRQ 15
+    NUMA node: 0
+    Region 0: Memory at df800000 (32-bit, non-prefetchable) [size=2M]
+&amp;lt;...&amp;gt;
+    Capabilities: [80] Express (v2) Endpoint, MSI 00
+        DevCap: MaxPayload 128 bytes, PhantFunc 0, Latency L0s &amp;lt;64ns, L1 &amp;lt;1us
+            ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset- SlotPowerLimit 25.000W
+        DevCtl: CorrErr- NonFatalErr+ FatalErr+ UnsupReq+
+            RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
+            MaxPayload 128 bytes, MaxReadReq 512 bytes
+        DevSta: CorrErr+ NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
+        LnkCap: Port #1, Speed 5GT/s, Width x8, ASPM not supported
+            ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp+
+        LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk+
+            ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+        LnkSta: Speed 5GT/s (ok), Width x1 (downgraded)
+            TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+&amp;lt;...&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And finally, I can use &lt;code&gt;pcimem&lt;/code&gt; to read and write to the registers in the FPGA,
+e.g. read system ID and timestamp and write to a GPIO pin:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ sudo ./pcimem /sys/bus/pci/devices/0000:03:00.0/resource0 0x100000 w
+/sys/bus/pci/devices/0000:03:00.0/resource0 opened.
+Target offset is 0x100000, page size is 4096
+mmap(0, 4096, 0x3, 0x1, 3, 0x100000)
+PCI Memory mapped to address 0x7f3ecc8ba000.
+0x100000: 0x01A20001
+
+$ sudo ./pcimem /sys/bus/pci/devices/0000:03:00.0/resource0 0x100004 w
+/sys/bus/pci/devices/0000:03:00.0/resource0 opened.
+Target offset is 0x100004, page size is 4096
+mmap(0, 4096, 0x3, 0x1, 3, 0x100004)
+PCI Memory mapped to address 0x7f65b24b3000.
+0x100004: 0x6097B8A9
+
+$ sudo ./pcimem /sys/bus/pci/devices/0000:03:00.0/resource0 0x0 w 1
+/sys/bus/pci/devices/0000:03:00.0/resource0 opened.
+Target offset is 0x0, page size is 4096
+mmap(0, 4096, 0x3, 0x1, 3, 0x0)
+PCI Memory mapped to address 0x7fec6c0cc000.
+0x0000: 0x00000000
+Written 0x0001; readback 0x   1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The proverbial "blinky" is actually blinking and so far everything seems to be
+working correctly.&lt;/p&gt;
+&lt;h2&gt;First test with Storey Peak&lt;/h2&gt;
+&lt;p&gt;Encouraged by the success with the Pikes Peak board and the adapter PCB, I have
+installed the Storey Peak board instead. Compared to the Pikes Peak board and
+the cable salad there, this one fits much nicer - both from purely esthetic as
+well as thermal point-of-view.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Storey Peak in a server" src="www.j-marjanovic.io/images/2021_fpga_card_part_7/sp_in_server.jpg" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;And here I encountered an unpleasant surprise. Although the clocks are there,
+the PCIe link can never reach the &lt;em&gt;L0&lt;/em&gt; state, i.e. the link never finishes
+training.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;pp_sp_example &amp;gt; pcie status
+pcie:
+  id = 2c1e57a7
+  version = 10000
+  status.cur speed   = 1
+  status.LTTSM state = 1a
+  status.lane act    = 8
+  status.DL up       = 0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Intel® provides good &lt;a href="https://community.intel.com/t5/FPGA-Wiki/FTA-PCI-express/ta-p/735993"&gt;troubleshooting resources for the PCIe
+link&lt;/a&gt;, and
+I have decided to have a look at the PIPE interface to see the data exchange
+between the FPGA and the CPU.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="TS1 ordered sets" src="www.j-marjanovic.io/images/2021_fpga_card_part_7/ts1.png" style="width:80%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;We can decode the data received by the first two transceivers and obtain
+the information from the &lt;a href="https://www.oreilly.com/library/view/pci-express-system/0321156307/0321156307_ch14lev1sec5.html"&gt;TS1 ordered sets&lt;/a&gt;:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align="left"&gt;field&lt;/th&gt;
+&lt;th align="left"&gt;xcvr 0&lt;/th&gt;
+&lt;th align="left"&gt;xcvr 1&lt;/th&gt;
+&lt;th&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;COM&lt;/td&gt;
+&lt;td align="left"&gt;0xBC (K28.5)&lt;/td&gt;
+&lt;td align="left"&gt;0xBC (K28.5)&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;Link #&lt;/td&gt;
+&lt;td align="left"&gt;0x00&lt;/td&gt;
+&lt;td align="left"&gt;0x00&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;Lane #&lt;/td&gt;
+&lt;td align="left"&gt;0x08&lt;/td&gt;
+&lt;td align="left"&gt;0x09&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;N_FTS&lt;/td&gt;
+&lt;td align="left"&gt;0x1E&lt;/td&gt;
+&lt;td align="left"&gt;0x1E&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;Rate ID&lt;/td&gt;
+&lt;td align="left"&gt;0x0E&lt;/td&gt;
+&lt;td align="left"&gt;0x0E&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;We see that the first transceiver receives lane number 8 and the second
+transceiver receives lane number 9. At this point one can look again at the
+board, and realize that the upper 8 lanes are connected to the PCIe Hard IP in
+the FPGA.&lt;/p&gt;
+&lt;p&gt;TODO: annotated&lt;/p&gt;
+&lt;p&gt;This explains why we see lane 8 on the first transceiver, and also explains
+why the link does not get established.&lt;/p&gt;
+&lt;h2&gt;Storey Peak in a computer which supports bifurcation&lt;/h2&gt;
+&lt;p&gt;Just for a test, I have plugged the Storey Peak card in a computer that
+supports 2 x8 bifurcation on a x16 slot.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Bifurcation configuration" src="www.j-marjanovic.io/images/2021_fpga_card_part_7/server_bifurcation.png" style="width:50%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;We can see that in this configuration there are two PCIe endpoints presented:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ lspci
+&amp;lt;...&amp;gt;
+86:00.0 Unassigned class [ff00]: Microsoft Corporation Device b100 (rev 01)
+87:00.0 Unassigned class [ff00]: Microsoft Corporation Device b101 (rev 01)
+&amp;lt;...&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And each of them supports a x8 link. It is theoretically possible that one of
+the endpoints is implemented in FPGA logic, but we will later see that this
+is not the case.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ sudo lspci -s 86:00 -vv
+86:00.0 Unassigned class [ff00]: Microsoft Corporation Device b100 (rev 01)
+&amp;lt;...&amp;gt;
+        LnkCap:    Port #1, Speed 8GT/s, Width x8, ASPM not supported, Exit Latency L0s &amp;lt;4us, L1 &amp;lt;1us
+&amp;lt;...&amp;gt;
+        LnkSta:    Speed 8GT/s, Width x8, TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+&amp;lt;...&amp;gt;
+
+$ sudo lspci -s 87:00 -vv
+87:00.0 Unassigned class [ff00]: Microsoft Corporation Device b101 (rev 01)
+&amp;lt;...&amp;gt;
+        LnkCap:    Port #1, Speed 8GT/s, Width x8, ASPM not supported, Exit Latency L0s &amp;lt;4us, L1 &amp;lt;1us
+&amp;lt;...&amp;gt;
+        LnkSta:    Speed 8GT/s, Width x8, TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+&amp;lt;...&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Unfortunately the DELL R720 which I use in my homelab does not support PCIe
+bifurcation.&lt;/p&gt;
+&lt;h1&gt;Investigation&lt;/h1&gt;
+&lt;p&gt;With some confusion regarding the assignment of PCIe lanes and the number of
+hard IP blocks in this device, it is time to carefully check the presentation on
+&lt;a href="https://indico.cern.ch/event/822126/contributions/3500184/attachments/1906428/3148591/Catapult_FastML_Fermilab_2019.pdf"&gt;Heterogeneous Computing @
+Microsoft&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Shown on slide 14 is the screenshot from Quartus® Chip Planner. Comparing this
+screenshot with the Chip Planner view for a "normal" device, we can note that
+in the presentation there is an additional PCIe block, which is not present
+in a normal device.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Comparison between the two devices" src="www.j-marjanovic.io/images/2021_fpga_card_part_7/msft_presentation.png" style="width:80%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;h2&gt;Web search&lt;/h2&gt;
+&lt;p&gt;There were a couple of speculation on &lt;a href="https://twitter.com/rombik_su/status/1257741366144180226"&gt;Twitter by
+@rombik_su&lt;/a&gt; and
+&lt;a href="https://www.reddit.com/r/FPGA/comments/7g0f80/altera_part_lookup/"&gt;reddit&lt;/a&gt; on
+what this part might be, and we can see that the last part of the code (reserved
+for &lt;em&gt;Special order devices&lt;/em&gt;) contains &lt;strong&gt;AC&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;blockquote class="twitter-tweet" align="center"&gt;&lt;a href="https://twitter.com/rombik_su/status/1257741366144180226"&gt;Tweet of rombik_su/1257741366144180226&lt;/a&gt;&lt;/blockquote&gt;&lt;/p&gt;
+&lt;p&gt;Searching for the full code (&lt;strong&gt;5SGSKF40I3LNAC&lt;/strong&gt;) also finds a &lt;a href="https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/pcn/pdn2007.pdf"&gt;PDN from
+Intel&lt;/a&gt;
+with a comment that the device is available "Upon Request, Please Contact Sales".&lt;/p&gt;
+&lt;p&gt;There is also &lt;a href="https://community.intel.com/t5/Programmable-Devices/FA-request-of-3-PCS-FBGA-AJ000400T01-ALTERA-Mfr-P-N/td-p/1204542"&gt;a
+thread&lt;/a&gt;
+on the Intel forum by somebody from Quanta who has a problem with a post-production
+check on this device.&lt;/p&gt;
+&lt;h2&gt;Bitstream analysis&lt;/h2&gt;
+&lt;p&gt;At this point it is pretty clear that this device is a custom part with 2 PCIe
+Hard IPs. I was curious if I am able to find the evince of the second IP
+in the bitstream.&lt;/p&gt;
+&lt;p&gt;I have used the same approach as for the DDR3 controller: by changing one
+variable at the time I was able to isolate the address in the JIC file which
+corresponds to the individual PCIe IP parameter. By repeating this procedure I
+was able to extract addresses for several parameters, especially interesting are
+the ones that can be observed from the outside, such as vendor ID, device ID,
+BAR type and size, ...&lt;/p&gt;
+&lt;p&gt;After I have managed to find the location of several parameters, I have
+extracted the values from the original JIC. As expected, one can easily
+see Microsoft® vendor ID (&lt;code&gt;0x1414&lt;/code&gt;) and the device ID (&lt;code&gt;0xb100&lt;/code&gt;):&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Parameters extracted from the bitstream" src="www.j-marjanovic.io/images/2021_fpga_card_part_7/bitstream_extract.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;I have then taken the bits which correspond to the PCIe block on the left side
+and performed a weighted autocorrelation on the bitstream. The procedure
+and the result can be found in a Jupyter &lt;a href="https://github.com/j-marjanovic/otma-pin-re/blob/master/scripts/pcie_analysis/02_autocorrelation.ipynb"&gt;notebook&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;One can see that there is a strong peak very close to the original
+configuration: the second configuration differs by just 1 bit. This is exactly
+what one can expect since we know that the two endpoints have different device
+IDs (&lt;code&gt;0xb100&lt;/code&gt; and &lt;code&gt;0xb101&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Auto-correlation of the original IP configuration" src="www.j-marjanovic.io/images/2021_fpga_card_part_7/auto_corr.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;With this we can confirm that there is a configuration for the second Hard IP
+stored in the factory image in the on-board Flash.&lt;/p&gt;
+&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;It is now clear that this board contains a custom part with two PCIe hard IP
+blocks. Unfortunately, the block which is available in a normal
+device is connected to the high lanes (lanes 8-15), and this requires at minimum
+some support from the motherboard to be useful.&lt;/p&gt;
+&lt;p&gt;There are several possibilities on how to proceed here:&lt;/p&gt;
+&lt;h2&gt;Playing stupid method&lt;/h2&gt;
+&lt;p&gt;I tried playing stupid and just instantiated two hard IPs in my design.
+Quartus was (as expected), not so easily fooled:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Error message when two hard IPs are instantiated with a normal part" src="www.j-marjanovic.io/images/2021_fpga_card_part_7/2_ips.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;h2&gt;Riser cable&lt;/h2&gt;
+&lt;p&gt;One could take a x16 riser cable and resolder the wires to swap the two x8
+connections on the connector. This will only provide 8 lanes, as the second
+hard IP cannot be used (yet).&lt;/p&gt;
+&lt;h2&gt;Upgrading my homelab server&lt;/h2&gt;
+&lt;p&gt;Is somebody interested in buying a DELL PowerEdge R720? :)&lt;/p&gt;
+&lt;h2&gt;Soft PCIe IP&lt;/h2&gt;
+&lt;p&gt;One could think about developing a soft IP and connect it directly to the
+transceivers. The development effort here would be enormous since Physical,
+Data, and Transaction Layers need to be handled in the logic. On the other hand,
+this could also be a great learning experience to get familiar with the lower
+layers of protocol, which are usually handled by a dedicated PCIe block.
+Additionally, one would have to use few advanced features of the transceiver
+itself (rate change, 8b/10b and 128b/130b decoder, receiver detection, lane
+bonding, ...).&lt;/p&gt;
+&lt;h2&gt;Manipulating the bitstream&lt;/h2&gt;
+&lt;p&gt;Since we have the configuration stored in the factory bitstream, one could
+consider "pasting" this configuration on top of a normal bitstream. This
+method does not seem user-friendly, and the main obstacle would be connecting
+the user logic to the second (unknown) hard IP.&lt;/p&gt;
+&lt;h2&gt;Unlocking the custom part in Quartus&lt;/h2&gt;
+&lt;p&gt;The database for this custom part is either already integrated into Quartus or
+it is delivered to the customer as a separate package (e.g. a DLL or a shared
+object).&lt;/p&gt;
+&lt;p&gt;If one &lt;code&gt;grep&lt;/code&gt;s for &lt;code&gt;5SGSMD5&lt;/code&gt; in the Quartus directory there is a library that
+contains a couple of interesting strings:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ strings libddb_dstr.so | egrep &amp;#39;5SGSMD5&amp;#39;
+&amp;lt;...&amp;gt;
+5SGSMD5H3F35I3LNAA
+&amp;lt;...&amp;gt;
+5SGSMD5K3F40I3YY
+&amp;lt;...&amp;gt;
+5SGSMD5_MS
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;So far hard work and determination have paid off. It seems that continuing
+to poke around Quartus libraries would be the right way ahead.&lt;/p&gt;
+&lt;hr&gt;
+&lt;div style="font-size: 80%;" &gt;
+Intel, the Intel logo, Altera, Nios, Quartus and Stratix words and logos are
+trademarks of Intel  Corporation  or  its subsidiaries  in  the  U.S.  and/or
+other  countries.
+&lt;/div&gt;
+
+&lt;div style="font-size: 80%;" &gt;
+Microsoft® is a registered trademark of Microsoft Corporation in the United
+States and/or other countries.
+&lt;/div&gt;
+
+&lt;div style="font-size: 80%;" &gt;
+PCI Express® and PCIe® are registered trademarks of PCI-SIG.
+&lt;/div&gt;
+
+&lt;div style="font-size: 80%;" &gt;
+All trademarks and registered trademarks are the property of their respective owners.
+&lt;/div&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay, part 6</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-6.html" rel="alternate"></link><published>2021-02-28T13:00:00+01:00</published><updated>2021-02-28T13:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2021-02-28:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-6.html</id><summary type="html">&lt;p&gt;In my &lt;a href="./stratix-v-accelerator-card-from-ebay-part-5.html"&gt;last blog post&lt;/a&gt; I
 have presented a method to extract the DDR3 pinout from the bitstream, obtained
 from the on-board Flash. In this post I will use the information obtained from
 the bitstream to instantiate a DDR3 memory controller and measure its
@@ -121,7 +501,6 @@ a part of Nios example design.&lt;/p&gt;
 &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;mem&lt;/span&gt; &lt;span class="n"&gt;check&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;   &lt;span class="n"&gt;read&lt;/span&gt; &lt;span class="n"&gt;throughput&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;9662&lt;/span&gt; &lt;span class="n"&gt;MB&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;h1&gt;Performance&lt;/h1&gt;
 &lt;p&gt;Although the performance of the HW-accelerated memory test is several times
 better than the SW-based memory test, I still wanted to see the throughput which
@@ -153,7 +532,7 @@ of the controller and the board itself (it was purchased of eBay for 40 USD
 after all), I have used Intel tools (EMIF Debug Toolkit) and developed a Memory
 Checker IP. The test successfully ran overnight and did not detect any errors.&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;All trademarks and registered trademarks are the property of their respective owners.&lt;/p&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay, part 5</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-5.html" rel="alternate"></link><published>2021-01-10T10:00:00+01:00</published><updated>2021-01-10T10:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2021-01-10:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-5.html</id><summary type="html">&lt;p&gt;The last piece of the puzzle on the Stratix V board is the DDR3 memory pinout. Once this is
+&lt;p&gt;All trademarks and registered trademarks are the property of their respective owners.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay, part 5</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-5.html" rel="alternate"></link><published>2021-01-10T10:00:00+01:00</published><updated>2021-01-10T10:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2021-01-10:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-5.html</id><summary type="html">&lt;p&gt;The last piece of the puzzle on the Stratix V board is the DDR3 memory pinout. Once this is
 figured out, I can finally start using the board for my developments. It is obvious that this is not
 the most simple way to get a cheap FPGA development board, but …&lt;/p&gt;</summary><content type="html">&lt;p&gt;The last piece of the puzzle on the Stratix V board is the DDR3 memory pinout. Once this is
 figured out, I can finally start using the board for my developments. It is obvious that this is not
@@ -264,27 +643,25 @@ section.&lt;/p&gt;
 6525678&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;To give an example, here are two excerpts, the first one from the uncompressed bitstream and the
 second one from the compressed.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;227550 | 00 00 b6 f9 81 8b 00 00 2f e8 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;227560 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;*&lt;/span&gt;
-&lt;span class="err"&gt;2279f0 | 00 00 00 00 00 00 b6 f9 81 8b 00 00 2f e8 00 00&lt;/span&gt;
-&lt;span class="err"&gt;227a00 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;*&lt;/span&gt;
-&lt;span class="err"&gt;227e90 | 00 00 00 00 00 00 00 00 00 00 b6 f9 81 8b 00 00&lt;/span&gt;
-&lt;span class="err"&gt;227ea0 | 2f e8 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="mf"&gt;227550&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="n"&gt;b6&lt;/span&gt; &lt;span class="n"&gt;f9&lt;/span&gt; &lt;span class="mf"&gt;81&lt;/span&gt; &lt;span class="mf"&gt;8&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;2&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;e8&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
+&lt;span class="mf"&gt;227560&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
+&lt;span class="o"&gt;*&lt;/span&gt;
+&lt;span class="mf"&gt;2279&lt;/span&gt;&lt;span class="n"&gt;f0&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="n"&gt;b6&lt;/span&gt; &lt;span class="n"&gt;f9&lt;/span&gt; &lt;span class="mf"&gt;81&lt;/span&gt; &lt;span class="mf"&gt;8&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;2&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;e8&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
+&lt;span class="mf"&gt;227&lt;/span&gt;&lt;span class="n"&gt;a00&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
+&lt;span class="o"&gt;*&lt;/span&gt;
+&lt;span class="mf"&gt;227&lt;/span&gt;&lt;span class="n"&gt;e90&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="n"&gt;b6&lt;/span&gt; &lt;span class="n"&gt;f9&lt;/span&gt; &lt;span class="mf"&gt;81&lt;/span&gt; &lt;span class="mf"&gt;8&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
+&lt;span class="mf"&gt;227&lt;/span&gt;&lt;span class="n"&gt;ea0&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;2&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;e8&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;225900 | 00 00 6f 9b ff 81 8b f0 2f e8 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;225910 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;*&lt;/span&gt;
-&lt;span class="err"&gt;225a30 | 00 6f 9b ff 81 8b f0 2f e8 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;225a40 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;*&lt;/span&gt;
-&lt;span class="err"&gt;225b60 | 6f 9b ff 81 8b f0 2f e8 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;225b70 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="mf"&gt;225900&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;6&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="mf"&gt;9&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="n"&gt;ff&lt;/span&gt; &lt;span class="mf"&gt;81&lt;/span&gt; &lt;span class="mf"&gt;8&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="n"&gt;f0&lt;/span&gt; &lt;span class="mf"&gt;2&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;e8&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
+&lt;span class="mf"&gt;225910&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
+&lt;span class="o"&gt;*&lt;/span&gt;
+&lt;span class="mf"&gt;225&lt;/span&gt;&lt;span class="n"&gt;a30&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;6&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="mf"&gt;9&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="n"&gt;ff&lt;/span&gt; &lt;span class="mf"&gt;81&lt;/span&gt; &lt;span class="mf"&gt;8&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="n"&gt;f0&lt;/span&gt; &lt;span class="mf"&gt;2&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;e8&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
+&lt;span class="mf"&gt;225&lt;/span&gt;&lt;span class="n"&gt;a40&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
+&lt;span class="o"&gt;*&lt;/span&gt;
+&lt;span class="mf"&gt;225&lt;/span&gt;&lt;span class="n"&gt;b60&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;6&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="mf"&gt;9&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="n"&gt;ff&lt;/span&gt; &lt;span class="mf"&gt;81&lt;/span&gt; &lt;span class="mf"&gt;8&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="n"&gt;f0&lt;/span&gt; &lt;span class="mf"&gt;2&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;e8&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
+&lt;span class="mf"&gt;225&lt;/span&gt;&lt;span class="n"&gt;b70&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;We see that the non-compressed bitstream contains a sequence &lt;code&gt;b6&lt;/code&gt;, &lt;code&gt;f9&lt;/code&gt;, ... after a long string of
 zeros. In the compressed bitstream the long string of zeros is interrupted by an &lt;code&gt;f&lt;/code&gt; (which
@@ -798,7 +1175,7 @@ why this was not the case.&lt;/p&gt;
 &lt;p&gt;In the next blog post I plan to verify that the pinout presented here is accurate and perform
 some memory tests.&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;All trademarks and registered trademarks are the property of their respective owners.&lt;/p&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay, part 4</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-4.html" rel="alternate"></link><published>2020-10-11T16:00:00+02:00</published><updated>2020-10-11T16:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-10-11:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-4.html</id><summary type="html">&lt;p&gt;In the part 4 of the Odyssey with the Startix V board from the eBay, I explore
+&lt;p&gt;All trademarks and registered trademarks are the property of their respective owners.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay, part 4</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-4.html" rel="alternate"></link><published>2020-10-11T16:00:00+02:00</published><updated>2020-10-11T16:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-10-11:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-4.html</id><summary type="html">&lt;p&gt;In the part 4 of the Odyssey with the Startix V board from the eBay, I explore
 the QSFP+ port and establish a 40 Gigabit Ethernet connection to a computer
 with an Intel X710 40GbE network adapter.&lt;/p&gt;
 &lt;h1&gt;HW overview&lt;/h1&gt;
@@ -823,36 +1200,34 @@ contains a relatively simple management interface, accessible over an I2C bus.&l
 &lt;p&gt;First I &lt;a href="https://github.com/j-marjanovic/otma-fpga-bringup/blob/master/software/otma_bringup/src/mini_i2cdetect.c"&gt;implemented a mini equivalent to &lt;code&gt;i2cdetect&lt;/code&gt;&lt;/a&gt; to check if I am probing a
 correct I2C bus. As expected, an I2C device with address 0x50 replies to our
 request:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt; 0000 |          -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
-&lt;span class="err"&gt; 0010 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
-&lt;span class="err"&gt; 0020 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
-&lt;span class="err"&gt; 0030 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
-&lt;span class="err"&gt; 0040 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
-&lt;span class="err"&gt; 0050 | 50 -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
-&lt;span class="err"&gt; 0060 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
-&lt;span class="err"&gt; 0070 | -- -- -- -- -- -- --&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c"&gt; 0000 |          &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
+&lt;span class="c"&gt; 0010 | &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
+&lt;span class="c"&gt; 0020 | &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
+&lt;span class="c"&gt; 0030 | &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
+&lt;span class="c"&gt; 0040 | &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
+&lt;span class="c"&gt; 0050 | 50 &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
+&lt;span class="c"&gt; 0060 | &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
+&lt;span class="c"&gt; 0070 | &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;We can then continue by dumping the content of the module EEPROM:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;rc = 0 | 0d 02 06 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 0d 00 23 08 00 00 00 00 00 00 00 05 8d 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 00 00 02 a0 4d 65 6c 6c 61 6e 6f 78 20 20 20 20&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 20 20 20 20 0f 00 02 c9 36 37 30 37 35 39 2d 42&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 32 33 20 20 20 20 20 20 41 31 04 06 09 00 46 27&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 00 00 00 00 36 43 32 32 31 32 30 37 36 58 20 20&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 20 20 20 20 31 32 30 33 32 37 20 20 00 00 00 64&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 02 00 00 30 00 00&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;rc = 0 | 0d 02 06 00 00 00 00 00 00 00 00 00 00 00 00 00
+rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+rc = 0 | 0d 00 23 08 00 00 00 00 00 00 00 05 8d 00 00 00
+rc = 0 | 00 00 02 a0 4d 65 6c 6c 61 6e 6f 78 20 20 20 20
+rc = 0 | 20 20 20 20 0f 00 02 c9 36 37 30 37 35 39 2d 42
+rc = 0 | 32 33 20 20 20 20 20 20 41 31 04 06 09 00 46 27
+rc = 0 | 00 00 00 00 36 43 32 32 31 32 30 37 36 58 20 20
+rc = 0 | 20 20 20 20 31 32 30 33 32 37 20 20 00 00 00 64
+rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+rc = 0 | 00 00 00 00 00 00 00 00 00 00 02 00 00 30 00 00
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;The cable is correctly identified as Mellanox 670759-B23 cable.&lt;/p&gt;
 &lt;h1&gt;40G Ethernet MAC&lt;/h1&gt;
@@ -873,9 +1248,8 @@ measurements and change other transceiver configurations.&lt;/p&gt;
 &lt;p&gt;With everything in place, I have programmed the bitstream to the FPGA, and the
 &lt;code&gt;dmesg&lt;/code&gt; output in Linux on the other side of the link reported some good news,
 the link is up:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;[  615.469842] i40e 0000:01:00.0 enp1s0: NIC Link is Up, 40 Gbps Full Duplex, Flow Control: None&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;[  615.469842] i40e 0000:01:00.0 enp1s0: NIC Link is Up, 40 Gbps Full Duplex, Flow Control: None
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h1&gt;Eye scan&lt;/h1&gt;
 &lt;p&gt;Once the link is established, we can use &lt;a href="https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/an/an605.pdf"&gt;Transceiver Toolkit
@@ -910,7 +1284,7 @@ integrity of the received signals.&lt;/p&gt;
 UDP packets between the computer and the FPGA.&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;All trademarks and registered trademarks are the property of their respective
-owners.&lt;/p&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay, part 3</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-3.html" rel="alternate"></link><published>2020-09-06T16:00:00+02:00</published><updated>2020-09-06T16:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-09-06:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-3.html</id><summary type="html">&lt;p&gt;As mentioned in my &lt;a href="https://j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html"&gt;previous blog post&lt;/a&gt;, the next step would be
+owners.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay, part 3</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-3.html" rel="alternate"></link><published>2020-09-06T16:00:00+02:00</published><updated>2020-09-06T16:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-09-06:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-3.html</id><summary type="html">&lt;p&gt;As mentioned in my &lt;a href="https://j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html"&gt;previous blog post&lt;/a&gt;, the next step would be
 to get the JTAG running in Quaruts. In this blog post I describe how I managed
 to develop a library as an interface between the FPGA board and Quartus, and
 demonstrate the developed interface to download the bitstream …&lt;/p&gt;</summary><content type="html">&lt;p&gt;As mentioned in my &lt;a href="https://j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html"&gt;previous blog post&lt;/a&gt;, the next step would be
@@ -969,7 +1343,6 @@ Info : JTAG tap: auto0.tap tap/device found: 0x029070dd &lt;span class="o"&gt;(&
 Warn : gdb services need one or more targets defined
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;This gives hope that at least on the HW side, integrating the board with Quartus
 will be easy.&lt;/p&gt;
 &lt;h1&gt;JTAG library&lt;/h1&gt;
@@ -1021,7 +1394,6 @@ space:&lt;/p&gt;
 &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="nv"&gt;master_read_32&lt;/span&gt; &lt;span class="nv"&gt;$jtag_master&lt;/span&gt; &lt;span class="mh"&gt;0x1000&lt;/span&gt; &lt;span class="mi"&gt;12&lt;/span&gt;
 &lt;span class="nv"&gt;0xc10cc272&lt;/span&gt; &lt;span class="mh"&gt;0x00010000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x266ac4a3&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;I will explain later what exactly are we seeing here, for now let's just accept
 that &lt;em&gt;JTAG to Avalon bridge&lt;/em&gt; works, and it reads a magic number register
@@ -1121,7 +1493,6 @@ loop where it prints the measured frequency once per second.&lt;/p&gt;
 &lt;span class="p"&gt;[...]&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;We see that after the measurement has stabilized, we are receiving the clock
 which we have configured, and we see that both the reference clock (125 MHz to
 generate the strobe signal) and the measured clock have a low wander and a low
@@ -1140,7 +1511,7 @@ to a desired frequency, in my case 156.25 MHz. I plan to use this for a test
 of the transceivers connected to the QSFP slots.&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;All trademarks and registered trademarks are the property of their respective
-owners.&lt;/p&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay, part 2</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html" rel="alternate"></link><published>2020-06-07T16:00:00+02:00</published><updated>2020-06-07T16:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-06-07:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html</id><summary type="html">&lt;p&gt;In my previous blog post I have explored the FPGA card I have purchased on eBay,
+owners.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay, part 2</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html" rel="alternate"></link><published>2020-06-07T16:00:00+02:00</published><updated>2020-06-07T16:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-06-07:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html</id><summary type="html">&lt;p&gt;In my previous blog post I have explored the FPGA card I have purchased on eBay,
 and in this post I will present an adapter card which I have developed. The
 adapter provides PCI Express connection between a normal card-edge slot and the
 FPGA card, as well as the access …&lt;/p&gt;</summary><content type="html">&lt;p&gt;In my previous blog post I have explored the FPGA card I have purchased on eBay,
@@ -1184,7 +1555,6 @@ address:&lt;/p&gt;
 70: -- -- -- -- -- -- -- 77         
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;We see the EEPROM at the address 0x51, and another two devices at addresses 0x4C
 and 0x77 - I would assume that these are some kind of sensors and/or regulators.&lt;/p&gt;
 &lt;h2&gt;IPMI FRU&lt;/h2&gt;
@@ -1225,7 +1595,6 @@ ProductArea:
   checksum: 241 (OK) 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;From my understanding of the IPMI standard, the Chassis information should
 not be present on this card:&lt;/p&gt;
 &lt;blockquote&gt;
@@ -1262,7 +1631,6 @@ one can also note the Microsoft card:&lt;/p&gt;
 04:00.0 USB controller: NEC Corporation uPD720200 USB 3.0 Host Controller (rev 04)
 05:03.0 FireWire (IEEE 1394): LSI Corporation FW322/323 [TrueFire] 1394a Controller (rev 70)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Using &lt;code&gt;lspci -vv&lt;/code&gt; to get more information, we see that the link is established
 at 2.5 GT/s (probably too many connectors in series to go faster) and at
@@ -1329,7 +1697,6 @@ x1 width (as expected, since we only pass one lane through the USB cable):&lt;/p
         HeaderLog: 00000000 00000000 00000000 00000000
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;h1&gt;Summary and outlook&lt;/h1&gt;
 &lt;p&gt;The adapter card did its job and provided access to the I2C bus and a connection
 to the PCI Express. I have managed to parse the content of the EEPROM (and
@@ -1345,7 +1712,7 @@ to be more careful next time and double-check everything.&lt;/p&gt;
 know that it can be used with OpenOCD, but I would imagine that one can somehow
 also make it talk to Quartus directly.&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;All trademarks and registered trademarks are the property of their respective owners.&lt;/p&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay.html" rel="alternate"></link><published>2020-05-03T14:30:00+02:00</published><updated>2020-05-03T14:30:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-05-03:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay.html</id><summary type="html">&lt;p&gt;A couple of weeks ago &lt;a href="https://twitter.com/rombik_su"&gt;@rombik_su&lt;/a&gt; in a &lt;a href="https://twitter.com/rombik_su/status/1250382904074608642"&gt;Twitter
+&lt;p&gt;All trademarks and registered trademarks are the property of their respective owners.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay.html" rel="alternate"></link><published>2020-05-03T14:30:00+02:00</published><updated>2020-05-03T14:30:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-05-03:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay.html</id><summary type="html">&lt;p&gt;A couple of weeks ago &lt;a href="https://twitter.com/rombik_su"&gt;@rombik_su&lt;/a&gt; in a &lt;a href="https://twitter.com/rombik_su/status/1250382904074608642"&gt;Twitter
 thread&lt;/a&gt; pointed out a
 very cheap FPGA accelerator card on eBay. The board contains a proprietary
 Samtec board-to-board connector, most likely carrying power, PCI Express, and
@@ -1528,7 +1895,7 @@ determined are the reference clock and an enable signal from the connector.&lt;/
 &lt;p&gt;Eventually I plan to produce a small PCB that would allow plugging this board
 in a normal PCIe card slot.&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;All trademarks and registered trademarks are the property of their respective owners.&lt;/p&gt;</content><category term="FPGA"></category></entry><entry><title>Books read: Synchrotron Radiation Sources</title><link href="www.j-marjanovic.io/books-read-synchrotron-radiation-sources.html" rel="alternate"></link><published>2019-11-02T12:30:00+01:00</published><updated>2019-11-02T12:30:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2019-11-02:www.j-marjanovic.io/books-read-synchrotron-radiation-sources.html</id><summary type="html">&lt;p&gt;Here are my notes on the book "Synchrotron Radiation Sources: A Primer", edited
+&lt;p&gt;All trademarks and registered trademarks are the property of their respective owners.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="FPGA"></category></entry><entry><title>Books read: Synchrotron Radiation Sources</title><link href="www.j-marjanovic.io/books-read-synchrotron-radiation-sources.html" rel="alternate"></link><published>2019-11-02T12:30:00+01:00</published><updated>2019-11-02T12:30:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2019-11-02:www.j-marjanovic.io/books-read-synchrotron-radiation-sources.html</id><summary type="html">&lt;p&gt;Here are my notes on the book "Synchrotron Radiation Sources: A Primer", edited
 by H. Winick. Although a little bit dated (the book is from 1995) it gives a
 nice overview of all components of a modern synchrotron and helps with better
 understanding of how all subsystem interconnect together. It …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Here are my notes on the book "Synchrotron Radiation Sources: A Primer", edited
@@ -1730,7 +2097,7 @@ mentioned. The standard was first published in 1998, while the book is from
     (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="Books read"></category></entry><entry><title>New Ubuntu, old problems with ModelSim</title><link href="www.j-marjanovic.io/new-ubuntu-old-problems-with-modelsim.html" rel="alternate"></link><published>2019-04-20T08:40:00+02:00</published><updated>2019-04-20T08:40:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2019-04-20:www.j-marjanovic.io/new-ubuntu-old-problems-with-modelsim.html</id><summary type="html">&lt;p&gt;A couple of days ago a new release of Ubuntu, Ubuntu 19.04 Disco Dingo was
+&lt;/script&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Books read"></category></entry><entry><title>New Ubuntu, old problems with ModelSim</title><link href="www.j-marjanovic.io/new-ubuntu-old-problems-with-modelsim.html" rel="alternate"></link><published>2019-04-20T08:40:00+02:00</published><updated>2019-04-20T08:40:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2019-04-20:www.j-marjanovic.io/new-ubuntu-old-problems-with-modelsim.html</id><summary type="html">&lt;p&gt;A couple of days ago a new release of Ubuntu, Ubuntu 19.04 Disco Dingo was
 released. On my personal laptop I follow the non-LTS line, which brings
 me cool features and updated programs (e.g. Python 3.7, GCC 8.3, ...)
 out-of-the-box.&lt;/p&gt;
@@ -1756,7 +2123,6 @@ Error: cannot find &lt;span class="s2"&gt;&amp;quot;./../linux_rh60/vsim&amp;quo
 $
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;From the path it is clear that ModelSim thinks it is running on RHEL 6. As
 described in an extensive &lt;a href="https://wiki.archlinux.org/index.php/Altera_Design_Software#ModelSim-Altera_Edition"&gt;Wiki entry on Altera
 software on Arch Linux Wiki&lt;/a&gt;,
@@ -1766,9 +2132,8 @@ Ubuntu 18.10) we get the following error:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ ./vsim
 Reading pref.tcl
 ./../linuxaloem/vish: symbol lookup error: /usr/lib/i386-linux-gnu/libfontconfig.so.1: undefined symbol: FT_Done_MM_Var
-** Fatal: Read failure in vlm process &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;,0&lt;span class="o"&gt;)&lt;/span&gt;
+** Fatal: Read failure &lt;span class="k"&gt;in&lt;/span&gt; vlm process &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;,0&lt;span class="o"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;This message is new and it required me to do some investigation to get it fixed.&lt;/p&gt;
 &lt;h1&gt;Downgrading fontconfig&lt;/h1&gt;
@@ -1783,7 +2148,6 @@ https://gitlab.freedesktop.org/fontconfig/fontconfig.git&lt;/p&gt;
 ./configure.ac:321:AC_CHECK_FUNCS&lt;span class="o"&gt;(&lt;/span&gt;FT_Get_BDF_Property FT_Get_PS_Font_Info FT_Has_PS_Glyph_Names FT_Get_X11_Font_Format FT_Done_MM_Var&lt;span class="o"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;One &lt;code&gt;git blame&lt;/code&gt; after we find the following commit which introduced this function:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;commit&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;94683&lt;/span&gt;&lt;span class="n"&gt;a1255c065a7f8e7fadee9de605f3eaf9ac7&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 &lt;span class="nl"&gt;Author&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Behdad&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Esfahbod&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;behdad&lt;/span&gt;&lt;span class="nv"&gt;@behdad&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;org&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
@@ -1792,30 +2156,26 @@ https://gitlab.freedesktop.org/fontconfig/fontconfig.git&lt;/p&gt;
 &lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;Use&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;FT_Done_MM_Var&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;available&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;And then we can find out that release &lt;strong&gt;2.12.92&lt;/strong&gt; is the last one which does
 not contain this change.&lt;/p&gt;
 &lt;p&gt;I checked out the code from release &lt;strong&gt;2.12.92&lt;/strong&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;git checkout -b 2.12.92 2.12.92&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;git checkout -b 2.12.92 2.12.92
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Installed the libraries needed:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;sudo apt install libxml2-dev:i386 uuid-dev:i386&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sudo apt install libxml2-dev:i386 uuid-dev:i386
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;And used the following commands to compile and install an older version
 of &lt;code&gt;fontconfig&lt;/code&gt; library:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;aclocal -I m4&lt;/span&gt;
-&lt;span class="err"&gt;autoconf&lt;/span&gt;
-&lt;span class="err"&gt;libtoolize&lt;/span&gt;
-&lt;span class="err"&gt;./autogen.sh&lt;/span&gt;
-&lt;span class="err"&gt;CFLAGS=-m32 LDFLAGS=-L/home/jan/local/packages/freetype-2.4.7-32bit/lib ./configure --prefix=/home/jan/local/packages/fontconfig-2.12.92-32bit --enable-libxml2&lt;/span&gt;
-&lt;span class="err"&gt;make&lt;/span&gt;
-&lt;span class="err"&gt;make install&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;aclocal&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;I&lt;/span&gt; &lt;span class="n"&gt;m4&lt;/span&gt;
+&lt;span class="n"&gt;autoconf&lt;/span&gt;
+&lt;span class="n"&gt;libtoolize&lt;/span&gt;
+&lt;span class="o"&gt;./&lt;/span&gt;&lt;span class="n"&gt;autogen&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sh&lt;/span&gt;
+&lt;span class="n"&gt;CFLAGS&lt;/span&gt;&lt;span class="o"&gt;=-&lt;/span&gt;&lt;span class="n"&gt;m32&lt;/span&gt; &lt;span class="n"&gt;LDFLAGS&lt;/span&gt;&lt;span class="o"&gt;=-&lt;/span&gt;&lt;span class="n"&gt;L&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;home&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;jan&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;local&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;packages&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;freetype&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;2.4&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;32&lt;/span&gt;&lt;span class="n"&gt;bit&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;lib&lt;/span&gt; &lt;span class="o"&gt;./&lt;/span&gt;&lt;span class="n"&gt;configure&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;prefix&lt;/span&gt;&lt;span class="o"&gt;=/&lt;/span&gt;&lt;span class="n"&gt;home&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;jan&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;local&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;packages&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;fontconfig&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;2.12&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;92&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;32&lt;/span&gt;&lt;span class="n"&gt;bit&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;enable&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;libxml2&lt;/span&gt;
+&lt;span class="n"&gt;make&lt;/span&gt;
+&lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h1&gt;Changes to vco&lt;/h1&gt;
 &lt;p&gt;Finally, I needed to change &lt;code&gt;vco&lt;/code&gt; in &lt;code&gt;intelFPGA/19.1/modelsim_ase/bin&lt;/code&gt; folder
@@ -1835,11 +2195,10 @@ to load the freshly-recompiled libraries:&lt;/p&gt;
 &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;           &lt;span class="mf"&gt;5.&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="s s-Atom"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;         &lt;span class="s s-Atom"&gt;vco=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;linuxaloem&amp;quot;&lt;/span&gt; &lt;span class="p"&gt;;;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;h1&gt;Conclusion&lt;/h1&gt;
 &lt;p&gt;Ta-da, ModelSim now works on Ubuntu 19.04. The font styles are a little bit
 broken, but being humble is a good characteristic, and we won't ask too much.&lt;/p&gt;
-&lt;p style="width:80%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="ModelSim up and running" src="www.j-marjanovic.io/images/modelsim_on_ubuntu19-04.png"&gt;&lt;/p&gt;</content><category term="misc"></category><category term="FPGA"></category><category term="ModelSim"></category></entry><entry><title>Notes from FOSDEM 2019</title><link href="www.j-marjanovic.io/notes-from-fosdem-2019.html" rel="alternate"></link><published>2019-02-03T20:10:00+01:00</published><updated>2019-02-03T20:10:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2019-02-03:www.j-marjanovic.io/notes-from-fosdem-2019.html</id><summary type="html">&lt;p&gt;I attended FOSDEM 2019 in Brussels:&lt;/p&gt;
+&lt;p style="width:80%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="ModelSim up and running" src="www.j-marjanovic.io/images/modelsim_on_ubuntu19-04.png"&gt;&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="misc"></category><category term="FPGA"></category><category term="ModelSim"></category></entry><entry><title>Notes from FOSDEM 2019</title><link href="www.j-marjanovic.io/notes-from-fosdem-2019.html" rel="alternate"></link><published>2019-02-03T20:10:00+01:00</published><updated>2019-02-03T20:10:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2019-02-03:www.j-marjanovic.io/notes-from-fosdem-2019.html</id><summary type="html">&lt;p&gt;I attended FOSDEM 2019 in Brussels:&lt;/p&gt;
 &lt;p style="width:40%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Brussels" src="www.j-marjanovic.io/images/fosdem2019.jpg"&gt;&lt;/p&gt;
 &lt;p&gt;and these are my notes from Quantum Computers, CAD and Open Hardware
 and Python tracks:&lt;/p&gt;
@@ -2437,7 +2796,7 @@ same API as networkx&lt;/p&gt;
 &lt;li&gt;two modules: gc and tracemalloc&lt;/li&gt;
 &lt;li&gt;plus: sys._debugmallocstats()&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;em&gt;That's all folks, 'till next year!&lt;/em&gt;&lt;/p&gt;</content><category term="Conferences"></category><category term="Quantum computers"></category><category term="Open Hardware"></category><category term="Chisel"></category></entry><entry><title>Chisel tester with overridden step() method</title><link href="www.j-marjanovic.io/chisel-tester-with-overridden-step-method.html" rel="alternate"></link><published>2018-10-14T21:00:00+02:00</published><updated>2018-10-14T21:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2018-10-14:www.j-marjanovic.io/chisel-tester-with-overridden-step-method.html</id><summary type="html">&lt;h1&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;&lt;em&gt;That's all folks, 'till next year!&lt;/em&gt;&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Conferences"></category><category term="Quantum computers"></category><category term="Open Hardware"></category><category term="Chisel"></category></entry><entry><title>Chisel tester with overridden step() method</title><link href="www.j-marjanovic.io/chisel-tester-with-overridden-step-method.html" rel="alternate"></link><published>2018-10-14T21:00:00+02:00</published><updated>2018-10-14T21:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2018-10-14:www.j-marjanovic.io/chisel-tester-with-overridden-step-method.html</id><summary type="html">&lt;h1&gt;Introduction&lt;/h1&gt;
 &lt;p&gt;&lt;a href="https://chisel.eecs.berkeley.edu/"&gt;Chisel&lt;/a&gt; is a modern take on Hardware
 Description Languages, such as (System)Verilog and VHDL. Both Verilog and VHDL
 were conceived in 80s, and are currently still the main two options when it
@@ -2465,7 +2824,6 @@ Verilog:&lt;/p&gt;
 &lt;span class="k"&gt;end&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;and VHDL:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nc"&gt;proc_smth&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;process&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;clk&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="k"&gt;begin&lt;/span&gt;
@@ -2478,7 +2836,6 @@ Verilog:&lt;/p&gt;
   &lt;span class="k"&gt;end&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="k"&gt;end&lt;/span&gt; &lt;span class="k"&gt;process&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;I would argue that half of the lines in a typical VHDL modules are not needed,
 as demonstrated in previous example. A typical module for me would be some DSP
@@ -2530,25 +2887,24 @@ the DUT and monitor BFM can in parallel monitor the output port of the DUT.&lt;/
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;  &lt;span class="c1"&gt;//==========================================================================&lt;/span&gt;
   &lt;span class="c1"&gt;// step&lt;/span&gt;
 
-  &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;rm&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;runtimeMirror&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;getClass&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getClassLoader&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-  &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;im&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reflect&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-  &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;members&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;im&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;symbol&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;typeSignature&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;members&lt;/span&gt;
-  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;bfms&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;members&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;filter&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;_&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;typeSignature&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;:&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;typeOf&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;ChiselBfm&lt;/span&gt;&lt;span class="o"&gt;])&lt;/span&gt;
+  &lt;span class="kd"&gt;val&lt;/span&gt; &lt;span class="n"&gt;rm&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;runtimeMirror&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;getClass&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getClassLoader&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="kd"&gt;val&lt;/span&gt; &lt;span class="n"&gt;im&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rm&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reflect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;this&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="kd"&gt;val&lt;/span&gt; &lt;span class="n"&gt;members&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;im&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;symbol&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;typeSignature&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;members&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;bfms&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;members&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;_&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;typeSignature&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;:&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;typeOf&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nc"&gt;ChiselBfm&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
 
-  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;stepSingle&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Unit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bfm&lt;/span&gt; &lt;span class="k"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="n"&gt;bfms&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
-      &lt;span class="n"&gt;im&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reflectField&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bfm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;asTerm&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;asInstanceOf&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;ChiselBfm&lt;/span&gt;&lt;span class="o"&gt;].&lt;/span&gt;&lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-    &lt;span class="o"&gt;}&lt;/span&gt;
-    &lt;span class="k"&gt;super&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;step&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-  &lt;span class="o"&gt;}&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;stepSingle&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt; &lt;span class="nc"&gt;Unit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bfm&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="n"&gt;bfms&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      &lt;span class="n"&gt;im&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reflectField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bfm&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;asTerm&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="k"&gt;asInstanceOf&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nc"&gt;ChiselBfm&lt;/span&gt;&lt;span class="p"&gt;].&lt;/span&gt;&lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="bp"&gt;super&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;step&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
 
-  &lt;span class="k"&gt;override&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;step&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Unit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;_&lt;/span&gt; &lt;span class="k"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="n"&gt;until&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;override&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;step&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nc"&gt;Int&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt; &lt;span class="nc"&gt;Unit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;_&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="n"&gt;until&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
       &lt;span class="n"&gt;stepSingle&lt;/span&gt;
-    &lt;span class="o"&gt;}&lt;/span&gt;
-  &lt;span class="o"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Through Scala's &lt;a href="https://www.michaelpollmeier.com/fun-with-scalas-new-reflection-api-2-10"&gt;Reflection API&lt;/a&gt;
 we are able to find all instances of classes which have a trait of &lt;code&gt;ChiselBfm&lt;/code&gt;,
@@ -2585,7 +2941,6 @@ operation of the BFMs.&lt;/p&gt;
 &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;should&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;compare&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;expected&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="ow"&gt;and&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;obtained&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;And this is the display of the waveforms from GTKWave:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="GTKWave display" src="www.j-marjanovic.io/images/chisel_override_clock.png"&gt;&lt;/p&gt;
 &lt;p&gt;It can be noted that both Driver and Monitor are able to perform their tasks
@@ -2595,7 +2950,7 @@ in parallel.&lt;/p&gt;
 this particular case (when DUT has only one input and one output port), one
 could also use &lt;code&gt;OrderedDecoupledHWIOTester&lt;/code&gt;, but it should be obvious that the
 method presented here provides more control and flexibility in more complex
-cases.&lt;/p&gt;</content><category term="Chisel"></category><category term="FPGA"></category><category term="Scala"></category><category term="BFM"></category></entry><entry><title>Blog restart</title><link href="www.j-marjanovic.io/blog-restart.html" rel="alternate"></link><published>2018-09-15T19:00:00+02:00</published><updated>2018-09-15T19:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2018-09-15:www.j-marjanovic.io/blog-restart.html</id><summary type="html">&lt;p&gt;This blog was left dormant for quite some time now. From the last blog post
+cases.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Chisel"></category><category term="FPGA"></category><category term="Scala"></category><category term="BFM"></category></entry><entry><title>Blog restart</title><link href="www.j-marjanovic.io/blog-restart.html" rel="alternate"></link><published>2018-09-15T19:00:00+02:00</published><updated>2018-09-15T19:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2018-09-15:www.j-marjanovic.io/blog-restart.html</id><summary type="html">&lt;p&gt;This blog was left dormant for quite some time now. From the last blog post
 in February 2017 a lot has happened. I have moved to Hamburg, Germany, to
 start a new position as FPGA Developer at MicroTCA Technology Lab at
 &lt;a href="https://www.desy.de/"&gt;DESY&lt;/a&gt;.&lt;/p&gt;
@@ -2612,7 +2967,7 @@ having a blog is a nice way to organize your thoughts and outputs. Writing a
 blog post at the end of the project requires someone to gather his thoughts
 and to write down the conclusion.&lt;/p&gt;
 &lt;p&gt;That is all for now, expect more interesting blog posts (probably focusing on
-FPGA, mid-level languages as Chisel and high-level synthesis) in the future.&lt;/p&gt;</content><category term="Misc"></category></entry><entry><title>FOSDEM 2017</title><link href="www.j-marjanovic.io/fosdem-2017.html" rel="alternate"></link><published>2017-02-03T18:00:00+01:00</published><updated>2017-02-03T18:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2017-02-03:www.j-marjanovic.io/fosdem-2017.html</id><summary type="html">&lt;p&gt;I am writing this post from Brussels where I am attending &lt;a href="https://fosdem.org/2017/"&gt;FOSDEM 2017&lt;/a&gt;
+FPGA, mid-level languages as Chisel and high-level synthesis) in the future.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Misc"></category></entry><entry><title>FOSDEM 2017</title><link href="www.j-marjanovic.io/fosdem-2017.html" rel="alternate"></link><published>2017-02-03T18:00:00+01:00</published><updated>2017-02-03T18:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2017-02-03:www.j-marjanovic.io/fosdem-2017.html</id><summary type="html">&lt;p&gt;I am writing this post from Brussels where I am attending &lt;a href="https://fosdem.org/2017/"&gt;FOSDEM 2017&lt;/a&gt;
 conference.&lt;/p&gt;
 &lt;p&gt;There are a lot of interesting talks, and sometimes it is quite hard to decide
 on which one to go. Luckily there the talks are recorded and one can later
@@ -2688,7 +3043,7 @@ check also the missed ones.&lt;/p&gt;
 &lt;h2&gt;Sunday&lt;/h2&gt;
 &lt;p&gt;On Sunday I plan to spend most of the time in &lt;a href="https://fosdem.org/2017/schedule/track/electronic_design_automation_eda/"&gt;Electronic Design Automation (EDA) devroom&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Here is a selfie of me with the famous &lt;a href="https://en.wikipedia.org/wiki/Manneken_Pis"&gt;Manneken Pis status&lt;/a&gt;:&lt;/p&gt;
-&lt;p style="width:50%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Selfie with Manneken Pis" src="www.j-marjanovic.io/images/fosdem_2017/IMG_4898.JPG"&gt;&lt;/p&gt;</content><category term="Misc"></category><category term="Conference"></category></entry><entry><title>Books read: E. Stavinov: 100 Power Tips for FPGA Designers</title><link href="www.j-marjanovic.io/books-read-e-stavinov-100-power-tips-for-fpga-designers.html" rel="alternate"></link><published>2016-10-18T23:00:00+02:00</published><updated>2016-10-18T23:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2016-10-18:www.j-marjanovic.io/books-read-e-stavinov-100-power-tips-for-fpga-designers.html</id><summary type="html">&lt;p&gt;I recently found a great book explaining in details FPGA workflow for Xilinx
+&lt;p style="width:50%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Selfie with Manneken Pis" src="www.j-marjanovic.io/images/fosdem_2017/IMG_4898.JPG"&gt;&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Misc"></category><category term="Conference"></category></entry><entry><title>Books read: E. Stavinov: 100 Power Tips for FPGA Designers</title><link href="www.j-marjanovic.io/books-read-e-stavinov-100-power-tips-for-fpga-designers.html" rel="alternate"></link><published>2016-10-18T23:00:00+02:00</published><updated>2016-10-18T23:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2016-10-18:www.j-marjanovic.io/books-read-e-stavinov-100-power-tips-for-fpga-designers.html</id><summary type="html">&lt;p&gt;I recently found a great book explaining in details FPGA workflow for Xilinx
 tools, titled 100 Power Tips for FPGA Designers. &lt;a href="http://www.outputlogic.com"&gt;Evgeni
 Stavinov&lt;/a&gt; is an experienced FPGA designer who
 previously worked for Xilinx. It is not evident from the title, but this book
@@ -2731,11 +3086,10 @@ and Vivado Synthesis
 now support initialization of the register from &lt;code&gt;initial&lt;/code&gt; block.&lt;/p&gt;
 &lt;p&gt;Vivado Synthesis Guidelines go even further and suggest using &lt;code&gt;inital&lt;/code&gt; instead
 of reset:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;Avoid operational set/reset logic whenever possible. There may be other,&lt;/span&gt;
-&lt;span class="err"&gt;less expensive, ways to achieve the desired effect, such as taking&lt;/span&gt;
-&lt;span class="err"&gt;advantage of the circuit global reset by defining an initial content.&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Avoid operational set/reset logic whenever possible. There may be other,
+less expensive, ways to achieve the desired effect, such as taking
+advantage of the circuit global reset by defining an initial content.
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h2&gt;Tip #18&lt;/h2&gt;
 &lt;p&gt;A small typo on page 81, in SystemVerilog &lt;code&gt;logic&lt;/code&gt; is a 4-state type which
@@ -2760,7 +3114,6 @@ to different delays from IO pins to registers.&lt;/p&gt;
 should be:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;initial&lt;/span&gt; &lt;span class="n"&gt;shift4&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;init2&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="mh"&gt;2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;   &lt;span class="c1"&gt;// result is 8&amp;#39;hE0&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Note that result after shift operation should be 8'hE0 (-32) instead of 8'h0E.&lt;/p&gt;
 &lt;h2&gt;Tip #27&lt;/h2&gt;
@@ -2867,9 +3220,8 @@ since it often provides a way to find the post-synthesis nets. The &lt;code&gt;k
 attribute could also be combined with &lt;code&gt;debug&lt;/code&gt; attribute for easier identification
 of signals.&lt;/p&gt;
 &lt;p&gt;Verilog example:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c"&gt;(* keep = &amp;quot;true&amp;quot;, mark_debug = &amp;quot;true&amp;quot; *)&lt;/span&gt; &lt;span class="n"&gt;wire&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;19&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="n"&gt;signal_to_be_dbged&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;keep&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;true&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mark_debug&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;true&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;wire&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;19&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="n"&gt;signal_to_be_dbged&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h2&gt;Tip #90&lt;/h2&gt;
 &lt;p&gt;UCF constants are completely out of date, and were replaced by an equivalent of
@@ -2885,7 +3237,7 @@ of the entire project directly from the source code in the repository.&lt;/p&gt;
 &lt;p&gt;Another tools which could be added to this list is &lt;a href="http://www.ohwr.org/projects/hdl-make"&gt;hdlmake&lt;/a&gt;
 which is meant to be an equivalent of Make for FPGA projects. Currently it is
 not able to tackle more complex compilation procedures, such as re-compiling
-vendor IP cores or handling Vivado Block Diagrams.&lt;/p&gt;</content><category term="Projects"></category><category term="FPGA"></category><category term="Xilinx"></category></entry><entry><title>Debugging Linux start-up on Altera Cyclone V SoC with OpenOCD</title><link href="www.j-marjanovic.io/debugging-linux-start-up-on-altera-cyclone-v-soc-with-openocd.html" rel="alternate"></link><published>2016-07-12T22:00:00+02:00</published><updated>2016-07-12T22:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2016-07-12:www.j-marjanovic.io/debugging-linux-start-up-on-altera-cyclone-v-soc-with-openocd.html</id><summary type="html">&lt;p&gt;This blog post will show you how one can use the OpenOCD debugger with Altera
+vendor IP cores or handling Vivado Block Diagrams.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Projects"></category><category term="FPGA"></category><category term="Xilinx"></category></entry><entry><title>Debugging Linux start-up on Altera Cyclone V SoC with OpenOCD</title><link href="www.j-marjanovic.io/debugging-linux-start-up-on-altera-cyclone-v-soc-with-openocd.html" rel="alternate"></link><published>2016-07-12T22:00:00+02:00</published><updated>2016-07-12T22:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2016-07-12:www.j-marjanovic.io/debugging-linux-start-up-on-altera-cyclone-v-soc-with-openocd.html</id><summary type="html">&lt;p&gt;This blog post will show you how one can use the OpenOCD debugger with Altera
 Cyclone V SoC. Altera Cyclone V SoC is a very interesting integrated circuit,
 combining dual-core ARM processor and a decent FPGA, allowing a wide variety
 of possibilities to partition the application between the two.&lt;/p&gt;
@@ -2917,9 +3269,8 @@ provide a graphical way to debug programs. If you want to know more, at the
 bottom of &lt;a href="http://openocd.org/documentation/"&gt;OpenOCD Documentation page&lt;/a&gt; is
 a link to the presentation on FOSDEM 2006.&lt;/p&gt;
 &lt;p&gt;First we need to install all needed tools:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;sudo apt-get install libtool autotools-dev automake libusb-1.0 libhidapi-dev pkg-config git&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;libtool&lt;/span&gt; &lt;span class="n"&gt;autotools&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt; &lt;span class="n"&gt;automake&lt;/span&gt; &lt;span class="n"&gt;libusb&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;1.0&lt;/span&gt; &lt;span class="n"&gt;libhidapi&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt; &lt;span class="n"&gt;pkg&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt; &lt;span class="n"&gt;git&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Then we get the source code from OpenOCD SourceForge repository. I have used the
 latest available commit in master, which was the one with a git tree-ish value
@@ -2933,47 +3284,43 @@ of &lt;code&gt;12ff09f&lt;/code&gt;:&lt;/p&gt;
 &lt;span class="nl"&gt;cfi&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;Add&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;support&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;strangely&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;endianness&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;broken&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;SoC&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;implementations&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Perform all needed steps to compile the code (have a look in &lt;code&gt;INSTALL&lt;/code&gt; for
 detailed instructions):&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;cd openocd-code&lt;/span&gt;
-&lt;span class="err"&gt;aclocal&lt;/span&gt;
-&lt;span class="err"&gt;./bootstrap&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;cd openocd-code
+aclocal
+./bootstrap
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;At the end of configure step make sure that support for Altera USB-Blaster II
 and CMSIS-DAP Debugger are configured. The output should look something like
 this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;configure&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;./configure
 
-&lt;span class="p"&gt;...&lt;/span&gt;
+...
 
-&lt;span class="n"&gt;OpenOCD&lt;/span&gt; &lt;span class="n"&gt;configuration&lt;/span&gt; &lt;span class="n"&gt;summary&lt;/span&gt;
-&lt;span class="c1"&gt;--------------------------------------------------&lt;/span&gt;
-&lt;span class="n"&gt;MPSSE&lt;/span&gt; &lt;span class="k"&gt;mode&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="n"&gt;FTDI&lt;/span&gt; &lt;span class="n"&gt;based&lt;/span&gt; &lt;span class="n"&gt;devices&lt;/span&gt;        &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;Segger&lt;/span&gt; &lt;span class="n"&gt;J&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Link&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;           &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;ST&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Link&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;                 &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;TI&lt;/span&gt; &lt;span class="n"&gt;ICDI&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;                 &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;Keil&lt;/span&gt; &lt;span class="n"&gt;ULINK&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;              &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;Altera&lt;/span&gt; &lt;span class="n"&gt;USB&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Blaster&lt;/span&gt; &lt;span class="n"&gt;II&lt;/span&gt; &lt;span class="n"&gt;Compatible&lt;/span&gt;        &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;Versaloon&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Link&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;          &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;OSBDM&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="k"&gt;only&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;            &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;eStick&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opendous&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;         &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;Andes&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;                   &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;USBProg&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;                 &lt;span class="k"&gt;no&lt;/span&gt;
-&lt;span class="n"&gt;Raisonance&lt;/span&gt; &lt;span class="n"&gt;RLink&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;        &lt;span class="k"&gt;no&lt;/span&gt;
-&lt;span class="n"&gt;Olimex&lt;/span&gt; &lt;span class="n"&gt;ARM&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;JTAG&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;EW&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;           &lt;span class="k"&gt;no&lt;/span&gt;
-&lt;span class="n"&gt;CMSIS&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;DAP&lt;/span&gt; &lt;span class="n"&gt;Compliant&lt;/span&gt; &lt;span class="n"&gt;Debugger&lt;/span&gt;            &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+OpenOCD configuration summary
+--------------------------------------------------
+MPSSE mode of FTDI based devices        yes (auto)
+Segger J-Link JTAG Programmer           yes (auto)
+ST-Link JTAG Programmer                 yes (auto)
+TI ICDI JTAG Programmer                 yes (auto)
+Keil ULINK JTAG Programmer              yes (auto)
+Altera USB-Blaster II Compatible        yes (auto)
+Versaloon-Link JTAG Programmer          yes (auto)
+OSBDM (JTAG only) Programmer            yes (auto)
+eStick/opendous JTAG Programmer         yes (auto)
+Andes JTAG Programmer                   yes (auto)
+USBProg JTAG Programmer                 no
+Raisonance RLink JTAG Programmer        no
+Olimex ARM-JTAG-EW Programmer           no
+CMSIS-DAP Compliant Debugger            yes (auto)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Then we just need to compile everything and install the openocd binary.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;make&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;make
 
-&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt;
+sudo make install
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h2&gt;&lt;code&gt;udev&lt;/code&gt; rules for USB-Blaster&lt;/h2&gt;
 &lt;p&gt;After the OpenOCD is installed, we must take care to set the correct &lt;code&gt;udev&lt;/code&gt;
@@ -2986,58 +3333,54 @@ WITH UBUNTU 14.04&lt;/a&gt;. The USB-Blaster has multiple personalities (one for
 one for ARM JTAG), the udev rule therefore needs to specify both 6010 and
 6810 as the targeted devices.&lt;/p&gt;
 &lt;p&gt;Create /etc/udev/rules.d/51-usbblaster.rules with the following content:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;# For Altera USB-Blaster on SoCkit&lt;/span&gt;
-&lt;span class="err"&gt;SUBSYSTEM==&amp;quot;usb&amp;quot;,\&lt;/span&gt;
-&lt;span class="err"&gt;ENV{DEVTYPE}==&amp;quot;usb_device&amp;quot;,\&lt;/span&gt;
-&lt;span class="err"&gt;ATTR{idVendor}==&amp;quot;09fb&amp;quot;,\&lt;/span&gt;
-&lt;span class="err"&gt;ATTR{idProduct}==&amp;quot;6010|6810&amp;quot;,\&lt;/span&gt;
-&lt;span class="err"&gt;MODE=&amp;quot;0666&amp;quot;,\&lt;/span&gt;
-&lt;span class="err"&gt;NAME=&amp;quot;bus/usb/$env{BUSNUM}/$env{DEVNUM}&amp;quot;,\&lt;/span&gt;
-&lt;span class="err"&gt;RUN+=&amp;quot;/bin/chmod 0666 %c&amp;quot;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;# &lt;span class="k"&gt;For&lt;/span&gt; &lt;span class="nv"&gt;Altera&lt;/span&gt; &lt;span class="nv"&gt;USB&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;Blaster&lt;/span&gt; &lt;span class="nv"&gt;on&lt;/span&gt; &lt;span class="nv"&gt;SoCkit&lt;/span&gt;
+&lt;span class="nv"&gt;SUBSYSTEM&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;usb&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;,\
+&lt;span class="nv"&gt;ENV&lt;/span&gt;{&lt;span class="nv"&gt;DEVTYPE&lt;/span&gt;}&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;usb_device&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;,\
+&lt;span class="nv"&gt;ATTR&lt;/span&gt;{&lt;span class="nv"&gt;idVendor&lt;/span&gt;}&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;09fb&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;,\
+&lt;span class="nv"&gt;ATTR&lt;/span&gt;{&lt;span class="nv"&gt;idProduct&lt;/span&gt;}&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;6010|6810&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;,\
+&lt;span class="nv"&gt;MODE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;0666&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;,\
+&lt;span class="nv"&gt;NAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;bus/usb/$env{BUSNUM}/$env{DEVNUM}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;,\
+&lt;span class="nv"&gt;RUN&lt;/span&gt;&lt;span class="o"&gt;+=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;/bin/chmod 0666 %c&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;&lt;code&gt;udev&lt;/code&gt; rules should be reloaded with the following command to take effect
 immediately:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;sudo udevadm control --reload&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;udevadm&lt;/span&gt; &lt;span class="n"&gt;control&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;reload&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h2&gt;First checks&lt;/h2&gt;
 &lt;p&gt;Now we can try running Altera &lt;code&gt;jtagconfig&lt;/code&gt; program to check if the permissions
 are OK. When the SoCkit board is attached, the output should look something
 like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;➜  ~ ~/altera/16.0/quartus/bin/jtagconfig                                                                                            &lt;/span&gt;
-&lt;span class="err"&gt;1) CV SoCKit [1-1.1]                          &lt;/span&gt;
-&lt;span class="err"&gt;  02D020DD   5CSEBA6(.|ES)/5CSEMA6/..&lt;/span&gt;
-&lt;span class="err"&gt;  4BA00477   SOCVHPS&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;➜  ~ ~/altera/16.0/quartus/bin/jtagconfig                                                                                            
+1) CV SoCKit [1-1.1]                          
+  02D020DD   5CSEBA6(.|ES)/5CSEMA6/..
+  4BA00477   SOCVHPS
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Now we can also try running OpenOCD:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;➜  ~ openocd -f interface/altera-usb-blaster2.cfg -f target/altera_fpgasoc.cfg&lt;/span&gt;
-&lt;span class="err"&gt;Open On-Chip Debugger 0.10.0-dev-00324-g12ff09f (2016-06-26-19:19)&lt;/span&gt;
-&lt;span class="err"&gt;Licensed under GNU GPL v2&lt;/span&gt;
-&lt;span class="err"&gt;For bug reports, read&lt;/span&gt;
-&lt;span class="c"&gt;http://openocd.org/doc/doxygen/bugs.html&lt;/span&gt;
-&lt;span class="err"&gt;Warn : Adapter driver &amp;#39;usb_blaster&amp;#39; did not declare which transports it allows; assuming legacy JTAG-only&lt;/span&gt;
-&lt;span class="err"&gt;Info : only one transport option; autoselect &amp;#39;jtag&amp;#39;&lt;/span&gt;
-&lt;span class="err"&gt;adapter speed: 1000 kHz&lt;/span&gt;
-&lt;span class="err"&gt;cycv_dbginit&lt;/span&gt;
-&lt;span class="err"&gt;Info : Altera USB-Blaster II (uninitialized) found&lt;/span&gt;
-&lt;span class="err"&gt;Info : Loading firmware...&lt;/span&gt;
-&lt;span class="err"&gt;Info : Waiting for renumerate...&lt;/span&gt;
-&lt;span class="err"&gt;Info : Waiting for renumerate...&lt;/span&gt;
-&lt;span class="err"&gt;Info : Altera USB-Blaster II found (Firm. rev. = 1.36)&lt;/span&gt;
-&lt;span class="err"&gt;Info : This adapter doesn&amp;#39;t support configurable speed&lt;/span&gt;
-&lt;span class="err"&gt;Info : JTAG tap: fpgasoc.dap tap/device found: 0x4ba00477 (mfg: 0x23b (ARM Ltd.), part: 0xba00, ver: 0x4)&lt;/span&gt;
-&lt;span class="err"&gt;Info : JTAG tap: fpgasoc.fpga.tap tap/device found: 0x02d020dd (mfg: 0x06e (Altera), part: 0x2d02, ver: 0x0)&lt;/span&gt;
-&lt;span class="err"&gt;Info : DAP transaction stalled (WAIT) - slowing down&lt;/span&gt;
-&lt;span class="err"&gt;Info : DAP transaction stalled (WAIT) - slowing down&lt;/span&gt;
-&lt;span class="err"&gt;Info : DAP transaction stalled (WAIT) - slowing down&lt;/span&gt;
-&lt;span class="err"&gt;Info : fpgasoc.cpu.0: hardware has 6 breakpoints, 4 watchpoints&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;➜&lt;/span&gt;  &lt;span class="o"&gt;~&lt;/span&gt; &lt;span class="n"&gt;openocd&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;interface&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;altera&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;usb&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;blaster2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cfg&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;target&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;altera_fpgasoc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cfg&lt;/span&gt;
+&lt;span class="n"&gt;Open&lt;/span&gt; &lt;span class="n"&gt;On&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Chip&lt;/span&gt; &lt;span class="n"&gt;Debugger&lt;/span&gt; &lt;span class="mf"&gt;0.10&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;00324&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;g12ff09f&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2016&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;06&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;26&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;19&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;19&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Licensed&lt;/span&gt; &lt;span class="n"&gt;under&lt;/span&gt; &lt;span class="n"&gt;GNU&lt;/span&gt; &lt;span class="n"&gt;GPL&lt;/span&gt; &lt;span class="n"&gt;v2&lt;/span&gt;
+&lt;span class="n"&gt;For&lt;/span&gt; &lt;span class="n"&gt;bug&lt;/span&gt; &lt;span class="n"&gt;reports&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;read&lt;/span&gt;
+&lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;openocd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;org&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;doc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;doxygen&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bugs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;
+&lt;span class="n"&gt;Warn&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Adapter&lt;/span&gt; &lt;span class="n"&gt;driver&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;usb_blaster&amp;#39;&lt;/span&gt; &lt;span class="n"&gt;did&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="n"&gt;declare&lt;/span&gt; &lt;span class="n"&gt;which&lt;/span&gt; &lt;span class="n"&gt;transports&lt;/span&gt; &lt;span class="n"&gt;it&lt;/span&gt; &lt;span class="n"&gt;allows&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;assuming&lt;/span&gt; &lt;span class="n"&gt;legacy&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;only&lt;/span&gt;
+&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;only&lt;/span&gt; &lt;span class="n"&gt;one&lt;/span&gt; &lt;span class="n"&gt;transport&lt;/span&gt; &lt;span class="n"&gt;option&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;autoselect&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;jtag&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;adapter&lt;/span&gt; &lt;span class="n"&gt;speed&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;1000&lt;/span&gt; &lt;span class="n"&gt;kHz&lt;/span&gt;
+&lt;span class="n"&gt;cycv_dbginit&lt;/span&gt;
+&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Altera&lt;/span&gt; &lt;span class="n"&gt;USB&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Blaster&lt;/span&gt; &lt;span class="n"&gt;II&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;uninitialized&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;found&lt;/span&gt;
+&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Loading&lt;/span&gt; &lt;span class="n"&gt;firmware&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Waiting&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;renumerate&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Waiting&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;renumerate&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Altera&lt;/span&gt; &lt;span class="n"&gt;USB&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Blaster&lt;/span&gt; &lt;span class="n"&gt;II&lt;/span&gt; &lt;span class="n"&gt;found&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Firm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;span class="n"&gt;rev&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;1.36&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;This&lt;/span&gt; &lt;span class="n"&gt;adapter&lt;/span&gt; &lt;span class="n"&gt;doesn&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;t support configurable speed&lt;/span&gt;
+&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;tap&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;fpgasoc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dap&lt;/span&gt; &lt;span class="n"&gt;tap&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;device&lt;/span&gt; &lt;span class="n"&gt;found&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x4ba00477&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;mfg&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x23b&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ARM&lt;/span&gt; &lt;span class="n"&gt;Ltd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;part&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0xba00&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ver&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x4&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;tap&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;fpgasoc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fpga&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tap&lt;/span&gt; &lt;span class="n"&gt;tap&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;device&lt;/span&gt; &lt;span class="n"&gt;found&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x02d020dd&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;mfg&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x06e&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Altera&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;part&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x2d02&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ver&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;DAP&lt;/span&gt; &lt;span class="n"&gt;transaction&lt;/span&gt; &lt;span class="n"&gt;stalled&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;WAIT&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;slowing&lt;/span&gt; &lt;span class="n"&gt;down&lt;/span&gt;
+&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;DAP&lt;/span&gt; &lt;span class="n"&gt;transaction&lt;/span&gt; &lt;span class="n"&gt;stalled&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;WAIT&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;slowing&lt;/span&gt; &lt;span class="n"&gt;down&lt;/span&gt;
+&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;DAP&lt;/span&gt; &lt;span class="n"&gt;transaction&lt;/span&gt; &lt;span class="n"&gt;stalled&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;WAIT&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;slowing&lt;/span&gt; &lt;span class="n"&gt;down&lt;/span&gt;
+&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;fpgasoc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cpu&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;hardware&lt;/span&gt; &lt;span class="n"&gt;has&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt; &lt;span class="n"&gt;breakpoints&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt; &lt;span class="n"&gt;watchpoints&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;This gives us information that ARM core was recognized, this is therefore the
 correct command to use it later with the GDB debugger.&lt;/p&gt;
@@ -3058,21 +3401,20 @@ created file in deploy directory is &lt;code&gt;zimage&lt;/code&gt; file. This i
 with all debugging symbols stripped out. It is optimized to be used in
 embedded environment. We need to find the original &lt;code&gt;vmlinux&lt;/code&gt; image before the
 debugging symbols were stripped out:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;➜  tmp git:(jethro) find . -name vmlinux                                       &lt;/span&gt;
-&lt;span class="err"&gt;./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/&lt;/span&gt;
-&lt;span class="err"&gt;linux-cyclone5-standard-build/arch/arm/boot/vmlinux&lt;/span&gt;
-&lt;span class="err"&gt;./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/&lt;/span&gt;
-&lt;span class="err"&gt;linux-cyclone5-standard-build/arch/arm/boot/compressed/vmlinux&lt;/span&gt;
-&lt;span class="err"&gt;./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/&lt;/span&gt;
-&lt;span class="err"&gt;linux-cyclone5-standard-build/vmlinux&lt;/span&gt;
-&lt;span class="err"&gt;./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/&lt;/span&gt;
-&lt;span class="err"&gt;linux-cyclone5-standard-build/arch/arm/boot/vmlinux&lt;/span&gt;
-&lt;span class="err"&gt;./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/&lt;/span&gt;
-&lt;span class="err"&gt;linux-cyclone5-standard-build/arch/arm/boot/compressed/vmlinux&lt;/span&gt;
-&lt;span class="err"&gt;./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/&lt;/span&gt;
-&lt;span class="err"&gt;linux-cyclone5-standard-build/vmlinux&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;➜  tmp git:(jethro) find . -name vmlinux                                       
+./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/
+linux-cyclone5-standard-build/arch/arm/boot/vmlinux
+./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/
+linux-cyclone5-standard-build/arch/arm/boot/compressed/vmlinux
+./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/
+linux-cyclone5-standard-build/vmlinux
+./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/
+linux-cyclone5-standard-build/arch/arm/boot/vmlinux
+./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/
+linux-cyclone5-standard-build/arch/arm/boot/compressed/vmlinux
+./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/
+linux-cyclone5-standard-build/vmlinux
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;There are various images from various different runs (and different versions
 of the kernel).&lt;/p&gt;
@@ -3089,7 +3431,7 @@ and "Load executable" fields under "Startup tab".&lt;/p&gt;
 &lt;p&gt;And we are good to go. After pressing the "Debug" button, the debugging
 perspective will show up. Now we can access &lt;code&gt;__log_buf&lt;/code&gt; buffer to determine
 what is stopping the kernel boot.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Creation of new project in Eclipse" src="www.j-marjanovic.io/images/debugging_cyclone_soc_openocd/eclipse_debug_final.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;</content><category term="misc"></category><category term="FPGA"></category><category term="Altera"></category><category term="Linux"></category><category term="OpenOCD"></category></entry><entry><title>Books read: 97 Things Every Programmer Should Know</title><link href="www.j-marjanovic.io/books-read-97-things-every-programmer-should-know.html" rel="alternate"></link><published>2016-06-05T22:00:00+02:00</published><updated>2016-06-05T22:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2016-06-05:www.j-marjanovic.io/books-read-97-things-every-programmer-should-know.html</id><summary type="html">&lt;p&gt;I have seen this book referenced on several occasions when the software
+&lt;p&gt;&lt;img alt="Creation of new project in Eclipse" src="www.j-marjanovic.io/images/debugging_cyclone_soc_openocd/eclipse_debug_final.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="misc"></category><category term="FPGA"></category><category term="Altera"></category><category term="Linux"></category><category term="OpenOCD"></category></entry><entry><title>Books read: 97 Things Every Programmer Should Know</title><link href="www.j-marjanovic.io/books-read-97-things-every-programmer-should-know.html" rel="alternate"></link><published>2016-06-05T22:00:00+02:00</published><updated>2016-06-05T22:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2016-06-05:www.j-marjanovic.io/books-read-97-things-every-programmer-should-know.html</id><summary type="html">&lt;p&gt;I have seen this book referenced on several occasions when the software
 engineering was discussed, but I never had the time to read from first page to
 the last. I bought the dead-tree version, which gives you a better motivation
 to read the whole book. Here are my comments and …&lt;/p&gt;</summary><content type="html">&lt;p&gt;I have seen this book referenced on several occasions when the software
@@ -3180,9 +3522,8 @@ chosen based on a parameter or a macro).&lt;/p&gt;
 &lt;p&gt;This contribution could be summarized as a call to use sensible
 variable/functions/object/methods names. This could be as well extended to
 writing informative comments, and not have comments like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;if (maxLim &amp;lt; 0) // checks if max limit is negative&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;maxLim&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="ss"&gt;)&lt;/span&gt; &lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="nv"&gt;checks&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nv"&gt;max&lt;/span&gt; &lt;span class="nv"&gt;limit&lt;/span&gt; &lt;span class="nv"&gt;is&lt;/span&gt; &lt;span class="nv"&gt;negative&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h2&gt;(12) Code Is Design by Ryan Brush&lt;/h2&gt;
 &lt;p&gt;The abstract process of making virtual artifacts (software) from nothing
@@ -3204,7 +3545,7 @@ ultimate code review is the release of the code to the public or to the
 clients. In this case one can be sure that the company will be judged by the
 quality of the released code. The same is true for the examples which
 demonstrates the use of someone own tools.&lt;/p&gt;
-&lt;p&gt;To be continued in the next blog post...&lt;/p&gt;</content><category term="Books read"></category><category term="Software Engineering"></category></entry><entry><title>HDL data type for Python parser implementations</title><link href="www.j-marjanovic.io/hdl-data-type-for-python-parser-implementations.html" rel="alternate"></link><published>2015-11-15T22:00:00+01:00</published><updated>2015-11-15T22:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2015-11-15:www.j-marjanovic.io/hdl-data-type-for-python-parser-implementations.html</id><summary type="html">&lt;p&gt;Recently I had to implement a parser for the PCIe protocol. The data was
+&lt;p&gt;To be continued in the next blog post...&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Books read"></category><category term="Software Engineering"></category></entry><entry><title>HDL data type for Python parser implementations</title><link href="www.j-marjanovic.io/hdl-data-type-for-python-parser-implementations.html" rel="alternate"></link><published>2015-11-15T22:00:00+01:00</published><updated>2015-11-15T22:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2015-11-15:www.j-marjanovic.io/hdl-data-type-for-python-parser-implementations.html</id><summary type="html">&lt;p&gt;Recently I had to implement a parser for the PCIe protocol. The data was
 captured with Xilinx ChipScope and saved as TSV (tab-separated value) text file.
 I wanted to implement a parser in Python, my favorite language for this kind of
 tasks. I have stumbled to a problem when I …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Recently I had to implement a parser for the PCIe protocol. The data was
@@ -3280,7 +3621,6 @@ which discouraged me from using it in my parser.&lt;/p&gt;
     &lt;span class="n"&gt;unittest&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;This results are 3 failing tests: test_invalid_slice, test_slicing, and
 test_unpack. test_invalid_slice fails because taking a slice wider than a vector
 width produces fills the missing bits with zero. This is similar to
@@ -3304,7 +3644,7 @@ more sense to use the same notation in both languages.&lt;/p&gt;
 (duh), but the Python with the generators, list comprehensions and dictionaries
 (well, SystemVerilog does have associative array) is much more elegant language.
 The ability to test commands on-the-fly in the interpreter is also much
-welcomed.&lt;/p&gt;</content><category term="Projects"></category><category term="Python"></category><category term="Verilog"></category><category term="FPGA"></category><category term="HDL"></category></entry><entry><title>Compilation of Linux kernel for Raspberry Pi</title><link href="www.j-marjanovic.io/compilation-of-linux-kernel-for-raspberry-pi.html" rel="alternate"></link><published>2015-03-01T19:00:00+01:00</published><updated>2015-03-01T19:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2015-03-01:www.j-marjanovic.io/compilation-of-linux-kernel-for-raspberry-pi.html</id><summary type="html">&lt;p&gt;Yesterday I got my Raspberry Pi 2, the evolution of the legendary Raspberry Pi. 
+welcomed.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Projects"></category><category term="Python"></category><category term="Verilog"></category><category term="FPGA"></category><category term="HDL"></category></entry><entry><title>Compilation of Linux kernel for Raspberry Pi</title><link href="www.j-marjanovic.io/compilation-of-linux-kernel-for-raspberry-pi.html" rel="alternate"></link><published>2015-03-01T19:00:00+01:00</published><updated>2015-03-01T19:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2015-03-01:www.j-marjanovic.io/compilation-of-linux-kernel-for-raspberry-pi.html</id><summary type="html">&lt;p&gt;Yesterday I got my Raspberry Pi 2, the evolution of the legendary Raspberry Pi. 
 The evolution is the right word to describe what has changed compared to 
 the previous version. The processor it is now a quad-core, it runs faster,
 it has got a newer instruction set (ARMv7) and the …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Yesterday I got my Raspberry Pi 2, the evolution of the legendary Raspberry Pi. 
@@ -3329,7 +3669,6 @@ like:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;apt-get install linux-headers-&lt;span class="k"&gt;$(&lt;/span&gt;uname -r&lt;span class="k"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;The above command will install the headers the headers for the currently running 
 kernel. It copies the header files to /usr/src and creates link in /lib/modules/,
 this gives the user tools needed to compile kernel modules.&lt;/p&gt;
@@ -3341,7 +3680,7 @@ get a kernel image, the &lt;em&gt;kbuild&lt;/em&gt; system did not work. In Thom
 &lt;p&gt;Initially I wanted to get the headers in the same way as I would on Ubuntu, by
 using apt (Advanced Packaging Tool). Searching for available packages did not
 show the package needed (the Raspbian was running the 3.18.7-v7+ kernel).&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;pi@raspberrypi ~ $&lt;/span&gt; sudo aptitude search linux-headers
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;pi@raspberrypi ~ $ &lt;/span&gt;sudo aptitude search linux-headers
 &lt;span class="go"&gt;v   linux-headers                                   -                                                           &lt;/span&gt;
 &lt;span class="go"&gt;p   linux-headers-3.10-3-all                        - All header files for Linux 3.10 (meta-package)            &lt;/span&gt;
 &lt;span class="go"&gt;p   linux-headers-3.10-3-all-armhf                  - All header files for Linux 3.10 (meta-package)            &lt;/span&gt;
@@ -3368,7 +3707,6 @@ show the package needed (the Raspbian was running the 3.18.7-v7+ kernel).&lt;/p&
 &lt;span class="go"&gt;p   linux-headers-rpi-rpfv                          - This metapackage will pull in the headers for the raspbian&lt;/span&gt;
 &lt;span class="go"&gt;p   linux-headers-rpi2-rpfv                         - This metapackage will pull in the headers for the raspbian&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;I tried my luck with &lt;em&gt;linux-headers-rpi2-rpfv&lt;/em&gt; which installed headers for
 kernel 3.18.0. That might sound close enough, but Linux refuses modules which
@@ -3433,7 +3771,6 @@ shows nothing promising:&lt;/p&gt;
 &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt; 4246.604593&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c1"&gt;---[ end trace 8e4bd0982f9f1fd0 ]---&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;It basically says that there was an error trying to access the wrong part of the
 memory from the &lt;em&gt;insmod&lt;/em&gt; process.&lt;/p&gt;
 &lt;p&gt;At this point I decided to stop experimenting with this approach. I was getting
@@ -3462,7 +3799,7 @@ module and to load it in kernel (debug message from kernel):&lt;/p&gt;
 &lt;span class="go"&gt;[   38.324796] &lt;/span&gt;
 &lt;span class="go"&gt;[   38.324808]   built: Mar  1 2015 11:38:10&lt;/span&gt;
 &lt;span class="go"&gt;[   38.324818] ============================================&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content><category term="Projects"></category><category term="Linux"></category><category term="Raspberry Pi"></category></entry><entry><title>Lattice iCEcube2 on Ubuntu 14.04</title><link href="www.j-marjanovic.io/lattice-icecube2-on-ubuntu-1404.html" rel="alternate"></link><published>2015-03-01T19:00:00+01:00</published><updated>2015-03-01T19:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2015-03-01:www.j-marjanovic.io/lattice-icecube2-on-ubuntu-1404.html</id><summary type="html">&lt;p&gt;/home/jan/opt/lscc/iCEcube2.2014.12/synpbase/bin/synplify_pro: 186: [: unexpected operator
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Projects"></category><category term="Linux"></category><category term="Raspberry Pi"></category></entry><entry><title>Lattice iCEcube2 on Ubuntu 14.04</title><link href="www.j-marjanovic.io/lattice-icecube2-on-ubuntu-1404.html" rel="alternate"></link><published>2015-03-01T19:00:00+01:00</published><updated>2015-03-01T19:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2015-03-01:www.j-marjanovic.io/lattice-icecube2-on-ubuntu-1404.html</id><summary type="html">&lt;p&gt;/home/jan/opt/lscc/iCEcube2.2014.12/synpbase/bin/synplify_pro: 186: [: unexpected operator
 /home/jan/opt/lscc/iCEcube2.2014.12/synpbase/bin/synplify_pro: 200: [: !=: argument expected
 /home/jan/opt/lscc/iCEcube2.2014.12/synpbase/bin/c_hdl: 186: [: unexpected operator
 /home/jan/opt/lscc/iCEcube2.2014.12/synpbase/bin/c_hdl: 200 …&lt;/p&gt;</summary><content type="html">&lt;p&gt;/home/jan/opt/lscc/iCEcube2.2014.12/synpbase/bin/synplify_pro: 186: [: unexpected operator
@@ -3481,7 +3818,7 @@ sed: couldn't edit config: not a regular file
 jan@jan-ThinkPad-T510 ~/opt/lscc/iCEcube2.2014.12/synpbase/bin
  % &lt;/p&gt;
 &lt;p&gt;for file in $(ls -la | grep -E '^[^d]' | awk -F "/" '{print $NF}' ); do echo $file; done &lt;/p&gt;
-&lt;p&gt;for file in $(ls -la | tail -n +2 | grep -E '^[^d]' | awk '{print $NF}' ); do sed -i 's/\/bin\/sh/\/bin\/bash/g' $file; done &lt;/p&gt;</content><category term="Projects"></category><category term="Lattice"></category><category term="iCE40"></category><category term="Linux"></category><category term="Ubuntu"></category></entry><entry><title>Lattice iCE40 configuration using Raspberry Pi</title><link href="www.j-marjanovic.io/lattice-ice40-configuration-using-raspberry-pi.html" rel="alternate"></link><published>2015-01-18T22:00:00+01:00</published><updated>2015-01-18T22:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2015-01-18:www.j-marjanovic.io/lattice-ice40-configuration-using-raspberry-pi.html</id><summary type="html">&lt;p&gt;As I mentioned in previous post, I started playing around with Lattice iCE40 FPGA. 
+&lt;p&gt;for file in $(ls -la | tail -n +2 | grep -E '^[^d]' | awk '{print $NF}' ); do sed -i 's/\/bin\/sh/\/bin\/bash/g' $file; done &lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Projects"></category><category term="Lattice"></category><category term="iCE40"></category><category term="Linux"></category><category term="Ubuntu"></category></entry><entry><title>Lattice iCE40 configuration using Raspberry Pi</title><link href="www.j-marjanovic.io/lattice-ice40-configuration-using-raspberry-pi.html" rel="alternate"></link><published>2015-01-18T22:00:00+01:00</published><updated>2015-01-18T22:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2015-01-18:www.j-marjanovic.io/lattice-ice40-configuration-using-raspberry-pi.html</id><summary type="html">&lt;p&gt;As I mentioned in previous post, I started playing around with Lattice iCE40 FPGA. 
 In the last post I did a quick overview of the 
 iCE40 tools. The iCEcube2 cannot compete with Xilinx ISE and Altera Quartus II, 
 not to mention the Vivado, but since this is a low-cost FPGA …&lt;/p&gt;</summary><content type="html">&lt;p&gt;As I mentioned in previous post, I started playing around with Lattice iCE40 FPGA. 
@@ -3517,7 +3854,7 @@ in iCEcube2. &lt;/p&gt;
 
 &lt;p&gt;This is the output (well, the real output it is the configured board which blinks the LEDs while
 the DONE led is lit):&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;pi@raspberrypi ~/Jan/ice40/test1 $&lt;/span&gt; sudo bash conf_FPGA.sh proto1_top_bitmap.bin
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;pi@raspberrypi ~/Jan/ice40/test1 $ &lt;/span&gt;sudo bash conf_FPGA.sh proto1_top_bitmap.bin
 &lt;span class="go"&gt;GPIO 25 not exported, trying to export...&lt;/span&gt;
 
 &lt;span class="go"&gt;spidev does not exist&lt;/span&gt;
@@ -3540,14 +3877,13 @@ the DONE led is lit):&lt;/p&gt;
 &lt;span class="go"&gt;1&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;I find this type of configuration very useful when the FPGA is not the main
 chip in the system (when there is as in the previous example an RPi). The 
 configuration file can be stored on Raspberry Pi SD card and at each start-up
 the FPGA gets programmed. The image update can be done very easily and there 
 is no way a user can brick the FPGA (which can easily happen if the FPGA writes
 the configuration image and boots from its Flash, in this case two images 
-(factory and user) are recommended).&lt;/p&gt;</content><category term="Projects"></category><category term="Lattice"></category><category term="iCE40"></category><category term="FPGA"></category><category term="Raspberry Pi"></category><category term="bash"></category></entry><entry><title>My first encounter with Lattice Semiconductor</title><link href="www.j-marjanovic.io/my-first-encounter-with-lattice-semiconductor.html" rel="alternate"></link><published>2014-12-24T20:00:00+01:00</published><updated>2014-12-24T20:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-12-24:www.j-marjanovic.io/my-first-encounter-with-lattice-semiconductor.html</id><summary type="html">&lt;p&gt;The FPGA market is one of those classical markets where there are two players 
+(factory and user) are recommended).&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Projects"></category><category term="Lattice"></category><category term="iCE40"></category><category term="FPGA"></category><category term="Raspberry Pi"></category><category term="bash"></category></entry><entry><title>My first encounter with Lattice Semiconductor</title><link href="www.j-marjanovic.io/my-first-encounter-with-lattice-semiconductor.html" rel="alternate"></link><published>2014-12-24T20:00:00+01:00</published><updated>2014-12-24T20:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-12-24:www.j-marjanovic.io/my-first-encounter-with-lattice-semiconductor.html</id><summary type="html">&lt;p&gt;The FPGA market is one of those classical markets where there are two players 
 who have nearly 100% market share, e.g. PC processors (Intel and AMD), graphic
 cards (NVIDIA and ATI), ... The two mayor players on the FPGA market are Xilinx
 and Altera. Both of this two companies follows …&lt;/p&gt;</summary><content type="html">&lt;p&gt;The FPGA market is one of those classical markets where there are two players 
@@ -3591,16 +3927,14 @@ when the licence manager was unable to find network adapter MAC address:&lt;/p&g
 &lt;span class="s s-Atom"&gt;available&lt;/span&gt; &lt;span class="s s-Atom"&gt;at&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;www.macrovision.com&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;The problem is that the FLEXnet software searches for the MAC address of the eth*
 interface, while Centos uses completely different naming. Being familiar with the
 problem, I used a trick to create a new interface named eth0 (you should replace
 the x's with desired MAC address):&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;modprobe dummy&lt;/span&gt;
-&lt;span class="err"&gt;ip link set name eth0 dev dummy0&lt;/span&gt;
-&lt;span class="err"&gt;ifconfig eth0 hw ether xx:xx:xx:xx:xx:xx&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;modprobe dummy
+ip link set name eth0 dev dummy0
+ifconfig eth0 hw ether xx:xx:xx:xx:xx:xx
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;After setting everything up, a view on the iCEcube2 showed before me.&lt;/p&gt;
 &lt;p&gt;&lt;img alt="iCEcube2" src="www.j-marjanovic.io/images/icestudio.png"&gt;&lt;/p&gt;
@@ -3617,20 +3951,19 @@ very user friendly approach.&lt;/p&gt;
 &lt;span class="n"&gt;tools&lt;/span&gt; &lt;span class="n"&gt;are&lt;/span&gt; &lt;span class="n"&gt;only&lt;/span&gt; &lt;span class="n"&gt;available&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;windows&lt;/span&gt; &lt;span class="n"&gt;platform&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Well this is it for now, i need to switch to Windows. Merry Christmas to everybody!&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;All trademarks and registered trademarks are the property of their respective owners.&lt;/p&gt;</content><category term="Projects"></category><category term="Lattice"></category><category term="iCE40"></category><category term="FPGA"></category></entry><entry><title>Theremin First Demo</title><link href="www.j-marjanovic.io/theremin-first-demo.html" rel="alternate"></link><published>2014-11-18T23:00:00+01:00</published><updated>2014-11-18T23:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-18:www.j-marjanovic.io/theremin-first-demo.html</id><content type="html">&lt;p&gt;During the weekend I was able to take some time to do first test of the theremin.
+&lt;p&gt;All trademarks and registered trademarks are the property of their respective owners.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Projects"></category><category term="Lattice"></category><category term="iCE40"></category><category term="FPGA"></category></entry><entry><title>Theremin First Demo</title><link href="www.j-marjanovic.io/theremin-first-demo.html" rel="alternate"></link><published>2014-11-18T23:00:00+01:00</published><updated>2014-11-18T23:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-18:www.j-marjanovic.io/theremin-first-demo.html</id><content type="html">&lt;p&gt;During the weekend I was able to take some time to do first test of the theremin.
 Here are two recordings of my friend Luka playing.&lt;/p&gt;
 &lt;iframe width="100%" height="450" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/177559922&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;visual=true"&gt;&lt;/iframe&gt;
 
 &lt;iframe width="100%" height="450" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/177561150&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;visual=true"&gt;&lt;/iframe&gt;
 
 &lt;p&gt;There are some more articles explaining how digital theremin works coming,
- remember to check out my blog.&lt;/p&gt;</content><category term="Projects"></category><category term="Theremin"></category></entry><entry><title>I just got a Nintendo 64</title><link href="www.j-marjanovic.io/i-just-got-a-nintendo-64.html" rel="alternate"></link><published>2014-11-16T18:00:00+01:00</published><updated>2014-11-16T18:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-16:www.j-marjanovic.io/i-just-got-a-nintendo-64.html</id><content type="html">&lt;p&gt;I just got a Nintendo 64, my friend Rok was kind enough to lend it.&lt;/p&gt;
+ remember to check out my blog.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Projects"></category><category term="Theremin"></category></entry><entry><title>I just got a Nintendo 64</title><link href="www.j-marjanovic.io/i-just-got-a-nintendo-64.html" rel="alternate"></link><published>2014-11-16T18:00:00+01:00</published><updated>2014-11-16T18:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-16:www.j-marjanovic.io/i-just-got-a-nintendo-64.html</id><content type="html">&lt;p&gt;I just got a Nintendo 64, my friend Rok was kind enough to lend it.&lt;/p&gt;
 &lt;p style="width:700px; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Nintendo 64" src="www.j-marjanovic.io/images/N64.png"&gt;&lt;/p&gt;
 &lt;p&gt;I have an interesting project in mind, I will keep you updated.
-Rok will for sure be the first one to get the alpha version.&lt;/p&gt;</content><category term="Projects"></category><category term="Nintendo 64"></category></entry><entry><title>Theremin Antenna Measurements</title><link href="www.j-marjanovic.io/theremin-antenna-measurements.html" rel="alternate"></link><published>2014-11-09T09:00:00+01:00</published><updated>2014-11-09T09:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-09:www.j-marjanovic.io/theremin-antenna-measurements.html</id><summary type="html">&lt;p&gt;Last week I briefly explained how theremin works. I also presented my idea to develop a 
+Rok will for sure be the first one to get the alpha version.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Projects"></category><category term="Nintendo 64"></category></entry><entry><title>Theremin Antenna Measurements</title><link href="www.j-marjanovic.io/theremin-antenna-measurements.html" rel="alternate"></link><published>2014-11-09T09:00:00+01:00</published><updated>2014-11-09T09:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-09:www.j-marjanovic.io/theremin-antenna-measurements.html</id><summary type="html">&lt;p&gt;Last week I briefly explained how theremin works. I also presented my idea to develop a 
 digital version, using FPGA as a detector of distance between hand and antenna.&lt;/p&gt;
 &lt;p&gt;You have probably already heard a joke about theory and practice. &lt;/p&gt;
 &lt;blockquote&gt;
@@ -3676,7 +4009,7 @@ from mains is also being picked up.&lt;/p&gt;
 improve.&lt;/p&gt;
 &lt;p&gt;I will write another article on filtering in FPGA, meanwhile let's enjoy much improved 
 results:&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Time constant with filtering" src="www.j-marjanovic.io/images/theremin_antenna_filtered.png"&gt;&lt;/p&gt;</content><category term="Projects"></category><category term="Theremin"></category></entry><entry><title>Theremin Basics</title><link href="www.j-marjanovic.io/theremin-basics.html" rel="alternate"></link><published>2014-11-06T22:00:00+01:00</published><updated>2014-11-06T22:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-06:www.j-marjanovic.io/theremin-basics.html</id><summary type="html">&lt;p&gt;Theremin, a first electronic instrument. Leon Theremin invented it in 1928. 
+&lt;p&gt;&lt;img alt="Time constant with filtering" src="www.j-marjanovic.io/images/theremin_antenna_filtered.png"&gt;&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Projects"></category><category term="Theremin"></category></entry><entry><title>Theremin Basics</title><link href="www.j-marjanovic.io/theremin-basics.html" rel="alternate"></link><published>2014-11-06T22:00:00+01:00</published><updated>2014-11-06T22:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-06:www.j-marjanovic.io/theremin-basics.html</id><summary type="html">&lt;p&gt;Theremin, a first electronic instrument. Leon Theremin invented it in 1928. 
 Try to imagine people seeing somebody waving hand in the middle or the air
 and producing an extraterrestrial sounds. Theremin, should be considered a 
 true pioneer of electronic music.&lt;/p&gt;
@@ -3714,7 +4047,7 @@ between hand and antenna)  will result in longer time and a smaller
 capacitance (longer distance between hand and antenna) will result in shorter
 time. This difference will generate a different pitch.&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Theremin settling time" src="www.j-marjanovic.io/images/theremin_settling_time.png"&gt;&lt;/p&gt;
-&lt;p&gt;This is all for this part, stay tuned for more.&lt;/p&gt;</content><category term="Projects"></category><category term="Theremin"></category></entry><entry><title>Hello world</title><link href="www.j-marjanovic.io/hello-world.html" rel="alternate"></link><published>2014-11-02T13:00:00+01:00</published><updated>2014-11-02T13:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-02:www.j-marjanovic.io/hello-world.html</id><summary type="html">&lt;p&gt;Hi and welcome to my blog.&lt;/p&gt;
+&lt;p&gt;This is all for this part, stay tuned for more.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Projects"></category><category term="Theremin"></category></entry><entry><title>Hello world</title><link href="www.j-marjanovic.io/hello-world.html" rel="alternate"></link><published>2014-11-02T13:00:00+01:00</published><updated>2014-11-02T13:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-02:www.j-marjanovic.io/hello-world.html</id><summary type="html">&lt;p&gt;Hi and welcome to my blog.&lt;/p&gt;
 &lt;p&gt;This is a "hello world" style post, I am curently testing pelican static blog generator.
 Since I don't know how much time I will have to manage this blog I prefer that everything 
 is static. If I some day stop writing this blog, at …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Hi and welcome to my blog.&lt;/p&gt;
@@ -3725,4 +4058,4 @@ due to out-of-date web page.&lt;/p&gt;
 &lt;p&gt;This blog will be about one of my biggest passions, electronics and technology in general.
 Since I was a kid I was curious about electronic devices and to this day I always enjoy
 taking thing appart (and sometimes also together, that is what I am being paid for). &lt;/p&gt;
-&lt;p&gt;This is all for now, let's see if it "compiles"...&lt;/p&gt;</content><category term="Misc"></category></entry></feed>
+&lt;p&gt;This is all for now, let's see if it "compiles"...&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Misc"></category></entry></feed>

@@ -1,5 +1,385 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io - FPGA</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/fpga.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2021-02-28T13:00:00+01:00</updated><entry><title>Stratix V accelerator card from eBay, part 6</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-6.html" rel="alternate"></link><published>2021-02-28T13:00:00+01:00</published><updated>2021-02-28T13:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2021-02-28:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-6.html</id><summary type="html">&lt;p&gt;In my &lt;a href="./stratix-v-accelerator-card-from-ebay-part-5.html"&gt;last blog post&lt;/a&gt; I
+<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io - FPGA</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/fpga.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2021-05-15T13:30:00+02:00</updated><entry><title>Stratix V accelerator card from eBay, part 7</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-7.html" rel="alternate"></link><published>2021-05-15T13:30:00+02:00</published><updated>2021-05-15T13:30:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2021-05-15:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-7.html</id><summary type="html">&lt;p&gt;The reverse engineering of the FPGA accelerator card from eBay is progressing
+well and documenting the DDR3 interface was a huge step forward. However, there
+is still one important part of the board which is not fully uncovered, the PCI
+Express® interface.&lt;/p&gt;
+&lt;h1&gt;Hardware&lt;/h1&gt;
+&lt;h2&gt;Pikes Peak&lt;/h2&gt;
+&lt;p&gt;Pikes Peak is a Stratix …&lt;/p&gt;</summary><content type="html">&lt;p&gt;The reverse engineering of the FPGA accelerator card from eBay is progressing
+well and documenting the DDR3 interface was a huge step forward. However, there
+is still one important part of the board which is not fully uncovered, the PCI
+Express® interface.&lt;/p&gt;
+&lt;h1&gt;Hardware&lt;/h1&gt;
+&lt;h2&gt;Pikes Peak&lt;/h2&gt;
+&lt;p&gt;Pikes Peak is a Stratix® V-based FPGA accelerator conforming to &lt;a href="https://www.opencompute.org/documents/microsoft-ocs-v2-tray-mezzanine"&gt;Open CloudServer
+OCS Tray Mezzanine
+Specification&lt;/a&gt;.
+It connects to the motherboard with a 160-pin connector which provides power,
+management, and a 16-lane-wide PCIe interface. With the resistors on the
+&lt;code&gt;PCIE_CFG_ID&lt;/code&gt;, Pikes Peak indicates 2 x8 bifurcation.&lt;/p&gt;
+&lt;p&gt;I have explored the various details of this board in previous posts on my blog.
+Important for today's discussion is &lt;a href="stratix-v-accelerator-card-from-ebay-part-2.html"&gt;the part
+2&lt;/a&gt;, where using a &lt;a href="https://github.com/j-marjanovic/ocs-tray-mezzanine-adapter"&gt;custom HW
+adapter&lt;/a&gt; I was able
+to establish the connection between the PC and the FPGA using the factory image
+on the board (stored in on-board Flash).&lt;/p&gt;
+&lt;p&gt;The part number of the device (&lt;code&gt;5SGSD5&lt;/code&gt;) indicates that it contains &lt;a href="https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/hb/stratix-v/stx5_51001.pdf"&gt;one
+PCIe hard IP block&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;At that time I have assumed that one link of 8 PCIe lanes is connected to
+the PCIe hard IP block and that another x8 link is connected to 8 transceivers
+on the other side of the device, maybe with the PCIe IP implemented in logic.
+Later we will explore why this assumption is not correct.&lt;/p&gt;
+&lt;h2&gt;Storey Peak&lt;/h2&gt;
+&lt;p&gt;Storey Peak contains (roughly) the same components as Pikes Peak but in a
+"normal" PCIe card form factor. For me, as a hobbyist who is not very keen on
+designing custom HW and prefers to stay in the FPGA domain, this form factor is
+much more convenient.&lt;/p&gt;
+&lt;p&gt;I have presented the main components of this board in a series of tweets a
+couple of weeks ago:&lt;/p&gt;
+&lt;p&gt;&lt;blockquote class="twitter-tweet" align="center"&gt;&lt;a href="https://twitter.com/janmarjanovic/status/1383876145821589505"&gt;Tweet of janmarjanovic/1383876145821589505&lt;/a&gt;&lt;/blockquote&gt;&lt;/p&gt;
+&lt;p&gt;An attentive reader will note the difference between the PCIe devices IDs on
+Storey Peak and Pikes Peak: Store Peak reports &lt;code&gt;0xb101&lt;/code&gt; while Pikes Peak reports
+&lt;code&gt;0xb100&lt;/code&gt;.&lt;/p&gt;
+&lt;h1&gt;First test&lt;/h1&gt;
+&lt;p&gt;I have
+&lt;a href="https://github.com/j-marjanovic/otma-fpga-bringup/commit/da95ff009cd1d9d0664b099894da73b6e59f4eae"&gt;instantiated&lt;/a&gt;
+the &lt;em&gt;Avalon-MM Stratix V Hard IP for PCI Express&lt;/em&gt; and connected it to a couple
+of peripherals (GPIO, System ID) to provide a minimal example for access
+from the computer. I have also connected the Hard IP status interface to the
+Nios II processor, which allows me to query the status of the PCIe link over the
+JTAG. There is only 1 location where the PCIe lanes can be connected in a
+normal &lt;code&gt;5SGSD5&lt;/code&gt; (annotated in light pink in the image below), so I connected the
+PCIe lanes there.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="PCIe pin locations" src="www.j-marjanovic.io/images/2021_fpga_card_part_7/pcie_pins.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;h2&gt;First test with Pikes Peak&lt;/h2&gt;
+&lt;p&gt;Once everything was set up I have connected the Pikes Peak board through the x1
+extender to one of the slots in my DELL PowerEdge R720.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Pikes Peak in a server" src="www.j-marjanovic.io/images/2021_fpga_card_part_7/pp_in_server.jpg" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;The "OTMA adapter" does not properly connect the reset pin to the Pikes Peak
+connector, and I had to manually issue a reset command after power-up. Below
+is the output from the CLI running on the Nios II processor in FPGA:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;init done
+
+pp_sp_example &amp;gt; pcie status
+pcie:
+  id = 2c1e57a7
+  version = 10000
+  status.cur speed   = 0
+  status.LTTSM state = 0
+  status.lane act    = 0
+  status.DL up       = 0
+
+pp_sp_example &amp;gt; clks
+Clock counter: ident = 0xc10cc272, version = 0x10000
+Clock frequency [0] =  124.999 MHz
+Clock frequency [1] =  644.531 MHz
+Clock frequency [2] =   99.998 MHz
+Clock frequency [3] =   99.998 MHz
+Clock frequency [4] =    0.000 MHz
+Clock frequency [5] =    0.000 MHz
+Clock frequency [6] =    0.000 MHz
+Clock frequency [7] =    0.000 MHz
+
+pp_sp_example &amp;gt; pcie reset
+pcie: asserting reset...
+pcie: deasserted reset...
+pcie: reset deasserted
+
+pp_sp_example &amp;gt; pcie status
+pcie:
+  id = 2c1e57a7
+  version = 10000
+  status.cur speed   = 2
+  status.LTTSM state = f
+  status.lane act    = 1
+  status.DL up       = 0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;We see that clocks 2 and 3 are both 100 MHz, which indicates that the PCIe clock
+distribution works correctly, and after the reset the link reports:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;current speed: 5 GT/s&lt;/strong&gt; - maximum supported by the IP in this configuration&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;LTSSM state: L0&lt;/strong&gt; - this is the state in which the state machine should be&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;lane active: 1&lt;/strong&gt; - as expected, the USB cable contains only one high-speed differential lane&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This is all looks very promising; once the PC boots I am also able to get the
+same information from the &lt;code&gt;lspci&lt;/code&gt; utility:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ sudo lspci -s 03:00 -vv
+03:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)
+    Subsystem: Device 01a2:0001
+    Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+    Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast &amp;gt;TAbort- &amp;lt;TAbort- &amp;lt;MAbort- &amp;gt;SERR- &amp;lt;PERR- INTx-
+    Latency: 0, Cache Line Size: 64 bytes
+    Interrupt: pin A routed to IRQ 15
+    NUMA node: 0
+    Region 0: Memory at df800000 (32-bit, non-prefetchable) [size=2M]
+&amp;lt;...&amp;gt;
+    Capabilities: [80] Express (v2) Endpoint, MSI 00
+        DevCap: MaxPayload 128 bytes, PhantFunc 0, Latency L0s &amp;lt;64ns, L1 &amp;lt;1us
+            ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset- SlotPowerLimit 25.000W
+        DevCtl: CorrErr- NonFatalErr+ FatalErr+ UnsupReq+
+            RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
+            MaxPayload 128 bytes, MaxReadReq 512 bytes
+        DevSta: CorrErr+ NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
+        LnkCap: Port #1, Speed 5GT/s, Width x8, ASPM not supported
+            ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp+
+        LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk+
+            ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+        LnkSta: Speed 5GT/s (ok), Width x1 (downgraded)
+            TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+&amp;lt;...&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And finally, I can use &lt;code&gt;pcimem&lt;/code&gt; to read and write to the registers in the FPGA,
+e.g. read system ID and timestamp and write to a GPIO pin:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ sudo ./pcimem /sys/bus/pci/devices/0000:03:00.0/resource0 0x100000 w
+/sys/bus/pci/devices/0000:03:00.0/resource0 opened.
+Target offset is 0x100000, page size is 4096
+mmap(0, 4096, 0x3, 0x1, 3, 0x100000)
+PCI Memory mapped to address 0x7f3ecc8ba000.
+0x100000: 0x01A20001
+
+$ sudo ./pcimem /sys/bus/pci/devices/0000:03:00.0/resource0 0x100004 w
+/sys/bus/pci/devices/0000:03:00.0/resource0 opened.
+Target offset is 0x100004, page size is 4096
+mmap(0, 4096, 0x3, 0x1, 3, 0x100004)
+PCI Memory mapped to address 0x7f65b24b3000.
+0x100004: 0x6097B8A9
+
+$ sudo ./pcimem /sys/bus/pci/devices/0000:03:00.0/resource0 0x0 w 1
+/sys/bus/pci/devices/0000:03:00.0/resource0 opened.
+Target offset is 0x0, page size is 4096
+mmap(0, 4096, 0x3, 0x1, 3, 0x0)
+PCI Memory mapped to address 0x7fec6c0cc000.
+0x0000: 0x00000000
+Written 0x0001; readback 0x   1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The proverbial "blinky" is actually blinking and so far everything seems to be
+working correctly.&lt;/p&gt;
+&lt;h2&gt;First test with Storey Peak&lt;/h2&gt;
+&lt;p&gt;Encouraged by the success with the Pikes Peak board and the adapter PCB, I have
+installed the Storey Peak board instead. Compared to the Pikes Peak board and
+the cable salad there, this one fits much nicer - both from purely esthetic as
+well as thermal point-of-view.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Storey Peak in a server" src="www.j-marjanovic.io/images/2021_fpga_card_part_7/sp_in_server.jpg" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;And here I encountered an unpleasant surprise. Although the clocks are there,
+the PCIe link can never reach the &lt;em&gt;L0&lt;/em&gt; state, i.e. the link never finishes
+training.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;pp_sp_example &amp;gt; pcie status
+pcie:
+  id = 2c1e57a7
+  version = 10000
+  status.cur speed   = 1
+  status.LTTSM state = 1a
+  status.lane act    = 8
+  status.DL up       = 0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Intel® provides good &lt;a href="https://community.intel.com/t5/FPGA-Wiki/FTA-PCI-express/ta-p/735993"&gt;troubleshooting resources for the PCIe
+link&lt;/a&gt;, and
+I have decided to have a look at the PIPE interface to see the data exchange
+between the FPGA and the CPU.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="TS1 ordered sets" src="www.j-marjanovic.io/images/2021_fpga_card_part_7/ts1.png" style="width:80%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;We can decode the data received by the first two transceivers and obtain
+the information from the &lt;a href="https://www.oreilly.com/library/view/pci-express-system/0321156307/0321156307_ch14lev1sec5.html"&gt;TS1 ordered sets&lt;/a&gt;:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align="left"&gt;field&lt;/th&gt;
+&lt;th align="left"&gt;xcvr 0&lt;/th&gt;
+&lt;th align="left"&gt;xcvr 1&lt;/th&gt;
+&lt;th&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;COM&lt;/td&gt;
+&lt;td align="left"&gt;0xBC (K28.5)&lt;/td&gt;
+&lt;td align="left"&gt;0xBC (K28.5)&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;Link #&lt;/td&gt;
+&lt;td align="left"&gt;0x00&lt;/td&gt;
+&lt;td align="left"&gt;0x00&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;Lane #&lt;/td&gt;
+&lt;td align="left"&gt;0x08&lt;/td&gt;
+&lt;td align="left"&gt;0x09&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;N_FTS&lt;/td&gt;
+&lt;td align="left"&gt;0x1E&lt;/td&gt;
+&lt;td align="left"&gt;0x1E&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;Rate ID&lt;/td&gt;
+&lt;td align="left"&gt;0x0E&lt;/td&gt;
+&lt;td align="left"&gt;0x0E&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;We see that the first transceiver receives lane number 8 and the second
+transceiver receives lane number 9. At this point one can look again at the
+board, and realize that the upper 8 lanes are connected to the PCIe Hard IP in
+the FPGA.&lt;/p&gt;
+&lt;p&gt;TODO: annotated&lt;/p&gt;
+&lt;p&gt;This explains why we see lane 8 on the first transceiver, and also explains
+why the link does not get established.&lt;/p&gt;
+&lt;h2&gt;Storey Peak in a computer which supports bifurcation&lt;/h2&gt;
+&lt;p&gt;Just for a test, I have plugged the Storey Peak card in a computer that
+supports 2 x8 bifurcation on a x16 slot.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Bifurcation configuration" src="www.j-marjanovic.io/images/2021_fpga_card_part_7/server_bifurcation.png" style="width:50%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;We can see that in this configuration there are two PCIe endpoints presented:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ lspci
+&amp;lt;...&amp;gt;
+86:00.0 Unassigned class [ff00]: Microsoft Corporation Device b100 (rev 01)
+87:00.0 Unassigned class [ff00]: Microsoft Corporation Device b101 (rev 01)
+&amp;lt;...&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And each of them supports a x8 link. It is theoretically possible that one of
+the endpoints is implemented in FPGA logic, but we will later see that this
+is not the case.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ sudo lspci -s 86:00 -vv
+86:00.0 Unassigned class [ff00]: Microsoft Corporation Device b100 (rev 01)
+&amp;lt;...&amp;gt;
+        LnkCap:    Port #1, Speed 8GT/s, Width x8, ASPM not supported, Exit Latency L0s &amp;lt;4us, L1 &amp;lt;1us
+&amp;lt;...&amp;gt;
+        LnkSta:    Speed 8GT/s, Width x8, TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+&amp;lt;...&amp;gt;
+
+$ sudo lspci -s 87:00 -vv
+87:00.0 Unassigned class [ff00]: Microsoft Corporation Device b101 (rev 01)
+&amp;lt;...&amp;gt;
+        LnkCap:    Port #1, Speed 8GT/s, Width x8, ASPM not supported, Exit Latency L0s &amp;lt;4us, L1 &amp;lt;1us
+&amp;lt;...&amp;gt;
+        LnkSta:    Speed 8GT/s, Width x8, TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+&amp;lt;...&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Unfortunately the DELL R720 which I use in my homelab does not support PCIe
+bifurcation.&lt;/p&gt;
+&lt;h1&gt;Investigation&lt;/h1&gt;
+&lt;p&gt;With some confusion regarding the assignment of PCIe lanes and the number of
+hard IP blocks in this device, it is time to carefully check the presentation on
+&lt;a href="https://indico.cern.ch/event/822126/contributions/3500184/attachments/1906428/3148591/Catapult_FastML_Fermilab_2019.pdf"&gt;Heterogeneous Computing @
+Microsoft&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Shown on slide 14 is the screenshot from Quartus® Chip Planner. Comparing this
+screenshot with the Chip Planner view for a "normal" device, we can note that
+in the presentation there is an additional PCIe block, which is not present
+in a normal device.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Comparison between the two devices" src="www.j-marjanovic.io/images/2021_fpga_card_part_7/msft_presentation.png" style="width:80%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;h2&gt;Web search&lt;/h2&gt;
+&lt;p&gt;There were a couple of speculation on &lt;a href="https://twitter.com/rombik_su/status/1257741366144180226"&gt;Twitter by
+@rombik_su&lt;/a&gt; and
+&lt;a href="https://www.reddit.com/r/FPGA/comments/7g0f80/altera_part_lookup/"&gt;reddit&lt;/a&gt; on
+what this part might be, and we can see that the last part of the code (reserved
+for &lt;em&gt;Special order devices&lt;/em&gt;) contains &lt;strong&gt;AC&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;blockquote class="twitter-tweet" align="center"&gt;&lt;a href="https://twitter.com/rombik_su/status/1257741366144180226"&gt;Tweet of rombik_su/1257741366144180226&lt;/a&gt;&lt;/blockquote&gt;&lt;/p&gt;
+&lt;p&gt;Searching for the full code (&lt;strong&gt;5SGSKF40I3LNAC&lt;/strong&gt;) also finds a &lt;a href="https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/pcn/pdn2007.pdf"&gt;PDN from
+Intel&lt;/a&gt;
+with a comment that the device is available "Upon Request, Please Contact Sales".&lt;/p&gt;
+&lt;p&gt;There is also &lt;a href="https://community.intel.com/t5/Programmable-Devices/FA-request-of-3-PCS-FBGA-AJ000400T01-ALTERA-Mfr-P-N/td-p/1204542"&gt;a
+thread&lt;/a&gt;
+on the Intel forum by somebody from Quanta who has a problem with a post-production
+check on this device.&lt;/p&gt;
+&lt;h2&gt;Bitstream analysis&lt;/h2&gt;
+&lt;p&gt;At this point it is pretty clear that this device is a custom part with 2 PCIe
+Hard IPs. I was curious if I am able to find the evince of the second IP
+in the bitstream.&lt;/p&gt;
+&lt;p&gt;I have used the same approach as for the DDR3 controller: by changing one
+variable at the time I was able to isolate the address in the JIC file which
+corresponds to the individual PCIe IP parameter. By repeating this procedure I
+was able to extract addresses for several parameters, especially interesting are
+the ones that can be observed from the outside, such as vendor ID, device ID,
+BAR type and size, ...&lt;/p&gt;
+&lt;p&gt;After I have managed to find the location of several parameters, I have
+extracted the values from the original JIC. As expected, one can easily
+see Microsoft® vendor ID (&lt;code&gt;0x1414&lt;/code&gt;) and the device ID (&lt;code&gt;0xb100&lt;/code&gt;):&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Parameters extracted from the bitstream" src="www.j-marjanovic.io/images/2021_fpga_card_part_7/bitstream_extract.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;I have then taken the bits which correspond to the PCIe block on the left side
+and performed a weighted autocorrelation on the bitstream. The procedure
+and the result can be found in a Jupyter &lt;a href="https://github.com/j-marjanovic/otma-pin-re/blob/master/scripts/pcie_analysis/02_autocorrelation.ipynb"&gt;notebook&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;One can see that there is a strong peak very close to the original
+configuration: the second configuration differs by just 1 bit. This is exactly
+what one can expect since we know that the two endpoints have different device
+IDs (&lt;code&gt;0xb100&lt;/code&gt; and &lt;code&gt;0xb101&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Auto-correlation of the original IP configuration" src="www.j-marjanovic.io/images/2021_fpga_card_part_7/auto_corr.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;With this we can confirm that there is a configuration for the second Hard IP
+stored in the factory image in the on-board Flash.&lt;/p&gt;
+&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;It is now clear that this board contains a custom part with two PCIe hard IP
+blocks. Unfortunately, the block which is available in a normal
+device is connected to the high lanes (lanes 8-15), and this requires at minimum
+some support from the motherboard to be useful.&lt;/p&gt;
+&lt;p&gt;There are several possibilities on how to proceed here:&lt;/p&gt;
+&lt;h2&gt;Playing stupid method&lt;/h2&gt;
+&lt;p&gt;I tried playing stupid and just instantiated two hard IPs in my design.
+Quartus was (as expected), not so easily fooled:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Error message when two hard IPs are instantiated with a normal part" src="www.j-marjanovic.io/images/2021_fpga_card_part_7/2_ips.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;h2&gt;Riser cable&lt;/h2&gt;
+&lt;p&gt;One could take a x16 riser cable and resolder the wires to swap the two x8
+connections on the connector. This will only provide 8 lanes, as the second
+hard IP cannot be used (yet).&lt;/p&gt;
+&lt;h2&gt;Upgrading my homelab server&lt;/h2&gt;
+&lt;p&gt;Is somebody interested in buying a DELL PowerEdge R720? :)&lt;/p&gt;
+&lt;h2&gt;Soft PCIe IP&lt;/h2&gt;
+&lt;p&gt;One could think about developing a soft IP and connect it directly to the
+transceivers. The development effort here would be enormous since Physical,
+Data, and Transaction Layers need to be handled in the logic. On the other hand,
+this could also be a great learning experience to get familiar with the lower
+layers of protocol, which are usually handled by a dedicated PCIe block.
+Additionally, one would have to use few advanced features of the transceiver
+itself (rate change, 8b/10b and 128b/130b decoder, receiver detection, lane
+bonding, ...).&lt;/p&gt;
+&lt;h2&gt;Manipulating the bitstream&lt;/h2&gt;
+&lt;p&gt;Since we have the configuration stored in the factory bitstream, one could
+consider "pasting" this configuration on top of a normal bitstream. This
+method does not seem user-friendly, and the main obstacle would be connecting
+the user logic to the second (unknown) hard IP.&lt;/p&gt;
+&lt;h2&gt;Unlocking the custom part in Quartus&lt;/h2&gt;
+&lt;p&gt;The database for this custom part is either already integrated into Quartus or
+it is delivered to the customer as a separate package (e.g. a DLL or a shared
+object).&lt;/p&gt;
+&lt;p&gt;If one &lt;code&gt;grep&lt;/code&gt;s for &lt;code&gt;5SGSMD5&lt;/code&gt; in the Quartus directory there is a library that
+contains a couple of interesting strings:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ strings libddb_dstr.so | egrep &amp;#39;5SGSMD5&amp;#39;
+&amp;lt;...&amp;gt;
+5SGSMD5H3F35I3LNAA
+&amp;lt;...&amp;gt;
+5SGSMD5K3F40I3YY
+&amp;lt;...&amp;gt;
+5SGSMD5_MS
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;So far hard work and determination have paid off. It seems that continuing
+to poke around Quartus libraries would be the right way ahead.&lt;/p&gt;
+&lt;hr&gt;
+&lt;div style="font-size: 80%;" &gt;
+Intel, the Intel logo, Altera, Nios, Quartus and Stratix words and logos are
+trademarks of Intel  Corporation  or  its subsidiaries  in  the  U.S.  and/or
+other  countries.
+&lt;/div&gt;
+
+&lt;div style="font-size: 80%;" &gt;
+Microsoft® is a registered trademark of Microsoft Corporation in the United
+States and/or other countries.
+&lt;/div&gt;
+
+&lt;div style="font-size: 80%;" &gt;
+PCI Express® and PCIe® are registered trademarks of PCI-SIG.
+&lt;/div&gt;
+
+&lt;div style="font-size: 80%;" &gt;
+All trademarks and registered trademarks are the property of their respective owners.
+&lt;/div&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay, part 6</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-6.html" rel="alternate"></link><published>2021-02-28T13:00:00+01:00</published><updated>2021-02-28T13:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2021-02-28:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-6.html</id><summary type="html">&lt;p&gt;In my &lt;a href="./stratix-v-accelerator-card-from-ebay-part-5.html"&gt;last blog post&lt;/a&gt; I
 have presented a method to extract the DDR3 pinout from the bitstream, obtained
 from the on-board Flash. In this post I will use the information obtained from
 the bitstream to instantiate a DDR3 memory controller and measure its
@@ -121,7 +501,6 @@ a part of Nios example design.&lt;/p&gt;
 &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;mem&lt;/span&gt; &lt;span class="n"&gt;check&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;   &lt;span class="n"&gt;read&lt;/span&gt; &lt;span class="n"&gt;throughput&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;9662&lt;/span&gt; &lt;span class="n"&gt;MB&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;h1&gt;Performance&lt;/h1&gt;
 &lt;p&gt;Although the performance of the HW-accelerated memory test is several times
 better than the SW-based memory test, I still wanted to see the throughput which
@@ -153,7 +532,7 @@ of the controller and the board itself (it was purchased of eBay for 40 USD
 after all), I have used Intel tools (EMIF Debug Toolkit) and developed a Memory
 Checker IP. The test successfully ran overnight and did not detect any errors.&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;All trademarks and registered trademarks are the property of their respective owners.&lt;/p&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay, part 5</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-5.html" rel="alternate"></link><published>2021-01-10T10:00:00+01:00</published><updated>2021-01-10T10:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2021-01-10:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-5.html</id><summary type="html">&lt;p&gt;The last piece of the puzzle on the Stratix V board is the DDR3 memory pinout. Once this is
+&lt;p&gt;All trademarks and registered trademarks are the property of their respective owners.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay, part 5</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-5.html" rel="alternate"></link><published>2021-01-10T10:00:00+01:00</published><updated>2021-01-10T10:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2021-01-10:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-5.html</id><summary type="html">&lt;p&gt;The last piece of the puzzle on the Stratix V board is the DDR3 memory pinout. Once this is
 figured out, I can finally start using the board for my developments. It is obvious that this is not
 the most simple way to get a cheap FPGA development board, but …&lt;/p&gt;</summary><content type="html">&lt;p&gt;The last piece of the puzzle on the Stratix V board is the DDR3 memory pinout. Once this is
 figured out, I can finally start using the board for my developments. It is obvious that this is not
@@ -264,27 +643,25 @@ section.&lt;/p&gt;
 6525678&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;To give an example, here are two excerpts, the first one from the uncompressed bitstream and the
 second one from the compressed.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;227550 | 00 00 b6 f9 81 8b 00 00 2f e8 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;227560 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;*&lt;/span&gt;
-&lt;span class="err"&gt;2279f0 | 00 00 00 00 00 00 b6 f9 81 8b 00 00 2f e8 00 00&lt;/span&gt;
-&lt;span class="err"&gt;227a00 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;*&lt;/span&gt;
-&lt;span class="err"&gt;227e90 | 00 00 00 00 00 00 00 00 00 00 b6 f9 81 8b 00 00&lt;/span&gt;
-&lt;span class="err"&gt;227ea0 | 2f e8 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="mf"&gt;227550&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="n"&gt;b6&lt;/span&gt; &lt;span class="n"&gt;f9&lt;/span&gt; &lt;span class="mf"&gt;81&lt;/span&gt; &lt;span class="mf"&gt;8&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;2&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;e8&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
+&lt;span class="mf"&gt;227560&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
+&lt;span class="o"&gt;*&lt;/span&gt;
+&lt;span class="mf"&gt;2279&lt;/span&gt;&lt;span class="n"&gt;f0&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="n"&gt;b6&lt;/span&gt; &lt;span class="n"&gt;f9&lt;/span&gt; &lt;span class="mf"&gt;81&lt;/span&gt; &lt;span class="mf"&gt;8&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;2&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;e8&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
+&lt;span class="mf"&gt;227&lt;/span&gt;&lt;span class="n"&gt;a00&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
+&lt;span class="o"&gt;*&lt;/span&gt;
+&lt;span class="mf"&gt;227&lt;/span&gt;&lt;span class="n"&gt;e90&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="n"&gt;b6&lt;/span&gt; &lt;span class="n"&gt;f9&lt;/span&gt; &lt;span class="mf"&gt;81&lt;/span&gt; &lt;span class="mf"&gt;8&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
+&lt;span class="mf"&gt;227&lt;/span&gt;&lt;span class="n"&gt;ea0&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;2&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;e8&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;225900 | 00 00 6f 9b ff 81 8b f0 2f e8 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;225910 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;*&lt;/span&gt;
-&lt;span class="err"&gt;225a30 | 00 6f 9b ff 81 8b f0 2f e8 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;225a40 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;*&lt;/span&gt;
-&lt;span class="err"&gt;225b60 | 6f 9b ff 81 8b f0 2f e8 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;225b70 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="mf"&gt;225900&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;6&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="mf"&gt;9&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="n"&gt;ff&lt;/span&gt; &lt;span class="mf"&gt;81&lt;/span&gt; &lt;span class="mf"&gt;8&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="n"&gt;f0&lt;/span&gt; &lt;span class="mf"&gt;2&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;e8&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
+&lt;span class="mf"&gt;225910&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
+&lt;span class="o"&gt;*&lt;/span&gt;
+&lt;span class="mf"&gt;225&lt;/span&gt;&lt;span class="n"&gt;a30&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;6&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="mf"&gt;9&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="n"&gt;ff&lt;/span&gt; &lt;span class="mf"&gt;81&lt;/span&gt; &lt;span class="mf"&gt;8&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="n"&gt;f0&lt;/span&gt; &lt;span class="mf"&gt;2&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;e8&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
+&lt;span class="mf"&gt;225&lt;/span&gt;&lt;span class="n"&gt;a40&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
+&lt;span class="o"&gt;*&lt;/span&gt;
+&lt;span class="mf"&gt;225&lt;/span&gt;&lt;span class="n"&gt;b60&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;6&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="mf"&gt;9&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="n"&gt;ff&lt;/span&gt; &lt;span class="mf"&gt;81&lt;/span&gt; &lt;span class="mf"&gt;8&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="n"&gt;f0&lt;/span&gt; &lt;span class="mf"&gt;2&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;e8&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
+&lt;span class="mf"&gt;225&lt;/span&gt;&lt;span class="n"&gt;b70&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;We see that the non-compressed bitstream contains a sequence &lt;code&gt;b6&lt;/code&gt;, &lt;code&gt;f9&lt;/code&gt;, ... after a long string of
 zeros. In the compressed bitstream the long string of zeros is interrupted by an &lt;code&gt;f&lt;/code&gt; (which
@@ -798,7 +1175,7 @@ why this was not the case.&lt;/p&gt;
 &lt;p&gt;In the next blog post I plan to verify that the pinout presented here is accurate and perform
 some memory tests.&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;All trademarks and registered trademarks are the property of their respective owners.&lt;/p&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay, part 4</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-4.html" rel="alternate"></link><published>2020-10-11T16:00:00+02:00</published><updated>2020-10-11T16:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-10-11:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-4.html</id><summary type="html">&lt;p&gt;In the part 4 of the Odyssey with the Startix V board from the eBay, I explore
+&lt;p&gt;All trademarks and registered trademarks are the property of their respective owners.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay, part 4</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-4.html" rel="alternate"></link><published>2020-10-11T16:00:00+02:00</published><updated>2020-10-11T16:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-10-11:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-4.html</id><summary type="html">&lt;p&gt;In the part 4 of the Odyssey with the Startix V board from the eBay, I explore
 the QSFP+ port and establish a 40 Gigabit Ethernet connection to a computer
 with an Intel X710 40GbE network adapter.&lt;/p&gt;
 &lt;h1&gt;HW overview&lt;/h1&gt;
@@ -823,36 +1200,34 @@ contains a relatively simple management interface, accessible over an I2C bus.&l
 &lt;p&gt;First I &lt;a href="https://github.com/j-marjanovic/otma-fpga-bringup/blob/master/software/otma_bringup/src/mini_i2cdetect.c"&gt;implemented a mini equivalent to &lt;code&gt;i2cdetect&lt;/code&gt;&lt;/a&gt; to check if I am probing a
 correct I2C bus. As expected, an I2C device with address 0x50 replies to our
 request:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt; 0000 |          -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
-&lt;span class="err"&gt; 0010 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
-&lt;span class="err"&gt; 0020 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
-&lt;span class="err"&gt; 0030 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
-&lt;span class="err"&gt; 0040 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
-&lt;span class="err"&gt; 0050 | 50 -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
-&lt;span class="err"&gt; 0060 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
-&lt;span class="err"&gt; 0070 | -- -- -- -- -- -- --&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c"&gt; 0000 |          &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
+&lt;span class="c"&gt; 0010 | &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
+&lt;span class="c"&gt; 0020 | &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
+&lt;span class="c"&gt; 0030 | &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
+&lt;span class="c"&gt; 0040 | &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
+&lt;span class="c"&gt; 0050 | 50 &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
+&lt;span class="c"&gt; 0060 | &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
+&lt;span class="c"&gt; 0070 | &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;We can then continue by dumping the content of the module EEPROM:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;rc = 0 | 0d 02 06 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 0d 00 23 08 00 00 00 00 00 00 00 05 8d 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 00 00 02 a0 4d 65 6c 6c 61 6e 6f 78 20 20 20 20&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 20 20 20 20 0f 00 02 c9 36 37 30 37 35 39 2d 42&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 32 33 20 20 20 20 20 20 41 31 04 06 09 00 46 27&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 00 00 00 00 36 43 32 32 31 32 30 37 36 58 20 20&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 20 20 20 20 31 32 30 33 32 37 20 20 00 00 00 64&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
-&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 02 00 00 30 00 00&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;rc = 0 | 0d 02 06 00 00 00 00 00 00 00 00 00 00 00 00 00
+rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+rc = 0 | 0d 00 23 08 00 00 00 00 00 00 00 05 8d 00 00 00
+rc = 0 | 00 00 02 a0 4d 65 6c 6c 61 6e 6f 78 20 20 20 20
+rc = 0 | 20 20 20 20 0f 00 02 c9 36 37 30 37 35 39 2d 42
+rc = 0 | 32 33 20 20 20 20 20 20 41 31 04 06 09 00 46 27
+rc = 0 | 00 00 00 00 36 43 32 32 31 32 30 37 36 58 20 20
+rc = 0 | 20 20 20 20 31 32 30 33 32 37 20 20 00 00 00 64
+rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+rc = 0 | 00 00 00 00 00 00 00 00 00 00 02 00 00 30 00 00
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;The cable is correctly identified as Mellanox 670759-B23 cable.&lt;/p&gt;
 &lt;h1&gt;40G Ethernet MAC&lt;/h1&gt;
@@ -873,9 +1248,8 @@ measurements and change other transceiver configurations.&lt;/p&gt;
 &lt;p&gt;With everything in place, I have programmed the bitstream to the FPGA, and the
 &lt;code&gt;dmesg&lt;/code&gt; output in Linux on the other side of the link reported some good news,
 the link is up:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;[  615.469842] i40e 0000:01:00.0 enp1s0: NIC Link is Up, 40 Gbps Full Duplex, Flow Control: None&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;[  615.469842] i40e 0000:01:00.0 enp1s0: NIC Link is Up, 40 Gbps Full Duplex, Flow Control: None
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h1&gt;Eye scan&lt;/h1&gt;
 &lt;p&gt;Once the link is established, we can use &lt;a href="https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/an/an605.pdf"&gt;Transceiver Toolkit
@@ -910,7 +1284,7 @@ integrity of the received signals.&lt;/p&gt;
 UDP packets between the computer and the FPGA.&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;All trademarks and registered trademarks are the property of their respective
-owners.&lt;/p&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay, part 3</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-3.html" rel="alternate"></link><published>2020-09-06T16:00:00+02:00</published><updated>2020-09-06T16:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-09-06:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-3.html</id><summary type="html">&lt;p&gt;As mentioned in my &lt;a href="https://j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html"&gt;previous blog post&lt;/a&gt;, the next step would be
+owners.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay, part 3</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-3.html" rel="alternate"></link><published>2020-09-06T16:00:00+02:00</published><updated>2020-09-06T16:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-09-06:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-3.html</id><summary type="html">&lt;p&gt;As mentioned in my &lt;a href="https://j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html"&gt;previous blog post&lt;/a&gt;, the next step would be
 to get the JTAG running in Quaruts. In this blog post I describe how I managed
 to develop a library as an interface between the FPGA board and Quartus, and
 demonstrate the developed interface to download the bitstream …&lt;/p&gt;</summary><content type="html">&lt;p&gt;As mentioned in my &lt;a href="https://j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html"&gt;previous blog post&lt;/a&gt;, the next step would be
@@ -969,7 +1343,6 @@ Info : JTAG tap: auto0.tap tap/device found: 0x029070dd &lt;span class="o"&gt;(&
 Warn : gdb services need one or more targets defined
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;This gives hope that at least on the HW side, integrating the board with Quartus
 will be easy.&lt;/p&gt;
 &lt;h1&gt;JTAG library&lt;/h1&gt;
@@ -1021,7 +1394,6 @@ space:&lt;/p&gt;
 &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="nv"&gt;master_read_32&lt;/span&gt; &lt;span class="nv"&gt;$jtag_master&lt;/span&gt; &lt;span class="mh"&gt;0x1000&lt;/span&gt; &lt;span class="mi"&gt;12&lt;/span&gt;
 &lt;span class="nv"&gt;0xc10cc272&lt;/span&gt; &lt;span class="mh"&gt;0x00010000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x266ac4a3&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;I will explain later what exactly are we seeing here, for now let's just accept
 that &lt;em&gt;JTAG to Avalon bridge&lt;/em&gt; works, and it reads a magic number register
@@ -1121,7 +1493,6 @@ loop where it prints the measured frequency once per second.&lt;/p&gt;
 &lt;span class="p"&gt;[...]&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;We see that after the measurement has stabilized, we are receiving the clock
 which we have configured, and we see that both the reference clock (125 MHz to
 generate the strobe signal) and the measured clock have a low wander and a low
@@ -1140,7 +1511,7 @@ to a desired frequency, in my case 156.25 MHz. I plan to use this for a test
 of the transceivers connected to the QSFP slots.&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;All trademarks and registered trademarks are the property of their respective
-owners.&lt;/p&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay, part 2</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html" rel="alternate"></link><published>2020-06-07T16:00:00+02:00</published><updated>2020-06-07T16:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-06-07:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html</id><summary type="html">&lt;p&gt;In my previous blog post I have explored the FPGA card I have purchased on eBay,
+owners.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay, part 2</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html" rel="alternate"></link><published>2020-06-07T16:00:00+02:00</published><updated>2020-06-07T16:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-06-07:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-2.html</id><summary type="html">&lt;p&gt;In my previous blog post I have explored the FPGA card I have purchased on eBay,
 and in this post I will present an adapter card which I have developed. The
 adapter provides PCI Express connection between a normal card-edge slot and the
 FPGA card, as well as the access …&lt;/p&gt;</summary><content type="html">&lt;p&gt;In my previous blog post I have explored the FPGA card I have purchased on eBay,
@@ -1184,7 +1555,6 @@ address:&lt;/p&gt;
 70: -- -- -- -- -- -- -- 77         
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;We see the EEPROM at the address 0x51, and another two devices at addresses 0x4C
 and 0x77 - I would assume that these are some kind of sensors and/or regulators.&lt;/p&gt;
 &lt;h2&gt;IPMI FRU&lt;/h2&gt;
@@ -1225,7 +1595,6 @@ ProductArea:
   checksum: 241 (OK) 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;From my understanding of the IPMI standard, the Chassis information should
 not be present on this card:&lt;/p&gt;
 &lt;blockquote&gt;
@@ -1262,7 +1631,6 @@ one can also note the Microsoft card:&lt;/p&gt;
 04:00.0 USB controller: NEC Corporation uPD720200 USB 3.0 Host Controller (rev 04)
 05:03.0 FireWire (IEEE 1394): LSI Corporation FW322/323 [TrueFire] 1394a Controller (rev 70)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Using &lt;code&gt;lspci -vv&lt;/code&gt; to get more information, we see that the link is established
 at 2.5 GT/s (probably too many connectors in series to go faster) and at
@@ -1329,7 +1697,6 @@ x1 width (as expected, since we only pass one lane through the USB cable):&lt;/p
         HeaderLog: 00000000 00000000 00000000 00000000
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;h1&gt;Summary and outlook&lt;/h1&gt;
 &lt;p&gt;The adapter card did its job and provided access to the I2C bus and a connection
 to the PCI Express. I have managed to parse the content of the EEPROM (and
@@ -1345,7 +1712,7 @@ to be more careful next time and double-check everything.&lt;/p&gt;
 know that it can be used with OpenOCD, but I would imagine that one can somehow
 also make it talk to Quartus directly.&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;All trademarks and registered trademarks are the property of their respective owners.&lt;/p&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay.html" rel="alternate"></link><published>2020-05-03T14:30:00+02:00</published><updated>2020-05-03T14:30:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-05-03:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay.html</id><summary type="html">&lt;p&gt;A couple of weeks ago &lt;a href="https://twitter.com/rombik_su"&gt;@rombik_su&lt;/a&gt; in a &lt;a href="https://twitter.com/rombik_su/status/1250382904074608642"&gt;Twitter
+&lt;p&gt;All trademarks and registered trademarks are the property of their respective owners.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="FPGA"></category></entry><entry><title>Stratix V accelerator card from eBay</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay.html" rel="alternate"></link><published>2020-05-03T14:30:00+02:00</published><updated>2020-05-03T14:30:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2020-05-03:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay.html</id><summary type="html">&lt;p&gt;A couple of weeks ago &lt;a href="https://twitter.com/rombik_su"&gt;@rombik_su&lt;/a&gt; in a &lt;a href="https://twitter.com/rombik_su/status/1250382904074608642"&gt;Twitter
 thread&lt;/a&gt; pointed out a
 very cheap FPGA accelerator card on eBay. The board contains a proprietary
 Samtec board-to-board connector, most likely carrying power, PCI Express, and
@@ -1528,4 +1895,4 @@ determined are the reference clock and an enable signal from the connector.&lt;/
 &lt;p&gt;Eventually I plan to produce a small PCB that would allow plugging this board
 in a normal PCIe card slot.&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;All trademarks and registered trademarks are the property of their respective owners.&lt;/p&gt;</content><category term="FPGA"></category></entry></feed>
+&lt;p&gt;All trademarks and registered trademarks are the property of their respective owners.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="FPGA"></category></entry></feed>
