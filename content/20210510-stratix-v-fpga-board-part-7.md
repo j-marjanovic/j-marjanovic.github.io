@@ -43,7 +43,7 @@ much more convenient.
 I have presented the main components of this board in a series of tweets a
 couple of weeks ago:
 
-t@janmarjanovic/status/1383876145821589505
+t#janmarjanovic/status/1383876145821589505
 
 An attentive reader will note the difference between the PCIe devices IDs on
 Storey Peak and Pikes Peak: Store Peak reports `0xb101` while Pikes Peak reports
@@ -302,7 +302,7 @@ There were a couple of speculation on [Twitter by
 what this part might be, and we can see that the last part of the code (reserved
 for *Special order devices*) contains **AC**.
 
-t@rombik_su/status/1257741366144180226
+t#rombik_su/status/1257741366144180226
 
 Searching for the full code (**5SGSKF40I3LNAC**) also finds a [PDN from
 Intel](https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/pcn/pdn2007.pdf)

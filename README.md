@@ -19,4 +19,4 @@ cloned alongside with this one (see `PLUGIN_PATHS` in `pelicanconf.py`).
 
 ###
 
-- pelican-embed-tweet
+- pelican-embed-tweet (from the `#` branch)
