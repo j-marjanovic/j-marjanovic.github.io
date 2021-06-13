@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io - FPGA, Zynq, Cache-Coherence</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/fpga-zynq-cache-coherence.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2021-06-12T20:00:00+02:00</updated><entry><title>Performance counters in Cache Coherent Interconnect in Zynq MPSoC</title><link href="www.j-marjanovic.io/performance-counters-in-cache-coherent-interconnect-in-zynq-mpsoc.html" rel="alternate"></link><published>2021-06-12T20:00:00+02:00</published><updated>2021-06-12T20:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2021-06-12:www.j-marjanovic.io/performance-counters-in-cache-coherent-interconnect-in-zynq-mpsoc.html</id><summary type="html">&lt;p&gt;In this blog post I describe my tinkering with the interconnect architecture of
+the Xilinx Zynq MPSoC. I specifically focus on the Performance Monitoring Unit
+(PMU) integrated into the Cache Coherence Interconnect (CCI).&lt;/p&gt;
+&lt;p&gt;I believe that most of the readers of my blog are already familiar with Xilinx
+Zynq® UltraScale …&lt;/p&gt;</summary><content type="html">&lt;p&gt;In this blog post I describe my tinkering with the interconnect architecture of
+the Xilinx Zynq MPSoC. I specifically focus on the Performance Monitoring Unit
+(PMU) integrated into the Cache Coherence Interconnect (CCI).&lt;/p&gt;
+&lt;p&gt;I believe that most of the readers of my blog are already familiar with Xilinx
+Zynq® UltraScale+™ MPSoC, but for the sake of completeness let's do a quick
+introduction. Zynq MPSoC is a programmable device, combining a quad-core ARM
+Cortex-A53 (called Application Processing Unit (APU) in Xilinx-speak) and a
+relatively large FPGA (called Programmable Logic (PL) in Xilinx-speak) in one
+package. Sitting in between the two parts is an interconnect, more precisely
+ARM® CoreLink™ CCI-400 Cache Coherent Interconnect. The majority of the
+connections between the APU and PL go through this interconnect, which makes it
+one of the more important parts of the Processing System (PS).&lt;/p&gt;
+&lt;p&gt;In simple use cases the interconnect is mostly transparent for the users; from
+the APU side, the memory transactions (i.e. reads and writes) come to the
+interconnect and get routed to the appropriate output port (e.g. DDR controller
+or PL manager ports - &lt;code&gt;M_AXI_HPMx_FPD&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;The overview of the CCI is shown in the excerpt from the UG1085 below - the
+CCI is shown prominently in its central location.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Excerpt from the UG1085 showing the interconnect" src="www.j-marjanovic.io/images/2021_cci_part_1/ug1085_ps_interconnect.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;h1&gt;Linux driver for CCI PMU&lt;/h1&gt;
+&lt;p&gt;Already provided in Linux is a driver for the Performance Monitoring Unit
+(PMU) in the CCI. This driver is enabled with the &lt;code&gt;CONFIG_ARM_CCI_PMU&lt;/code&gt; variable,
+and for Zynq MPSoC this option is by default already turned on.&lt;/p&gt;
+&lt;p&gt;The driver prints a short message in the &lt;code&gt;dmesg&lt;/code&gt; to indicate that it was
+successfully loaded:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;dmesg &lt;span class="p"&gt;|&lt;/span&gt; grep CCI
+&lt;span class="go"&gt;[    3.218405] ARM CCI_400_r1 PMU driver probed&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;We can then use &lt;a href="https://perf.wiki.kernel.org/index.php/Main_Page"&gt;perf&lt;/a&gt; command
+to list all performance counters available in the system, and among those there
+are also listed those from the CCI-400:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;perf list
+
+&lt;span class="go"&gt;List of pre-defined events (to be used in -e):&lt;/span&gt;
+
+&lt;span class="go"&gt;[...]&lt;/span&gt;
+&lt;span class="go"&gt;  CCI_400_r1/cycles/                                 [Kernel PMU event]&lt;/span&gt;
+&lt;span class="go"&gt;[...]&lt;/span&gt;
+&lt;span class="go"&gt;  CCI_400_r1/si_rrq_hs_any,source=?/                 [Kernel PMU event]&lt;/span&gt;
+&lt;span class="go"&gt;[...]&lt;/span&gt;
+&lt;span class="go"&gt;  CCI_400_r1/si_wrq_hs_any,source=?/                 [Kernel PMU event]&lt;/span&gt;
+&lt;span class="go"&gt;[...]&lt;/span&gt;
+&lt;span class="go"&gt;  CCI_400_r1/si_wrq_hs_write_unique,source=?/        [Kernel PMU event]&lt;/span&gt;
+&lt;span class="go"&gt;  CCI_400_r1/si_wrq_stall_tt_full,source=?/          [Kernel PMU event]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Although at this stage the performance counters are already accessible from the
+system, except for the &lt;code&gt;cycles&lt;/code&gt; counter no other counter is actually counting.&lt;/p&gt;
+&lt;p&gt;It turns out that the CCI-400 IP has some external signals which can disable
+the performance counters, even if the registers are properly configured.&lt;/p&gt;
+&lt;p&gt;Presented below is a table from the &lt;a href="https://developer.arm.com/documentation/ddi0470/i/programmers-model/register-descriptions/performance-monitor-control-register--pmcr-?lang=en"&gt;CCI-400 Technical Reference
+Manual&lt;/a&gt;
+(&lt;a href="http://archive.today/2021.06.12-193819/https://developer.arm.com/documentation/ddi0470/i/programmers-model/register-descriptions/performance-monitor-control-register--pmcr-?lang=en"&gt;archive.today
+link&lt;/a&gt;)
+which shows that &lt;code&gt;NIDEN&lt;/code&gt; must be high for &lt;em&gt;Event counters&lt;/em&gt; to be
+enabled.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Table describing the function of the NIDEN input" src="www.j-marjanovic.io/images/2021_cci_part_1/cci_manual.png" style="width:50%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;h1&gt;Configuration&lt;/h1&gt;
+&lt;p&gt;Looking at the register map for Zynq MPSoC in the
+&lt;a href="https://www.xilinx.com/html_docs/registers/ug1087/ug1087-zynq-ultrascale-registers.html"&gt;UG1087&lt;/a&gt;
+one can note that there are two modules associated with Cache Coherent
+Interconnect.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Modules in the Zynq MPSoC register map" src="www.j-marjanovic.io/images/2021_cci_part_1/ug1087.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;In my opinion, the documentation from Xilinx is a little bit vague, but I presume
+that the CCI_REG acts as a GPIO which then drives the debug inputs on the CCI
+module. Shown in the figure below is the CCI module together with this auxiliary
+module. This block diagram is based on my current understanding.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="CCI and debug signals" src="www.j-marjanovic.io/images/2021_cci_part_1/cci_reg_block_diag.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;h2&gt;Accessing the configuration registers&lt;/h2&gt;
+&lt;p&gt;With this in mind, one would be tempted to quickly change the value of NIDEN
+input directly from user space with &lt;code&gt;devmem&lt;/code&gt; utility.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;devmem 0xFD5E0000
+&lt;span class="go"&gt;Bus error&lt;/span&gt;
+&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;devmem 0xFD5E0040
+&lt;span class="go"&gt;Bus error&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Here we encounter another issue, namely the CCI_REG is protected by the Xilinx
+Memory Protection Unit (XMPU) and is only accessible from the secure
+environment.&lt;/p&gt;
+&lt;h2&gt;Exception Levels&lt;/h2&gt;
+&lt;p&gt;There are &lt;a href="https://developer.arm.com/documentation/102412/0100/Privilege-and-Exception-levels"&gt;4 exception
+levels&lt;/a&gt;
+defined in ARMv8 architecture.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The user space runs in EL0&lt;/li&gt;
+&lt;li&gt;The kernel space runs in EL1&lt;/li&gt;
+&lt;li&gt;Hypervisors run in EL2&lt;/li&gt;
+&lt;li&gt;Firmware runs in EL3&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;We can get the current Exception Level by reading the &lt;a href="https://developer.arm.com/documentation/ddi0595/2020-12/AArch64-Registers/CurrentEL--Current-Exception-Level"&gt;CurrentEL&lt;/a&gt; register.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;In user space this instruction throws &lt;code&gt;Illegal instruction&lt;/code&gt; - this is expected&lt;/li&gt;
+&lt;li&gt;In kernel space the reported level is 1: &lt;code&gt;[ 1091.821735] jan-level: EL = 1&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;In FSBL the reported level is 3:  &lt;code&gt;EL = 3&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Patch for the First Stage BootLoader (FSBL)&lt;/h2&gt;
+&lt;p&gt;Since we now know that FSBL runs in EL3, and we need EL3 to access the CCI_REG
+module, we can patch the FSBL to configure the appropriate registers before
+continuing with the boot. In this way, the &lt;code&gt;NIDEN&lt;/code&gt; and also &lt;code&gt;SPIDEN&lt;/code&gt; signals
+will be already set high before the Linux boots.&lt;/p&gt;
+&lt;p&gt;I wrote the following patch and included it in the Bitbake recipe for the FSBL:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;From 08450fd4c18d11fedf196c65c22f8abf83a6cc2a Mon Sep 17 00:00:00 2001
+From: Jan Marjanovic &amp;lt;jan.marjanovic@outlook.com&amp;gt;
+Date: Thu, 10 Jun 2021 19:20:25 +0200
+Subject: [PATCH] Enable CCI debug (NIDEN and SPINDEN on CCI-400)
+
+&lt;span class="gd"&gt;---&lt;/span&gt;
+ lib/sw_apps/zynqmp_fsbl/src/xfsbl_hooks.c | 39 +++++++++++++++++++++--
+ 1 file changed, 36 insertions(+), 3 deletions(-)
+
+&lt;span class="gh"&gt;diff --git a/lib/sw_apps/zynqmp_fsbl/src/xfsbl_hooks.c b/lib/sw_apps/zynqmp_fsbl/src/xfsbl_hooks.c&lt;/span&gt;
+&lt;span class="gh"&gt;index 80a1314203..b0030a1d67 100644&lt;/span&gt;
+&lt;span class="gd"&gt;--- a/lib/sw_apps/zynqmp_fsbl/src/xfsbl_hooks.c&lt;/span&gt;
+&lt;span class="gi"&gt;+++ b/lib/sw_apps/zynqmp_fsbl/src/xfsbl_hooks.c&lt;/span&gt;
+&lt;span class="gu"&gt;@@ -64,13 +64,46 @@ u32 XFsbl_HookAfterBSDownload(void )&lt;/span&gt;
+ }
+ #endif
+
+&lt;span class="gi"&gt;+static void print_el(void) {&lt;/span&gt;
+&lt;span class="gi"&gt;+   register uint64_t x0 __asm__ (&amp;quot;x0&amp;quot;);&lt;/span&gt;
+&lt;span class="gi"&gt;+   __asm__ (&amp;quot;mrs x0, CurrentEL;&amp;quot; : : : &amp;quot;%x0&amp;quot;);&lt;/span&gt;
+&lt;span class="gi"&gt;+   XFsbl_Printf(DEBUG_PRINT_ALWAYS, &amp;quot;EL = %x\r\n&amp;quot;, x0 &amp;gt;&amp;gt; 2);&lt;/span&gt;
+&lt;span class="gi"&gt;+}&lt;/span&gt;
+&lt;span class="gi"&gt;+&lt;/span&gt;
+&lt;span class="gi"&gt;+static void cci_reg_dump(void) {&lt;/span&gt;
+&lt;span class="gi"&gt;+   // offsets from UG1087&lt;/span&gt;
+&lt;span class="gi"&gt;+   uint64_t offsets[] = {0, 0x10, 0x14, 0x18, 0x1c, 0x40};&lt;/span&gt;
+&lt;span class="gi"&gt;+&lt;/span&gt;
+&lt;span class="gi"&gt;+   XFsbl_Printf(DEBUG_PRINT_ALWAYS, &amp;quot;CCI_REG: register dump\r\n&amp;quot;);&lt;/span&gt;
+&lt;span class="gi"&gt;+&lt;/span&gt;
+&lt;span class="gi"&gt;+   for (int i = 0; i &amp;lt; sizeof(offsets)/sizeof(*offsets); i++) {&lt;/span&gt;
+&lt;span class="gi"&gt;+       uint64_t offs = offsets[i];&lt;/span&gt;
+&lt;span class="gi"&gt;+       u32 val = XFsbl_In32(XPAR_PSU_CCI_REG_S_AXI_BASEADDR + offs);&lt;/span&gt;
+&lt;span class="gi"&gt;+       XFsbl_Printf(DEBUG_PRINT_ALWAYS, &amp;quot;  offset %x = %x\r\n&amp;quot;,&lt;/span&gt;
+&lt;span class="gi"&gt;+               offs, val);&lt;/span&gt;
+&lt;span class="gi"&gt;+   }&lt;/span&gt;
+&lt;span class="gi"&gt;+}&lt;/span&gt;
+&lt;span class="gi"&gt;+&lt;/span&gt;
+&lt;span class="gi"&gt;+static void cci_reg_debug_enable(void) {&lt;/span&gt;
+&lt;span class="gi"&gt;+   const uint64_t OFFS_CCI_MISC_CTRL = 0x40;&lt;/span&gt;
+&lt;span class="gi"&gt;+&lt;/span&gt;
+&lt;span class="gi"&gt;+   const uint32_t CCI_MISC_CTRL_NIDEN_MASK = 0x2;&lt;/span&gt;
+&lt;span class="gi"&gt;+   const uint32_t CCI_MISC_CTRL_SPIDEN_MASK = 0x1;&lt;/span&gt;
+&lt;span class="gi"&gt;+&lt;/span&gt;
+&lt;span class="gi"&gt;+   XFsbl_Printf(DEBUG_PRINT_ALWAYS, &amp;quot;CCI_REG: debug enable\r\n&amp;quot;);&lt;/span&gt;
+&lt;span class="gi"&gt;+&lt;/span&gt;
+&lt;span class="gi"&gt;+   XFsbl_Out32(XPAR_PSU_CCI_REG_S_AXI_BASEADDR + OFFS_CCI_MISC_CTRL,&lt;/span&gt;
+&lt;span class="gi"&gt;+           CCI_MISC_CTRL_NIDEN_MASK | CCI_MISC_CTRL_SPIDEN_MASK);&lt;/span&gt;
+&lt;span class="gi"&gt;+}&lt;/span&gt;
+&lt;span class="gi"&gt;+&lt;/span&gt;
+ u32 XFsbl_HookBeforeHandoff(u32 EarlyHandoff)
+ {
+    u32 Status = XFSBL_SUCCESS;
+
+&lt;span class="gd"&gt;-   /**&lt;/span&gt;
+&lt;span class="gd"&gt;-    * Add the code here&lt;/span&gt;
+&lt;span class="gd"&gt;-    */&lt;/span&gt;
+&lt;span class="gi"&gt;+   print_el();&lt;/span&gt;
+&lt;span class="gi"&gt;+   cci_reg_dump();&lt;/span&gt;
+&lt;span class="gi"&gt;+   cci_reg_debug_enable();&lt;/span&gt;
+&lt;span class="gi"&gt;+   cci_reg_dump();&lt;/span&gt;
+
+    return Status;
+ }
+&lt;span class="gd"&gt;--&lt;/span&gt;
+2.25.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The following is then the output of the FSBL with the patch:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Xilinx Zynq MP First Stage Boot Loader
+Release 2020.2   Jun 10 2021  -  19:49:38
+Reset Mode      :       System Reset
+Platform: Silicon (4.0), Running on A53-0 (64-bit) Processor, Device Name: XCZU3EG
+SD0 Boot Mode
+PMU Firmware 2020.2     Jun  3 2021   19:28:36
+PMU_ROM Version: xpbr-v8.1.0-0
+Protection configuration applied
+EL = 3
+CCI_REG: register dump
+  offset 0 = 0
+  offset 10 = 0
+  offset 14 = 8000003F
+  offset 18 = 0
+  offset 1C = 0
+  offset 40 = 0
+CCI_REG: debug enable
+CCI_REG: register dump
+  offset 0 = 0
+  offset 10 = 0
+  offset 14 = 8000003F
+  offset 18 = 0
+  offset 1C = 0
+  offset 40 = 3
+Exit from FSBL
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;We can note that the register at the offset &lt;code&gt;0x40&lt;/code&gt; has changed from &lt;code&gt;0&lt;/code&gt; to &lt;code&gt;3&lt;/code&gt;,
+as we have requested.&lt;/p&gt;
+&lt;h2&gt;Lamport's bakery algorithm&lt;/h2&gt;
+&lt;p&gt;To provide a good test case for the cache coherent interconnect I have
+implemented distributed counting (i.e. multiple workers share one counter),
+and the synchronization is provided with &lt;a href="https://github.com/j-marjanovic/chisel-stuff/tree/master/example-10-lamports-bakery-algorithm"&gt;Lamport's bakery algorithm&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;AXI protocol itself provides a possibility (&lt;code&gt;AxLOCK&lt;/code&gt; signals for exclusive
+access) to perform atomic operations on memory and devices, but Lamport's
+algorithm does not require any special locking primitives, &lt;a href="http://lamport.azurewebsites.net/pubs/pubs.html#bakery"&gt;only atomic reads
+and writes&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="IPs connected to HPC ports on Zynq MPSoC" src="www.j-marjanovic.io/images/2021_cci_part_1/vivado.png" style="width:80%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;In the Vivado design I have connected two &lt;code&gt;LamportsBakeryAlgo&lt;/code&gt; IPs to both
+HPC ports. Each IP can be configured to run for a defined number of loops,
+and in each loop the counter will be incremented by 1. For each loop we
+expect to see 5 writes in total:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;1 write for setting the entering flag&lt;/li&gt;
+&lt;li&gt;1 write for setting the number&lt;/li&gt;
+&lt;li&gt;1 write for clearing the entering flag&lt;/li&gt;
+&lt;li&gt;1 write to do the actual work (increment the counter in this example)&lt;/li&gt;
+&lt;li&gt;1 write to clear the number (i.e. release the lock)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Similarly, we can expect the following to be the lower limit of the number of reads
+- if the flag is set the algorithm continues to poll it until it is cleared. In
+this highly-contended example we expect the numbers of reads to be much higher.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;N reads for the &lt;code&gt;maximum()&lt;/code&gt; function&lt;/li&gt;
+&lt;li&gt;N reads in the inner loop to check the entering flag&lt;/li&gt;
+&lt;li&gt;N reads in the inner loop to check the number variable&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Performance counters usage example&lt;/h1&gt;
+&lt;p&gt;With the Performance Memory Unit enabled we can now start monitoring the values
+of the counters with the &lt;code&gt;perf&lt;/code&gt; tool.&lt;/p&gt;
+&lt;p&gt;I ran the two &lt;code&gt;LamportsBakeryAlgo&lt;/code&gt; IP, each programmed to perform 100000 loops.
+In addition, there is a third instance of Lamport's bakery algorithm, this
+one running in the software and accessing the same memory locations as the two
+FPGA implementations.&lt;/p&gt;
+&lt;p&gt;In parallel, I ran &lt;code&gt;perf stat&lt;/code&gt; and selected the following events: read requests
+(&lt;code&gt;rrq&lt;/code&gt;) handshakes (&lt;code&gt;hs&lt;/code&gt;) and write request (&lt;code&gt;wr&lt;/code&gt;) handshakes on subordinate
+ports 0 and 3. From the
+&lt;a href="https://www.xilinx.com/support/documentation/user_guides/ug1085-zynq-ultrascale-trm.pdf"&gt;UG1085&lt;/a&gt;
+we can see that the APU is connected to port 3 on the CCI-400 and the HPC ports
+are connected to port 0 on the interconnect.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;perf stat -e &lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="gp"&gt;&amp;gt; &lt;/span&gt;CCI_400_r1/cycles/,&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="gp"&gt;&amp;gt; &lt;/span&gt;CCI_400_r1/si_rrq_hs_any,source&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;/,&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="gp"&gt;&amp;gt; &lt;/span&gt;CCI_400_r1/si_wrq_hs_any,source&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;/,&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="gp"&gt;&amp;gt; &lt;/span&gt;CCI_400_r1/si_rrq_hs_any,source&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;/,&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="gp"&gt;&amp;gt; &lt;/span&gt;CCI_400_r1/si_wrq_hs_any,source&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;/
+
+&lt;span class="go"&gt;^C&lt;/span&gt;
+&lt;span class="go"&gt; Performance counter stats for &amp;#39;system wide&amp;#39;:&lt;/span&gt;
+
+&lt;span class="go"&gt;        1103648324      CCI_400_r1/cycles/&lt;/span&gt;
+&lt;span class="go"&gt;           3207971      CCI_400_r1/si_rrq_hs_any,source=0/&lt;/span&gt;
+&lt;span class="go"&gt;           1000000      CCI_400_r1/si_wrq_hs_any,source=0/&lt;/span&gt;
+&lt;span class="go"&gt;           3158786      CCI_400_r1/si_rrq_hs_any,source=3/&lt;/span&gt;
+&lt;span class="go"&gt;            636417      CCI_400_r1/si_wrq_hs_any,source=3/&lt;/span&gt;
+
+&lt;span class="go"&gt;       4.138963536 seconds time elapsed&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;We see that expected 1000000 writes from the HPC ports (= 2 (instances) * 5 (per
+loop) * 100000 (number of loops)) and we also see the number of reads on the HPS
+port matches our expectation to be equal or greater than 1800000 (= 2 (total
+instances) * 3 * 3 (total instances = N) * 100000 (number of loops)).&lt;/p&gt;
+&lt;p&gt;Port 3 (APU port) is also used to load the program from
+the main memory or the SD card which slightly obscures the number of
+transactions performed by the algorithm itself, but the numbers match our
+expectations.&lt;/p&gt;
+&lt;h2&gt;Limitations&lt;/h2&gt;
+&lt;p&gt;It seems that the PMU in the CCI-400 does not provide all facilities needed for
+&lt;code&gt;perf record&lt;/code&gt; to work properly, it reports &lt;code&gt;PMU Hardware doesn't support
+sampling/overflow-interrupts. Try 'perf stat'&lt;/code&gt;.&lt;/p&gt;
+&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;In this post we have seen how tools commonly used in performance engineering
+can also be used to observe the behavior and performance of the FPGA. With the
+proliferation of heterogeneous architectures, having good tools to observe
+(and debug) the interfaces between individual components provides additional
+insight into the system.&lt;/p&gt;
+&lt;p&gt;It is yet to be explored if shouting at the Zynq MPSoC has any impact
+on the &lt;a href="https://www.youtube.com/watch?v=tDacjrSCeq4"&gt;performance in terms of
+latency&lt;/a&gt;.&lt;/p&gt;
+&lt;hr&gt;
+&lt;div style="font-size: 80%;" &gt;
+Xilinx, Inc. Xilinx, the Xilinx logo, Vivado, Zynq are trademarks of Xilinx in the United States and
+other countries.
+&lt;/div&gt;
+
+&lt;div style="font-size: 80%;" &gt;
+AMBA, ARM, Cortex and TrustZone are registered trademarks of ARM Limited (or its
+subsidiaries) in the EU and/or elsewhere. CoreLink is  a trademark of ARM
+Limited (or its subsidiaries) in the EU and/or elsewhere.
+&lt;/div&gt;
+
+&lt;div style="font-size: 80%;" &gt;
+All trademarks and registered trademarks are the property of their respective owners.
+&lt;/div&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="FPGA, Zynq, Cache-Coherence"></category></entry></feed>

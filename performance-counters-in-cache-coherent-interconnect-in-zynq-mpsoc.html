@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Performance counters in Cache Coherent Interconnect in Zynq MPSoC</title>
+        <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="shortcut icon" href="./theme/images/favicon.ico"/>
+        <link rel="stylesheet" href="./theme/css/main.css" type="text/css" />
+        <link href="www.j-marjanovic.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="j-marjanovic.io Atom Feed" />
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie.css"/>
+                <script src="./js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie6.css"/><![endif]-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="theme/jquery.cookiesdirective.js"></script>
+
+</head>
+
+<body id="index" class="home">
+<script type="text/javascript">
+	// Using $(document).ready never hurts
+	$(document).ready(function(){
+
+		// Cookie setting script wrapper
+		var cookieScripts = function () {
+			// Internal javascript called
+			console.log("Running");
+		
+			// Loading external javascript file
+			$.cookiesDirective.loadScript({
+				uri:'external.js',
+				appendTo: 'eantics'
+			});
+		}
+	
+		/* Call cookiesDirective, overriding any default params
+		
+			*** These are the defaults ***
+				explicitConsent: true,
+				position: 'top',
+				duration: 10,
+				limit: 0,
+				message: null,				
+				cookieScripts: null,
+				privacyPolicyUri: 'privacy.html',
+				scriptWrapper: function(){},	
+				fontFamily: 'helvetica',
+				fontColor: '#FFFFFF',
+				fontSize: '13px',
+				backgroundColor: '#000000',
+				backgroundOpacity: '80',
+				linkColor: '#CA0000'
+				
+		*/
+		
+		$.cookiesDirective({
+			privacyPolicyUri: 'myprivacypolicy.html',
+			explicitConsent: false,
+			position : 'bottom',
+			scriptWrapper: cookieScripts, 
+			cookieScripts: 'Google Analytics', 
+			backgroundColor: '#52B54A',
+			linkColor: '#ffffff'
+		});
+	});
+</script>
+
+	
+  <!-- <header id="banner" class="body"> -->
+  <!--               <h1><a href="./"><img src="http://www.launchyard.com/images/logo.png" /></a></h1> -->
+  <!--       </header> --> 
+
+  <div class="LaunchyardDetail" style="align:right;">
+    <!-- <p> -->
+    <!-- <img src="./theme/images/blue-pin.png" width="100" height="100" alt="Graph icon"> -->
+    <!-- </p> -->
+    <p><a id="sitesubtitle" href="./">j-marjanovic.io</a></p>
+
+	<br>
+    <p style="float: right; margin-right: 50px;"><a id="aboutlink" href="./pages/about.html">About</a></p>
+
+    <br>
+	<p style="float: right; margin-right: 50px;"><img src="./theme/images/icons/rss.png"> <a id="aboutlink" href="./feeds/jan-marjanovic.atom.xml">Atom feed</a></p>
+    <br>
+
+  </div>
+
+<section id="content" >
+    <div class="body">
+      <article>
+        <header>
+          <h1 class="entry-title">
+            <a href="./performance-counters-in-cache-coherent-interconnect-in-zynq-mpsoc.html" rel="bookmark"
+               title="Permalink to Performance counters in Cache Coherent Interconnect in Zynq MPSoC">Performance counters in Cache Coherent Interconnect in Zynq MPSoC</a></h1>
+
+        </header>
+
+        <div class="entry-content">
+<div class="post-info">
+	<ul>
+        <li class="vcard author">
+                 by&nbsp;<a class="url fn" href="./author/jan-marjanovic.html">Jan Marjanovic</a>
+        </li>
+        <li class="published" title="2021-06-12T20:00:00+02:00">
+          on&nbsp;Sat 12 June 2021
+        </li>
+
+	</ul>
+
+</div><!-- /.post-info -->          <p>In this blog post I describe my tinkering with the interconnect architecture of
+the Xilinx Zynq MPSoC. I specifically focus on the Performance Monitoring Unit
+(PMU) integrated into the Cache Coherence Interconnect (CCI).</p>
+<p>I believe that most of the readers of my blog are already familiar with Xilinx
+Zynq® UltraScale+™ MPSoC, but for the sake of completeness let's do a quick
+introduction. Zynq MPSoC is a programmable device, combining a quad-core ARM
+Cortex-A53 (called Application Processing Unit (APU) in Xilinx-speak) and a
+relatively large FPGA (called Programmable Logic (PL) in Xilinx-speak) in one
+package. Sitting in between the two parts is an interconnect, more precisely
+ARM® CoreLink™ CCI-400 Cache Coherent Interconnect. The majority of the
+connections between the APU and PL go through this interconnect, which makes it
+one of the more important parts of the Processing System (PS).</p>
+<p>In simple use cases the interconnect is mostly transparent for the users; from
+the APU side, the memory transactions (i.e. reads and writes) come to the
+interconnect and get routed to the appropriate output port (e.g. DDR controller
+or PL manager ports - <code>M_AXI_HPMx_FPD</code>).</p>
+<p>The overview of the CCI is shown in the excerpt from the UG1085 below - the
+CCI is shown prominently in its central location.</p>
+<p><img alt="Excerpt from the UG1085 showing the interconnect" src="./images/2021_cci_part_1/ug1085_ps_interconnect.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"></p>
+<h1>Linux driver for CCI PMU</h1>
+<p>Already provided in Linux is a driver for the Performance Monitoring Unit
+(PMU) in the CCI. This driver is enabled with the <code>CONFIG_ARM_CCI_PMU</code> variable,
+and for Zynq MPSoC this option is by default already turned on.</p>
+<p>The driver prints a short message in the <code>dmesg</code> to indicate that it was
+successfully loaded:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~# </span>dmesg <span class="p">|</span> grep CCI
+<span class="go">[    3.218405] ARM CCI_400_r1 PMU driver probed</span>
+</code></pre></div>
+
+<p>We can then use <a href="https://perf.wiki.kernel.org/index.php/Main_Page">perf</a> command
+to list all performance counters available in the system, and among those there
+are also listed those from the CCI-400:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~# </span>perf list
+
+<span class="go">List of pre-defined events (to be used in -e):</span>
+
+<span class="go">[...]</span>
+<span class="go">  CCI_400_r1/cycles/                                 [Kernel PMU event]</span>
+<span class="go">[...]</span>
+<span class="go">  CCI_400_r1/si_rrq_hs_any,source=?/                 [Kernel PMU event]</span>
+<span class="go">[...]</span>
+<span class="go">  CCI_400_r1/si_wrq_hs_any,source=?/                 [Kernel PMU event]</span>
+<span class="go">[...]</span>
+<span class="go">  CCI_400_r1/si_wrq_hs_write_unique,source=?/        [Kernel PMU event]</span>
+<span class="go">  CCI_400_r1/si_wrq_stall_tt_full,source=?/          [Kernel PMU event]</span>
+</code></pre></div>
+
+<p>Although at this stage the performance counters are already accessible from the
+system, except for the <code>cycles</code> counter no other counter is actually counting.</p>
+<p>It turns out that the CCI-400 IP has some external signals which can disable
+the performance counters, even if the registers are properly configured.</p>
+<p>Presented below is a table from the <a href="https://developer.arm.com/documentation/ddi0470/i/programmers-model/register-descriptions/performance-monitor-control-register--pmcr-?lang=en">CCI-400 Technical Reference
+Manual</a>
+(<a href="http://archive.today/2021.06.12-193819/https://developer.arm.com/documentation/ddi0470/i/programmers-model/register-descriptions/performance-monitor-control-register--pmcr-?lang=en">archive.today
+link</a>)
+which shows that <code>NIDEN</code> must be high for <em>Event counters</em> to be
+enabled.</p>
+<p><img alt="Table describing the function of the NIDEN input" src="./images/2021_cci_part_1/cci_manual.png" style="width:50%; display: block; margin-left: auto; margin-right: auto;"></p>
+<h1>Configuration</h1>
+<p>Looking at the register map for Zynq MPSoC in the
+<a href="https://www.xilinx.com/html_docs/registers/ug1087/ug1087-zynq-ultrascale-registers.html">UG1087</a>
+one can note that there are two modules associated with Cache Coherent
+Interconnect.</p>
+<p><img alt="Modules in the Zynq MPSoC register map" src="./images/2021_cci_part_1/ug1087.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"></p>
+<p>In my opinion, the documentation from Xilinx is a little bit vague, but I presume
+that the CCI_REG acts as a GPIO which then drives the debug inputs on the CCI
+module. Shown in the figure below is the CCI module together with this auxiliary
+module. This block diagram is based on my current understanding.</p>
+<p><img alt="CCI and debug signals" src="./images/2021_cci_part_1/cci_reg_block_diag.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"></p>
+<h2>Accessing the configuration registers</h2>
+<p>With this in mind, one would be tempted to quickly change the value of NIDEN
+input directly from user space with <code>devmem</code> utility.</p>
+<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~# </span>devmem 0xFD5E0000
+<span class="go">Bus error</span>
+<span class="gp">root@u96v2-sbc:~# </span>devmem 0xFD5E0040
+<span class="go">Bus error</span>
+</code></pre></div>
+
+<p>Here we encounter another issue, namely the CCI_REG is protected by the Xilinx
+Memory Protection Unit (XMPU) and is only accessible from the secure
+environment.</p>
+<h2>Exception Levels</h2>
+<p>There are <a href="https://developer.arm.com/documentation/102412/0100/Privilege-and-Exception-levels">4 exception
+levels</a>
+defined in ARMv8 architecture.</p>
+<ul>
+<li>The user space runs in EL0</li>
+<li>The kernel space runs in EL1</li>
+<li>Hypervisors run in EL2</li>
+<li>Firmware runs in EL3</li>
+</ul>
+<p>We can get the current Exception Level by reading the <a href="https://developer.arm.com/documentation/ddi0595/2020-12/AArch64-Registers/CurrentEL--Current-Exception-Level">CurrentEL</a> register.</p>
+<ul>
+<li>In user space this instruction throws <code>Illegal instruction</code> - this is expected</li>
+<li>In kernel space the reported level is 1: <code>[ 1091.821735] jan-level: EL = 1</code></li>
+<li>In FSBL the reported level is 3:  <code>EL = 3</code></li>
+</ul>
+<h2>Patch for the First Stage BootLoader (FSBL)</h2>
+<p>Since we now know that FSBL runs in EL3, and we need EL3 to access the CCI_REG
+module, we can patch the FSBL to configure the appropriate registers before
+continuing with the boot. In this way, the <code>NIDEN</code> and also <code>SPIDEN</code> signals
+will be already set high before the Linux boots.</p>
+<p>I wrote the following patch and included it in the Bitbake recipe for the FSBL:</p>
+<div class="highlight"><pre><span></span><code>From 08450fd4c18d11fedf196c65c22f8abf83a6cc2a Mon Sep 17 00:00:00 2001
+From: Jan Marjanovic &lt;jan.marjanovic@outlook.com&gt;
+Date: Thu, 10 Jun 2021 19:20:25 +0200
+Subject: [PATCH] Enable CCI debug (NIDEN and SPINDEN on CCI-400)
+
+<span class="gd">---</span>
+ lib/sw_apps/zynqmp_fsbl/src/xfsbl_hooks.c | 39 +++++++++++++++++++++--
+ 1 file changed, 36 insertions(+), 3 deletions(-)
+
+<span class="gh">diff --git a/lib/sw_apps/zynqmp_fsbl/src/xfsbl_hooks.c b/lib/sw_apps/zynqmp_fsbl/src/xfsbl_hooks.c</span>
+<span class="gh">index 80a1314203..b0030a1d67 100644</span>
+<span class="gd">--- a/lib/sw_apps/zynqmp_fsbl/src/xfsbl_hooks.c</span>
+<span class="gi">+++ b/lib/sw_apps/zynqmp_fsbl/src/xfsbl_hooks.c</span>
+<span class="gu">@@ -64,13 +64,46 @@ u32 XFsbl_HookAfterBSDownload(void )</span>
+ }
+ #endif
+
+<span class="gi">+static void print_el(void) {</span>
+<span class="gi">+   register uint64_t x0 __asm__ (&quot;x0&quot;);</span>
+<span class="gi">+   __asm__ (&quot;mrs x0, CurrentEL;&quot; : : : &quot;%x0&quot;);</span>
+<span class="gi">+   XFsbl_Printf(DEBUG_PRINT_ALWAYS, &quot;EL = %x\r\n&quot;, x0 &gt;&gt; 2);</span>
+<span class="gi">+}</span>
+<span class="gi">+</span>
+<span class="gi">+static void cci_reg_dump(void) {</span>
+<span class="gi">+   // offsets from UG1087</span>
+<span class="gi">+   uint64_t offsets[] = {0, 0x10, 0x14, 0x18, 0x1c, 0x40};</span>
+<span class="gi">+</span>
+<span class="gi">+   XFsbl_Printf(DEBUG_PRINT_ALWAYS, &quot;CCI_REG: register dump\r\n&quot;);</span>
+<span class="gi">+</span>
+<span class="gi">+   for (int i = 0; i &lt; sizeof(offsets)/sizeof(*offsets); i++) {</span>
+<span class="gi">+       uint64_t offs = offsets[i];</span>
+<span class="gi">+       u32 val = XFsbl_In32(XPAR_PSU_CCI_REG_S_AXI_BASEADDR + offs);</span>
+<span class="gi">+       XFsbl_Printf(DEBUG_PRINT_ALWAYS, &quot;  offset %x = %x\r\n&quot;,</span>
+<span class="gi">+               offs, val);</span>
+<span class="gi">+   }</span>
+<span class="gi">+}</span>
+<span class="gi">+</span>
+<span class="gi">+static void cci_reg_debug_enable(void) {</span>
+<span class="gi">+   const uint64_t OFFS_CCI_MISC_CTRL = 0x40;</span>
+<span class="gi">+</span>
+<span class="gi">+   const uint32_t CCI_MISC_CTRL_NIDEN_MASK = 0x2;</span>
+<span class="gi">+   const uint32_t CCI_MISC_CTRL_SPIDEN_MASK = 0x1;</span>
+<span class="gi">+</span>
+<span class="gi">+   XFsbl_Printf(DEBUG_PRINT_ALWAYS, &quot;CCI_REG: debug enable\r\n&quot;);</span>
+<span class="gi">+</span>
+<span class="gi">+   XFsbl_Out32(XPAR_PSU_CCI_REG_S_AXI_BASEADDR + OFFS_CCI_MISC_CTRL,</span>
+<span class="gi">+           CCI_MISC_CTRL_NIDEN_MASK | CCI_MISC_CTRL_SPIDEN_MASK);</span>
+<span class="gi">+}</span>
+<span class="gi">+</span>
+ u32 XFsbl_HookBeforeHandoff(u32 EarlyHandoff)
+ {
+    u32 Status = XFSBL_SUCCESS;
+
+<span class="gd">-   /**</span>
+<span class="gd">-    * Add the code here</span>
+<span class="gd">-    */</span>
+<span class="gi">+   print_el();</span>
+<span class="gi">+   cci_reg_dump();</span>
+<span class="gi">+   cci_reg_debug_enable();</span>
+<span class="gi">+   cci_reg_dump();</span>
+
+    return Status;
+ }
+<span class="gd">--</span>
+2.25.1
+</code></pre></div>
+
+<p>The following is then the output of the FSBL with the patch:</p>
+<div class="highlight"><pre><span></span><code>Xilinx Zynq MP First Stage Boot Loader
+Release 2020.2   Jun 10 2021  -  19:49:38
+Reset Mode      :       System Reset
+Platform: Silicon (4.0), Running on A53-0 (64-bit) Processor, Device Name: XCZU3EG
+SD0 Boot Mode
+PMU Firmware 2020.2     Jun  3 2021   19:28:36
+PMU_ROM Version: xpbr-v8.1.0-0
+Protection configuration applied
+EL = 3
+CCI_REG: register dump
+  offset 0 = 0
+  offset 10 = 0
+  offset 14 = 8000003F
+  offset 18 = 0
+  offset 1C = 0
+  offset 40 = 0
+CCI_REG: debug enable
+CCI_REG: register dump
+  offset 0 = 0
+  offset 10 = 0
+  offset 14 = 8000003F
+  offset 18 = 0
+  offset 1C = 0
+  offset 40 = 3
+Exit from FSBL
+</code></pre></div>
+
+<p>We can note that the register at the offset <code>0x40</code> has changed from <code>0</code> to <code>3</code>,
+as we have requested.</p>
+<h2>Lamport's bakery algorithm</h2>
+<p>To provide a good test case for the cache coherent interconnect I have
+implemented distributed counting (i.e. multiple workers share one counter),
+and the synchronization is provided with <a href="https://github.com/j-marjanovic/chisel-stuff/tree/master/example-10-lamports-bakery-algorithm">Lamport's bakery algorithm</a>.</p>
+<p>AXI protocol itself provides a possibility (<code>AxLOCK</code> signals for exclusive
+access) to perform atomic operations on memory and devices, but Lamport's
+algorithm does not require any special locking primitives, <a href="http://lamport.azurewebsites.net/pubs/pubs.html#bakery">only atomic reads
+and writes</a>.</p>
+<p><img alt="IPs connected to HPC ports on Zynq MPSoC" src="./images/2021_cci_part_1/vivado.png" style="width:80%; display: block; margin-left: auto; margin-right: auto;"></p>
+<p>In the Vivado design I have connected two <code>LamportsBakeryAlgo</code> IPs to both
+HPC ports. Each IP can be configured to run for a defined number of loops,
+and in each loop the counter will be incremented by 1. For each loop we
+expect to see 5 writes in total:</p>
+<ul>
+<li>1 write for setting the entering flag</li>
+<li>1 write for setting the number</li>
+<li>1 write for clearing the entering flag</li>
+<li>1 write to do the actual work (increment the counter in this example)</li>
+<li>1 write to clear the number (i.e. release the lock)</li>
+</ul>
+<p>Similarly, we can expect the following to be the lower limit of the number of reads
+- if the flag is set the algorithm continues to poll it until it is cleared. In
+this highly-contended example we expect the numbers of reads to be much higher.</p>
+<ul>
+<li>N reads for the <code>maximum()</code> function</li>
+<li>N reads in the inner loop to check the entering flag</li>
+<li>N reads in the inner loop to check the number variable</li>
+</ul>
+<h1>Performance counters usage example</h1>
+<p>With the Performance Memory Unit enabled we can now start monitoring the values
+of the counters with the <code>perf</code> tool.</p>
+<p>I ran the two <code>LamportsBakeryAlgo</code> IP, each programmed to perform 100000 loops.
+In addition, there is a third instance of Lamport's bakery algorithm, this
+one running in the software and accessing the same memory locations as the two
+FPGA implementations.</p>
+<p>In parallel, I ran <code>perf stat</code> and selected the following events: read requests
+(<code>rrq</code>) handshakes (<code>hs</code>) and write request (<code>wr</code>) handshakes on subordinate
+ports 0 and 3. From the
+<a href="https://www.xilinx.com/support/documentation/user_guides/ug1085-zynq-ultrascale-trm.pdf">UG1085</a>
+we can see that the APU is connected to port 3 on the CCI-400 and the HPC ports
+are connected to port 0 on the interconnect.</p>
+<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~# </span>perf stat -e <span class="se">\</span>
+<span class="gp">&gt; </span>CCI_400_r1/cycles/,<span class="se">\</span>
+<span class="gp">&gt; </span>CCI_400_r1/si_rrq_hs_any,source<span class="o">=</span><span class="m">0</span>/,<span class="se">\</span>
+<span class="gp">&gt; </span>CCI_400_r1/si_wrq_hs_any,source<span class="o">=</span><span class="m">0</span>/,<span class="se">\</span>
+<span class="gp">&gt; </span>CCI_400_r1/si_rrq_hs_any,source<span class="o">=</span><span class="m">3</span>/,<span class="se">\</span>
+<span class="gp">&gt; </span>CCI_400_r1/si_wrq_hs_any,source<span class="o">=</span><span class="m">3</span>/
+
+<span class="go">^C</span>
+<span class="go"> Performance counter stats for &#39;system wide&#39;:</span>
+
+<span class="go">        1103648324      CCI_400_r1/cycles/</span>
+<span class="go">           3207971      CCI_400_r1/si_rrq_hs_any,source=0/</span>
+<span class="go">           1000000      CCI_400_r1/si_wrq_hs_any,source=0/</span>
+<span class="go">           3158786      CCI_400_r1/si_rrq_hs_any,source=3/</span>
+<span class="go">            636417      CCI_400_r1/si_wrq_hs_any,source=3/</span>
+
+<span class="go">       4.138963536 seconds time elapsed</span>
+</code></pre></div>
+
+<p>We see that expected 1000000 writes from the HPC ports (= 2 (instances) * 5 (per
+loop) * 100000 (number of loops)) and we also see the number of reads on the HPS
+port matches our expectation to be equal or greater than 1800000 (= 2 (total
+instances) * 3 * 3 (total instances = N) * 100000 (number of loops)).</p>
+<p>Port 3 (APU port) is also used to load the program from
+the main memory or the SD card which slightly obscures the number of
+transactions performed by the algorithm itself, but the numbers match our
+expectations.</p>
+<h2>Limitations</h2>
+<p>It seems that the PMU in the CCI-400 does not provide all facilities needed for
+<code>perf record</code> to work properly, it reports <code>PMU Hardware doesn't support
+sampling/overflow-interrupts. Try 'perf stat'</code>.</p>
+<h1>Conclusion</h1>
+<p>In this post we have seen how tools commonly used in performance engineering
+can also be used to observe the behavior and performance of the FPGA. With the
+proliferation of heterogeneous architectures, having good tools to observe
+(and debug) the interfaces between individual components provides additional
+insight into the system.</p>
+<p>It is yet to be explored if shouting at the Zynq MPSoC has any impact
+on the <a href="https://www.youtube.com/watch?v=tDacjrSCeq4">performance in terms of
+latency</a>.</p>
+<hr>
+<div style="font-size: 80%;" >
+Xilinx, Inc. Xilinx, the Xilinx logo, Vivado, Zynq are trademarks of Xilinx in the United States and
+other countries.
+</div>
+
+<div style="font-size: 80%;" >
+AMBA, ARM, Cortex and TrustZone are registered trademarks of ARM Limited (or its
+subsidiaries) in the EU and/or elsewhere. CoreLink is  a trademark of ARM
+Limited (or its subsidiaries) in the EU and/or elsewhere.
+</div>
+
+<div style="font-size: 80%;" >
+All trademarks and registered trademarks are the property of their respective owners.
+</div><script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+        </div><!-- /.entry-content -->
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="janmarjanovic">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script><br/><br/>
+
+      </article>
+    </div>
+</section>
+        <section id="extras" >
+        
+        </section><!-- /#extras -->
+	
+        <footer id="contentinfo" >
+                <address id="about" class="vcard ">
+                Proudly powered by <a href="https://getpelican.com/" target="_blank">Pelican</a>, which takes
+                great advantage of <a href="https://python.org" target="_blank">Python</a>.
+		
+                </address><!-- /#about -->
+		
+
+                
+        </footer><!-- /#contentinfo -->
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-56555055-1', 'auto');
+  ga('send', 'pageview');
+
+</script></body>
+</html>

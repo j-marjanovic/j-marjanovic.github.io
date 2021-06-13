@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>j-marjanovic.io - Jan Marjanovic</title><link>www.j-marjanovic.io/</link><description></description><lastBuildDate>Sat, 15 May 2021 13:30:00 +0200</lastBuildDate><item><title>Stratix V accelerator card from eBay, part 7</title><link>www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-7.html</link><description>&lt;p&gt;The reverse engineering of the FPGA accelerator card from eBay is progressing
+<rss version="2.0"><channel><title>j-marjanovic.io - Jan Marjanovic</title><link>www.j-marjanovic.io/</link><description></description><lastBuildDate>Sat, 12 Jun 2021 20:00:00 +0200</lastBuildDate><item><title>Performance counters in Cache Coherent Interconnect in Zynq MPSoC</title><link>www.j-marjanovic.io/performance-counters-in-cache-coherent-interconnect-in-zynq-mpsoc.html</link><description>&lt;p&gt;In this blog post I describe my tinkering with the interconnect architecture of
+the Xilinx Zynq MPSoC. I specifically focus on the Performance Monitoring Unit
+(PMU) integrated into the Cache Coherence Interconnect (CCI).&lt;/p&gt;
+&lt;p&gt;I believe that most of the readers of my blog are already familiar with Xilinx
+Zynq® UltraScale …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Jan Marjanovic</dc:creator><pubDate>Sat, 12 Jun 2021 20:00:00 +0200</pubDate><guid isPermaLink="false">tag:None,2021-06-12:www.j-marjanovic.io/performance-counters-in-cache-coherent-interconnect-in-zynq-mpsoc.html</guid><category>FPGA, Zynq, Cache-Coherence</category></item><item><title>Stratix V accelerator card from eBay, part 7</title><link>www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-7.html</link><description>&lt;p&gt;The reverse engineering of the FPGA accelerator card from eBay is progressing
 well and documenting the DDR3 interface was a huge step forward. However, there
 is still one important part of the board which is not fully uncovered, the PCI
 Express® interface.&lt;/p&gt;
