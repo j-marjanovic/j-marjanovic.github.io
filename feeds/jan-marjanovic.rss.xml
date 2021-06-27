@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>j-marjanovic.io - Jan Marjanovic</title><link>www.j-marjanovic.io/</link><description></description><lastBuildDate>Sat, 12 Jun 2021 20:00:00 +0200</lastBuildDate><item><title>Performance counters in Cache Coherent Interconnect in Zynq MPSoC</title><link>www.j-marjanovic.io/performance-counters-in-cache-coherent-interconnect-in-zynq-mpsoc.html</link><description>&lt;p&gt;In this blog post I describe my tinkering with the interconnect architecture of
+<rss version="2.0"><channel><title>j-marjanovic.io - Jan Marjanovic</title><link>www.j-marjanovic.io/</link><description></description><lastBuildDate>Sat, 26 Jun 2021 04:00:00 +0200</lastBuildDate><item><title>Notes from Chisel Community Conference China 2021</title><link>www.j-marjanovic.io/notes-from-chisel-community-conference-china-2021.html</link><description>&lt;p&gt;Here are my notes from the Chisel Community Conference China 2021. The
+conference took place on June 26th 2021, and was organized as a hybrid
+conference, open to both on-site and remote participants (over Zoom). The
+organizers have promised that the recorded talks will be made available online
+in the …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Jan Marjanovic</dc:creator><pubDate>Sat, 26 Jun 2021 04:00:00 +0200</pubDate><guid isPermaLink="false">tag:None,2021-06-26:www.j-marjanovic.io/notes-from-chisel-community-conference-china-2021.html</guid><category>misc</category><category>FPGA</category><category>Scala</category><category>Chisel</category></item><item><title>Performance counters in Cache Coherent Interconnect in Zynq MPSoC</title><link>www.j-marjanovic.io/performance-counters-in-cache-coherent-interconnect-in-zynq-mpsoc.html</link><description>&lt;p&gt;In this blog post I describe my tinkering with the interconnect architecture of
 the Xilinx Zynq MPSoC. I specifically focus on the Performance Monitoring Unit
 (PMU) integrated into the Cache Coherence Interconnect (CCI).&lt;/p&gt;
 &lt;p&gt;I believe that most of the readers of my blog are already familiar with Xilinx

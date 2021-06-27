@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Notes from Chisel Community Conference China 2021</title>
+        <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="shortcut icon" href="./theme/images/favicon.ico"/>
+        <link rel="stylesheet" href="./theme/css/main.css" type="text/css" />
+        <link href="www.j-marjanovic.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="j-marjanovic.io Atom Feed" />
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie.css"/>
+                <script src="./js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie6.css"/><![endif]-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="theme/jquery.cookiesdirective.js"></script>
+
+</head>
+
+<body id="index" class="home">
+<script type="text/javascript">
+	// Using $(document).ready never hurts
+	$(document).ready(function(){
+
+		// Cookie setting script wrapper
+		var cookieScripts = function () {
+			// Internal javascript called
+			console.log("Running");
+		
+			// Loading external javascript file
+			$.cookiesDirective.loadScript({
+				uri:'external.js',
+				appendTo: 'eantics'
+			});
+		}
+	
+		/* Call cookiesDirective, overriding any default params
+		
+			*** These are the defaults ***
+				explicitConsent: true,
+				position: 'top',
+				duration: 10,
+				limit: 0,
+				message: null,				
+				cookieScripts: null,
+				privacyPolicyUri: 'privacy.html',
+				scriptWrapper: function(){},	
+				fontFamily: 'helvetica',
+				fontColor: '#FFFFFF',
+				fontSize: '13px',
+				backgroundColor: '#000000',
+				backgroundOpacity: '80',
+				linkColor: '#CA0000'
+				
+		*/
+		
+		$.cookiesDirective({
+			privacyPolicyUri: 'myprivacypolicy.html',
+			explicitConsent: false,
+			position : 'bottom',
+			scriptWrapper: cookieScripts, 
+			cookieScripts: 'Google Analytics', 
+			backgroundColor: '#52B54A',
+			linkColor: '#ffffff'
+		});
+	});
+</script>
+
+	
+  <!-- <header id="banner" class="body"> -->
+  <!--               <h1><a href="./"><img src="http://www.launchyard.com/images/logo.png" /></a></h1> -->
+  <!--       </header> --> 
+
+  <div class="LaunchyardDetail" style="align:right;">
+    <!-- <p> -->
+    <!-- <img src="./theme/images/blue-pin.png" width="100" height="100" alt="Graph icon"> -->
+    <!-- </p> -->
+    <p><a id="sitesubtitle" href="./">j-marjanovic.io</a></p>
+
+	<br>
+    <p style="float: right; margin-right: 50px;"><a id="aboutlink" href="./pages/about.html">About</a></p>
+
+    <br>
+	<p style="float: right; margin-right: 50px;"><img src="./theme/images/icons/rss.png"> <a id="aboutlink" href="./feeds/jan-marjanovic.atom.xml">Atom feed</a></p>
+    <br>
+
+  </div>
+
+<section id="content" >
+    <div class="body">
+      <article>
+        <header>
+          <h1 class="entry-title">
+            <a href="./notes-from-chisel-community-conference-china-2021.html" rel="bookmark"
+               title="Permalink to Notes from Chisel Community Conference China 2021">Notes from Chisel Community Conference China 2021</a></h1>
+
+        </header>
+
+        <div class="entry-content">
+<div class="post-info">
+	<ul>
+        <li class="vcard author">
+                 by&nbsp;<a class="url fn" href="./author/jan-marjanovic.html">Jan Marjanovic</a>
+        </li>
+        <li class="published" title="2021-06-26T04:00:00+02:00">
+          on&nbsp;Sat 26 June 2021
+        </li>
+
+	</ul>
+<p>Category: <a href="./tag/fpga.html">FPGA</a>, <a href="./tag/scala.html">Scala</a>, <a href="./tag/chisel.html">Chisel</a>, </p>
+</div><!-- /.post-info -->          <p>Here are my notes from the Chisel Community Conference China 2021. The
+conference took place on June 26th 2021, and was organized as a hybrid
+conference, open to both on-site and remote participants (over Zoom). The
+organizers have promised that the recorded talks will be made available online
+in the next couple of weeks.</p>
+<p>Since the conference was located in China it started in the early morning hours
+for the participants from Europe. I decided that 4:00 is a good compromise
+between my love for Chisel and my need for sleep; I have only missed the two
+invited talks at the beginning. In general the conference was quite interesting,
+and it was clear that Chisel is particularly suited for highly configurable
+designs, e.g. processors and data-processing pipelines.</p>
+<p>Written in <em>italics</em> are my comments.</p>
+<hr>
+<h1>[Invited Talk] Chisel breakdown 2</h1>
+<p><em>...</em></p>
+<h2>cloneType</h2>
+<ul>
+<li><code>override def cloneType</code> --&gt; autoclonetype2</li>
+<li><em>why have I never needed this?</em></li>
+<li><code>autoclonetype1</code> - deprecated, was based on reflection</li>
+<li>generated by the compiler plugin</li>
+</ul>
+<h2>aspect phase</h2>
+<ul>
+<li>insert additional hardware, layout, verification, ...</li>
+</ul>
+<hr>
+<h1>Top 10 Common Misconception about Chisel</h1>
+<ul>
+<li>
+<p>Institute of Computing Technology at CAS</p>
+</li>
+<li>
+<p>in Chinese, I understood "Chisel", "DSL", and "okay"</p>
+</li>
+</ul>
+<h2>RocketChip</h2>
+<ul>
+<li>RocketChip is complicated, several additional ... (config, the bus framework, register gen)</li>
+<li>"if you are new to Chisel, DO NOT read the source code of RocketChip"</li>
+<li><em>note to self: go read the source code of RocketChip</em></li>
+</ul>
+<h2>Verilog is more expressive than Chisel</h2>
+<ul>
+<li>
+<p>the presenter argues that logic is fundamentally:</p>
+<ul>
+<li>modules</li>
+<li>combinatorial logic</li>
+<li>registers</li>
+</ul>
+</li>
+<li>
+<p>technically this is all supported in Chisel</p>
+</li>
+<li><em>I am not sure if I would agree - I think there is still place for Verilog for low-level stuff, just like some parts of the code (e.g. in Linux kernel) are still written in assembly</em></li>
+</ul>
+<h2>Chisel compile errors</h2>
+<p>types of errors:</p>
+<ul>
+<li>Scala compile errors</li>
+<li>Scala run-time error</li>
+<li>Chisel build error</li>
+<li>FIRRTL transform error</li>
+<li>
+<p>Circuit simulation error</p>
+</li>
+<li>
+<p>distinction between fault (uninit variable), error (returning  a garbage value) and failure (segmentation fault)</p>
+</li>
+<li><em>how are these different?</em></li>
+<li>the presenter argues that Chisel has a stricter type system than Verilog</li>
+<li>shouldn't Chisel be compared to SystemVerilog for a fair comparison? (also <code>default_nettype none</code>)</li>
+<li>"hidden fault" -&gt; "observable failure"</li>
+</ul>
+<h2><code>Blackbox</code> for (System)Verilog</h2>
+<h2>Testing</h2>
+<ul>
+<li>Chisel Tester, Chisel Tester 2, UVM from Verilog</li>
+<li>"Agent Faker": TL-C UVM above Chisel Tester 2, open source</li>
+</ul>
+<h2>equality between Chisel and generated Verilog code</h2>
+<ul>
+<li><em>aka "the Chisel compiler is not formally verified"</em></li>
+<li><em>very complex task and unnecessary, one can run tests also on the generated Verilog</em></li>
+<li><em>known-good</em> --&gt; successful Chisel projects: RocketChip, BOOM, lowRISC, NutShell, Labeled RISC-V, XiangShan</li>
+</ul>
+<h2>Quality of Results for Chisel</h2>
+<ul>
+<li>misconception: Java slower than C --&gt; Chisel hardware slower than Verilog hardware</li>
+<li><em>OK, I experienced this first hand - my colleague was asking me what the fmax is for a typical Chisel-generated logic</em></li>
+<li><em>will he also mention that Chisel is not an HLS?</em></li>
+</ul>
+<h2>Chisel is not HLS</h2>
+<ul>
+<li><em>I predict the future</em></li>
+<li>advanced features in Chisel/Scala (<em>i managed to understand "map", "mapper"</em>)</li>
+<li><em>PPA: Power-Performance-Area</em></li>
+</ul>
+<h2>generated core readability</h2>
+<ul>
+<li>comments in verilog</li>
+<li><code>EmbeddedTLB</code></li>
+<li><em>wasn't there a patch to improve readbility of the generated code - check previous CCC</em></li>
+</ul>
+<h2>high-performance circuits in Chisel</h2>
+<ul>
+<li><a href="https://github.com/OpenXiangShan/XiangShan">https://github.com/OpenXiangShan/XiangShan</a>, <a href="https://openxiangshan.github.io/">https://openxiangshan.github.io/</a></li>
+<li><em>looks impressive</em></li>
+</ul>
+<hr>
+<h1>Introducing Decoder Generation API to Chisel</h1>
+<h2>example</h2>
+<ul>
+<li>7 segment LED</li>
+<li>input: b0 - b4, output: a - g, k for cathode</li>
+<li>non-valid states = (default, don't care)</li>
+</ul>
+<h2>theory</h2>
+<ul>
+<li>
+<p>AND plane, OR plane  (<em>this looks like PAL/GAL, right?</em>, <em>is this really relevant for modern LUT-based FPGAs and ASICs?</em>)</p>
+</li>
+<li>
+<p>now a full example of the 7-segment decoder implemented in PLA</p>
+</li>
+<li>
+<p>logic optimization (definition from Wikipedia)</p>
+<ul>
+<li>Quine-McClusky</li>
+<li>Espresso</li>
+</ul>
+</li>
+<li>
+<p>sparser PLA</p>
+</li>
+</ul>
+<h2>Chisel utils</h2>
+<ul>
+<li>
+<p><code>experimental.decode.TruthTable</code>, <code>DecodeTableAnnotation</code>, <code>decoder</code>,
+  <code>QMCMinimizer</code>, <code>EspressoMinimizer</code></p>
+</li>
+<li>
+<p><em>how does this affect later stages (e.g. optimization during the synthesis)</em></p>
+</li>
+<li>
+<p>nice Scala feature - "list unpacking" - <code>val a :: b :: [...] = x.toBools()</code></p>
+</li>
+</ul>
+<hr>
+<h1>Practice of High-performance Chip Agile Development with Chisel</h1>
+<ul>
+<li>
+<p>XiangShan CPU</p>
+</li>
+<li>
+<p>agile development (iterative)</p>
+</li>
+<li>SystemVerilog <code>interface</code>s, Chisel <code>Bundle</code>s</li>
+<li>processor parameters</li>
+<li>
+<p>Ultra - apparently the highest-end impl of the processor</p>
+</li>
+<li>
+<p>Chisel solution - <code>Vec</code> in a <code>Bundle</code> as an I/O</p>
+</li>
+<li>
+<p>FIRRTL transform for <code>printf</code></p>
+</li>
+<li>
+<p>configurability</p>
+</li>
+<li>"Chisel = syntactic sugar for Verilog"</li>
+<li>
+<p>link: wallace tree multiplier, CCCC 2021</p>
+</li>
+<li>
+<p>recursion is allowed in Chisel, the generated Verilog code does not include recursion</p>
+</li>
+<li>
+<p><a href="https://github.com/OpenXiangShan/XiangShan/pull/812">https://github.com/OpenXiangShan/XiangShan/pull/812</a></p>
+</li>
+<li>
+<p>distinction between Chisel, Scala</p>
+</li>
+<li>Wire, Reg - straightforward to understand</li>
+<li>
+<p>advanced Scala features: object, abstract class, trait</p>
+</li>
+<li>
+<p>advice: start with Chisel, learn Scala later, <em>i would not agree, learn Scala first</em></p>
+</li>
+<li>
+<p>co-simulation</p>
+</li>
+<li>
+<p>Scala-based modules in Chisel Test2 cannot be used in other tools</p>
+</li>
+<li>
+<p>behavioral models to replace actual Chisel modules</p>
+</li>
+<li>
+<p>assertion generation in Chisel</p>
+</li>
+<li>
+<p>generated names can change between Chisel versions, and can cause problems for physical design</p>
+</li>
+</ul>
+<h2>summary</h2>
+<ul>
+<li>chisel is an advanced HDL, not HLS</li>
+<li>parametrization</li>
+<li>does not affect PPA (vs Verilog)</li>
+</ul>
+<hr>
+<h1>Revisiting Diplomacy</h1>
+<ul>
+<li>
+<p>not an HLS, HCL = HW Construction Language</p>
+</li>
+<li>
+<p>configuration</p>
+</li>
+<li>
+<p>RocketChip</p>
+</li>
+<li>
+<p>an example of a configuration with Verilog: <a href="https://github.com/riscv-mcu/e203_hbirdv2/blob/master/rtl/e203/core/config.v">https://github.com/riscv-mcu/e203_hbirdv2/blob/master/rtl/e203/core/config.v</a></p>
+</li>
+</ul>
+<p>Verilog defines = "that is a piece of garbage" :D</p>
+<ul>
+<li><code>defines</code> are handled by a preprocessor</li>
+<li>
+<p>no easy way to provide a validation</p>
+</li>
+<li>
+<p>diplomacy: parameter negotiation framework</p>
+</li>
+<li>CDE (Content Dependent Values)</li>
+<li>Scala <code>implicit</code>s</li>
+<li>Scala type inference and type checking</li>
+</ul>
+<h2>API</h2>
+<ul>
+<li>user API (<code>extend Config</code>)</li>
+<li>design API (<code>trait</code>)</li>
+</ul>
+<h2>parameters</h2>
+<ul>
+<li>hierarchy</li>
+<li>
+<p>topology</p>
+</li>
+<li>
+<p>global defintion = bad</p>
+</li>
+<li>
+<p><code>Parameter</code>, <code>LazyModule</code>, passed implicitly</p>
+</li>
+<li>
+<p>topology parameters</p>
+</li>
+<li>interfaces as DAG (Directed Acyclic Graph)</li>
+<li>acylic: how does DMA look like?</li>
+<li>interfaces: AXI, TileLink, ...</li>
+<li>2-phase elaboration</li>
+</ul>
+<h2>Summary</h2>
+<ul>
+<li>Diplomacy refactor -&gt; stand-alone library</li>
+<li>
+<p>(plans for) TileLink, AXI, ACE, CHI, WishBone</p>
+</li>
+<li>
+<p>RocketChip newbies</p>
+</li>
+<li>TileLink implementation</li>
+</ul>
+<hr>
+<h1>Using partial swarm optimization to reduce verification time</h1>
+<ul>
+<li>
+<p>prerecorded intro, <em>issues with audio</em></p>
+</li>
+<li>
+<p>Partial Swarm Optimization</p>
+<ul>
+<li>v_i - particle velocity</li>
+<li>C - learning factor</li>
+<li>global best</li>
+</ul>
+</li>
+</ul>
+<p>CDMA - some kind of a DMA, apparently <br/>
+MCIF - presumably memory controller interface</p>
+<p>1 channel with weights <br/>
+3 data channels: IMG, WG, DC</p>
+<p>data word: 78*3 bits</p>
+<p>process:</p>
+<ol>
+<li>generate random solution</li>
+<li>calculate the fitness</li>
+<li>update the particle speed and position</li>
+<li>end a high-quality stimulus was found, else goto 1</li>
+</ol>
+<hr>
+<h1>A general method of generating stimulus based on SVM</h1>
+<ul>
+<li>verification consumes a lot of resources</li>
+<li>using SVM to <strong>predict</strong> coverage</li>
+</ul>
+<p>SVM - support vector machine (binary classification)</p>
+<ul>
+<li>
+<p>using Matlab -&gt; different types, different functions</p>
+</li>
+<li>
+<p>Convolution Pipeline:</p>
+</li>
+<li>CDMA, CBUF, CSC, CMAC, ...</li>
+</ul>
+<p>CSC - convolution sequence controller = gets the data from DMA, loads/schedules it into MAC</p>
+<p>nvdla-csc</p>
+<ul>
+<li>SG - sequence generator</li>
+<li>DL - data loader</li>
+<li>WL - weight loader</li>
+</ul>
+<h2>training</h2>
+<ul>
+<li>data, labels = coverage data</li>
+<li>
+<p>process:</p>
+</li>
+<li>
+<p>training</p>
+<ol>
+<li>random stimuli</li>
+<li>get the coverage from VCS</li>
+<li>use this to create training set for SVM</li>
+<li>train SVM</li>
+</ol>
+</li>
+</ul>
+<p>an arbitrary value is chosen as a threshold between the labels</p>
+<p><em>couldn't this be done better with Reinforcement Learning? and is the SVM the right tool to use?</em></p>
+<p>Q: relationship between the project and Chisel? <br/>
+A: <em>answer in Chinese</em></p>
+<hr>
+<h1>Summary of Problems and Experiences during the Processor Development based on Chisel</h1>
+<ul>
+<li>short intro (chisel sheatsheet, Programming in Scala, software thinking, hardware thinking)</li>
+<li>
+<p><code>val</code> vs <code>def</code> (<em>this could be nasty to debug, <code>def</code> creates a new instance on each call</em>)</p>
+</li>
+<li>
+<p><code>Cat</code> vs <code>Map</code>, hardware thinking vs software thinking --&gt; Cat starts at MSB, Map starts at LSB</p>
+</li>
+<li>
+<p>width - in <code>Cat</code> it should be explicitly defined</p>
+</li>
+<li>
+<p>careful with <code>DontCare</code></p>
+</li>
+</ul>
+<p><em>Syntactic Salt - I like this very much</em></p>
+<ul>
+<li>competitive assignment (loop index)</li>
+</ul>
+<h2>developer perspective</h2>
+<ul>
+<li>"Chisel = excelent HDL, free devs from dirty work"</li>
+<li>"be familiar with Scala before using Chisel"</li>
+<li>check the generated verilog</li>
+</ul>
+<p><em>I liked this talk, the examples were relevant</em></p>
+<p>Q: a question about the competitive assignment (in Chinese)</p>
+<p>Q: <em>i understood TPU, SiFive and xie xie</em></p>
+<hr>
+<h1>Stimuli Generation by Constrained Markov Chain Monte Carlo Simulation for Chisel-based Deep Learning Accelerator Verification Platform</h1>
+<p><em>was this title also generated with a Markov Chain?</em></p>
+<p>nvdla.org</p>
+<h2>Direction Convolution</h2>
+<ul>
+<li>input: CSC, output CACC</li>
+<li>each MAC cell: 64 multipliers</li>
+<li>pipelined status</li>
+</ul>
+<h2>Constrained Random Testing</h2>
+<ul>
+<li>Markov-Chain Monte-Carlo (MCMC)</li>
+<li>Monte-Carlo: draw independent samples from the distribution</li>
+<li>Markov-Chain: the current value is probabilistically dependent on the previous value</li>
+<li>Metropolis-Hastings Algorithm (proposal, an acceptance of the proposal)</li>
+</ul>
+<h2>implementation</h2>
+<ul>
+<li>use a pool of states to generate a low-correlation stimulus</li>
+<li>MCMC-based fault location</li>
+</ul>
+<p><em>very precise and academic presentation, unclear how it relates to Chisel and
+how this method can be used in practice</em></p>
+<hr>
+<h1>Implementation of a Highly Configurable Wallace Tree Multiplier with Chisel</h1>
+<ul>
+<li>recursion for Wallace tree compression</li>
+<li>only 120 lines of Chisel code</li>
+<li>configurable pipelining</li>
+</ul>
+<h2>the algorithm</h2>
+<ul>
+<li>booth-4 encoding</li>
+<li>n*n mul &lt;-&gt; n/2 partial products</li>
+<li>sign-extend (<code>i match [...]</code>)</li>
+<li>tree-compression - columns represented as <code>Array[Seq[Bool]]</code></li>
+<li><em><code>Seq</code> vs <code>Array</code>?</em></li>
+<li><em>what is the benefit of using <code>Array</code> (from Java) vs <code>Vec</code> (from Chisel)</em></li>
+<li>
+<p>compress the whole tree (+ register insertion)</p>
+</li>
+<li>
+<p>summary: highly configurable, better scalability, easier to read</p>
+</li>
+</ul>
+<p>Q: something about latency on the slide about pipelining</p>
+<hr>
+<h1>Agile IC Design Team Working in Chisel, Empowered by Diplomacy and Config</h1>
+<p><a href="https://www.streamcomputing.com/en/">https://www.streamcomputing.com/en/</a></p>
+<ul>
+<li>
+<p>RocketChip/BOOM</p>
+</li>
+<li>
+<p>Qs when reading the code: <code>implicit</code>, <code>:*=</code> and <code>:=*</code>, ...</p>
+</li>
+</ul>
+<h2>Diplomacy</h2>
+<ul>
+<li>Scala framework</li>
+<li>negotation/castint/modifying parameters</li>
+<li>LazymoduleImp</li>
+</ul>
+<h2>Config</h2>
+<ul>
+<li>Scala framework</li>
+<li>
+<p>definition of parameters globaly</p>
+</li>
+<li>
+<p>Chisel =/= Diplomacy and Config</p>
+</li>
+<li>
+<p>Diplomacy and Config = pure Scala</p>
+</li>
+<li>
+<p>pros:</p>
+<ul>
+<li>suitable for SoCs</li>
+<li>availability of open-source IP</li>
+</ul>
+</li>
+<li>
+<p>cons:</p>
+<ul>
+<li>hard to fully understand</li>
+</ul>
+</li>
+</ul>
+<h2>building a Chisel Team</h2>
+<ul>
+<li>firm commitment to Chisel</li>
+<li>no modifications of the generated Verilog</li>
+<li>
+<p>divide an conquer: dedicated experts for Diplomacy and Config</p>
+</li>
+<li>
+<p>stages:</p>
+<ol>
+<li>Chisel basis (Bundle, Reg, WIre,, ...)</li>
+<li>Diplomacy and Config (case class, high-order function, other advanced features)</li>
+</ol>
+</li>
+<li>
+<p>minor tricks: wrap important signals in modules, use CamelCase in Chisel</p>
+</li>
+</ul>
+<hr>
+<h1>Experience Sharing: Develop NutShell using Chisel</h1>
+<p><a href="https://github.com/OSCPU/NutShell">https://github.com/OSCPU/NutShell</a></p>
+<ul>
+<li>NutShell (5 undergraduates in 4 months)</li>
+<li>SDRAM, SPI and UART,</li>
+<li>boots Linux (Debian/Fedora)</li>
+<li>single-issue, in-order core</li>
+<li>RV64IMAC, Zifence, Zicsr</li>
+<li>runs at 60 MHz on Zynq 7000, 200 MHz on Zynq US+, 350 MHz in 110 nm SMIC</li>
+</ul>
+<h2>example:</h2>
+<ul>
+<li><code>MaskedRegMap</code> abstract class - address, read and write side effects</li>
+<li><code>apply</code> method, <code>generate</code> method</li>
+</ul>
+<h2>peripheral devices</h2>
+<ul>
+<li>MMIO - AXI4 or AXI4Lite</li>
+<li><code>AXI4SlaveModule</code> abstract class</li>
+</ul>
+<h2>suggestion</h2>
+<ul>
+<li>avoid Verilog-like Chisel</li>
+<li>software-like Chisel - careful with <code>var</code></li>
+<li>find the balance</li>
+</ul>
+<hr>
+<h1>Chisel Implementation Tutorial - in a lightweight ...</h1>
+<p><em>the title in the program was "Light Weight Chisel3 KnitKit"</em></p>
+<ul>
+<li>
+<p>Data -&gt; Bits -&gt; Clock/Wire/... (<em>outdated diagram</em>)</p>
+</li>
+<li>
+<p><code>RegInit</code> with different types of resets</p>
+</li>
+</ul>
+<p><em>running through slides</em></p>
+<ul>
+<li>io connection with <code>withClockAndReset</code></li>
+</ul>
+<p><a href="https://github.com/colin4124/Chisel-Implementation-Tutorial">https://github.com/colin4124/Chisel-Implementation-Tutorial</a></p>
+<p><em>created 6 hours ago</em></p>
+<p>Q: something about <code>AutoBundle</code></p>
+<hr>
+<h1>Use Firrtl Transform to Control the Effective Range of 'printf' in Large Scale Circuits</h1>
+<ul>
+<li><code>printf</code> in Chisel can be translated in <code>fwrite</code> in Verilog</li>
+<li>extensive printing will slow down the simulation</li>
+<li>typically only as small part of the code is inspected</li>
+<li>using FIRRTL transform</li>
+</ul>
+<h2>Implementation</h2>
+<p>4 types of annotation:</p>
+<p><code>EnablePrintfAnnotation</code>, <code>Disable..</code>, <code>DisableAll..</code>, <code>Remove Assert...</code></p>
+<p><code>execute(c: CircuitState)</code></p>
+<ul>
+<li>
+<p>ancestor (hierarchy)</p>
+</li>
+<li>
+<p><code>firrtl.analyses.CircuitGraph</code></p>
+</li>
+</ul>
+<hr>
+<h1>Reinforcement Learning based Stimulus Generation for Chisel Module Verification</h1>
+<h2>Constrained Random Test</h2>
+<ul>
+<li>
+<p>test generator</p>
+</li>
+<li>
+<p>CACC: convolution accumulator</p>
+</li>
+<li>assembly SRAM group, delivery SRAM group (banks of 64Bx32 SRAMs)</li>
+<li>assembly = accumulation with saturation</li>
+</ul>
+<h2>Reinforcement Learning</h2>
+<ul>
+<li>Agent</li>
+<li>Action</li>
+<li>Environment</li>
+<li>Reward</li>
+<li>State</li>
+</ul>
+<p>Q-learning (Q = quality), Bellman equation,</p>
+<p>states = coverage, actions = stimulus
+gamma = reward discount</p>
+<ul>
+<li>agent is exploring the environment, Q-table is updated, Q is maximized</li>
+</ul>
+<h2>approach</h2>
+<ul>
+<li>extremely large input vector: 2 ** 131</li>
+<li>multiplexer: stimulus = 128 digits, select = 3 bits</li>
+</ul>
+<p><em>controller written in Python! (at a Chisel workshop)</em> :)</p>
+<hr>
+<h1>Genetic Algorithm based Stimulus Generation for Chisel Module Verification</h1>
+<ul>
+<li>Single Point Data Processor = post-processor of NVDLA</li>
+<li>inputs: i32 x 16 from CACC</li>
+</ul>
+<h2>Genetic Algorithm</h2>
+<ul>
+<li>population</li>
+<li>fitness calculation</li>
+<li>mating pool</li>
+<li>parents selection</li>
+<li>mating (crossover and mutation)</li>
+<li>offsprings</li>
+<li>back to population</li>
+</ul>
+<h2>approach</h2>
+<ul>
+<li>20 binary stimulus vectors</li>
+<li>fitness calculation - coverage from VCS</li>
+<li>matting: exchange bits in vectors between stimuli vectors, mutation: bit flips</li>
+</ul>
+<p><em>again no mention of Chisel, no result presented</em></p>
+<hr>
+<h1>Recurring Neural Networks based Stimuli Generation for Chisel Module Verification</h1>
+<ul>
+<li>constrained random verification (PRG for randomization, constraints for stimuli)</li>
+</ul>
+<h2>Recurring Neural Network</h2>
+<ul>
+<li>neuron: x * w - offset + threshold</li>
+<li>Hopfield Network (each neurons output is connected to all other neurons but not to itself)</li>
+</ul>
+<h2>PDP (Planar Data Processing)</h2>
+<ul>
+<li>results of the pooling process</li>
+<li>outputs: max, min, average</li>
+<li>traverses width, height, channel</li>
+<li>maximum pooling (pipelined)</li>
+</ul>
+<h2>approach</h2>
+<ul>
+<li>inputs: control, status from the previous module, data payload</li>
+<li>output: status, and data</li>
+<li>Python based controller, simulation with VCS</li>
+</ul>
+<hr>
+<h1>Quasar: SweRV-EL2 implemented in CHISEL</h1>
+<ul>
+<li>Convert SweRV-EL2 from SystemVerilog to Chisel</li>
+<li>comparison of SystemVerilog to Chisel</li>
+</ul>
+<h2>Quasar</h2>
+<ul>
+<li>4-stage, mostly in-order, RV32IMC, runs at 600 MHz at 16 nm</li>
+<li>development procedure: first unit test, then  comparison between SweRV-EL2</li>
+<li>LEC (*is this a formal) on the generated Verilog</li>
+</ul>
+<h2>Pros/Cons</h2>
+<ul>
+<li>parametreizable &amp; scalable code</li>
+<li>no linting problems</li>
+<li>people are reluctant about adopting Chisel</li>
+<li>"Chisel makes the verification more tedious"</li>
+</ul>
+<h2>Analysis of the results</h2>
+<ul>
+<li>fMAX, area and power almost the same (2-3% difference)</li>
+<li>Chisel: 12 kLOC, SystemVerilog: 19 kLOC</li>
+</ul>
+<h2>Roadmap</h2>
+<ul>
+<li>F-extension (will be open-sourced in the near future)</li>
+<li>vector extension</li>
+</ul>
+<p><a href="https://github.com/Lampro-Mellon/Chisel-Training">https://github.com/Lampro-Mellon/Chisel-Training</a></p>
+<hr>
+<h1>ChiselVerify: A Verification Framework for Chisel</h1>
+<ul>
+<li>verification = testing before tape-out</li>
+<li>validation = testing after tape-out</li>
+</ul>
+<h2>Current solutions</h2>
+<ul>
+<li>ChiselTest (not many functions), ScalaTest</li>
+<li>SystemVerilog, UVM (verbose, multiple languages)</li>
+</ul>
+<h2>ChiselVerify</h2>
+<ul>
+<li>an extension to ChiselTest</li>
+<li>4 parts</li>
+<li>functional coverage</li>
+<li>constraint random verification</li>
+<li>bus functional model</li>
+<li>timed assertions</li>
+</ul>
+<h3>functional coverage</h3>
+<ul>
+<li>statement coverage / functional coverage</li>
+<li>verification plan &lt;- cover groups &lt;- cover points] (Range, Conditions, Cross, Timed)</li>
+<li>coverage database</li>
+<li>coverage reporter</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span> <span class="n">cr</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">CoverageReporter</span><span class="p">(</span><span class="n">dut</span><span class="p">)</span>
+  <span class="n">cr</span><span class="p">.</span><span class="n">register</span><span class="p">(</span>
+      <span class="nc">CoverPoints</span><span class="p">(...),</span>
+      <span class="p">...</span>
+  <span class="p">)</span>
+<span class="p">...</span>
+<span class="n">cr</span><span class="p">.</span><span class="n">printReport</span><span class="p">()</span>
+</code></pre></div>
+
+<h3>constraint random verification</h3>
+<ul>
+<li>constraint programmable language</li>
+<li>JaCoP as an SMT solver</li>
+<li>custom distribution</li>
+</ul>
+<h3>bus functional models</h3>
+<ul>
+<li>AXI4 interface</li>
+<li>Transactions</li>
+<li>software abstraction</li>
+</ul>
+<h3>timed assertions</h3>
+<ul>
+<li>types of delays:</li>
+<li><code>Exactly</code></li>
+<li><code>Eventually</code></li>
+<li><code>Always</code></li>
+<li><code>Never</code></li>
+</ul>
+<h3>summary</h3>
+<ul>
+<li>"test Chisel designs in Scala"</li>
+</ul>
+<p><a href="https://github.com/chiselverify/chiselverify">https://github.com/chiselverify/chiselverify</a></p>
+<hr>
+<h2>Teaching Digital Design with Chisel</h2>
+<p>Q at CCC 2020: "Is Chisel ready for class?" <br/>
+A: yes</p>
+<ul>
+<li>two courses: Digital Electronics 1 &amp; 2</li>
+<li>VHDL until 2019, DE1 still uses VHDL, DE2 uses Chisel</li>
+<li>"VHDL is dying a little bit"</li>
+<li>IntelliJ, sbt (<code>sbt run</code>, <code>sbt test</code>)</li>
+<li>Digital Design with Chisel (<a href="https://www.imm.dtu.dk/~masca/chisel-book.html">https://www.imm.dtu.dk/~masca/chisel-book.html</a>)</li>
+<li>LOC(VHDL)/LOC(Chisel) ~ 2</li>
+<li>Simulation + GUI in Swing</li>
+</ul>
+<hr>
+<h1>Towards Agile Networking Hardware - Chisel at OVHcloud</h1>
+<ul>
+<li>OVHcloud = 1st European cloud provider</li>
+<li>22 Tbps bandwidth, DDoS</li>
+<li>anti-DDoS (scrubbing with FPGAs)</li>
+<li>attackers are agile, to respond</li>
+<li>HLS - reduces performance and agility</li>
+<li>does HCL improve agility without affecting performance</li>
+</ul>
+<h2>de-risking</h2>
+<ul>
+<li>counter store (hash table with a cuckoo filter)</li>
+<li><a href="https://hal.archives-ouvertes.fr/hal-03157426">https://hal.archives-ouvertes.fr/hal-03157426</a></li>
+<li>reset, async reset added recently</li>
+<li>with no reset the P&amp;R results are better</li>
+<li>Pull Request for Preset</li>
+</ul>
+<h2>flow</h2>
+<ul>
+<li>limitation: parameters are embedded in names</li>
+<li>solution: a wrapper in Verilog for the Chisel-generated Verilog</li>
+<li>successful SV/Chisel cohabitation</li>
+<li>sv2chisel ("low level Chisel"), challenges: clock and reset retrieval, choosing types</li>
+<li><a href="https://github.com/ovh/sv2chisel">https://github.com/ovh/sv2chisel</a></li>
+</ul>
+<h2>Summary</h2>
+<ul>
+<li>CocoTB instead of Chisel-testers</li>
+<li>Pipeline abstraction (PhD thesis, a DSL on top of Chisel)</li>
+</ul><script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+        </div><!-- /.entry-content -->
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="janmarjanovic">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script><br/><br/>
+
+      </article>
+    </div>
+</section>
+        <section id="extras" >
+        
+        </section><!-- /#extras -->
+	
+        <footer id="contentinfo" >
+                <address id="about" class="vcard ">
+                Proudly powered by <a href="https://getpelican.com/" target="_blank">Pelican</a>, which takes
+                great advantage of <a href="https://python.org" target="_blank">Python</a>.
+		
+                </address><!-- /#about -->
+		
+
+                
+        </footer><!-- /#contentinfo -->
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-56555055-1', 'auto');
+  ga('send', 'pageview');
+
+</script></body>
+</html>
