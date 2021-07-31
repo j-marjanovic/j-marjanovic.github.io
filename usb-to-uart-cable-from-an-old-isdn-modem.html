@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>USB-to-UART cable from an old ISDN modem</title>
+        <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="shortcut icon" href="./theme/images/favicon.ico"/>
+        <link rel="stylesheet" href="./theme/css/main.css" type="text/css" />
+        <link href="www.j-marjanovic.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="j-marjanovic.io Atom Feed" />
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie.css"/>
+                <script src="./js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie6.css"/><![endif]-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="theme/jquery.cookiesdirective.js"></script>
+
+</head>
+
+<body id="index" class="home">
+<script type="text/javascript">
+	// Using $(document).ready never hurts
+	$(document).ready(function(){
+
+		// Cookie setting script wrapper
+		var cookieScripts = function () {
+			// Internal javascript called
+			console.log("Running");
+		
+			// Loading external javascript file
+			$.cookiesDirective.loadScript({
+				uri:'external.js',
+				appendTo: 'eantics'
+			});
+		}
+	
+		/* Call cookiesDirective, overriding any default params
+		
+			*** These are the defaults ***
+				explicitConsent: true,
+				position: 'top',
+				duration: 10,
+				limit: 0,
+				message: null,				
+				cookieScripts: null,
+				privacyPolicyUri: 'privacy.html',
+				scriptWrapper: function(){},	
+				fontFamily: 'helvetica',
+				fontColor: '#FFFFFF',
+				fontSize: '13px',
+				backgroundColor: '#000000',
+				backgroundOpacity: '80',
+				linkColor: '#CA0000'
+				
+		*/
+		
+		$.cookiesDirective({
+			privacyPolicyUri: 'myprivacypolicy.html',
+			explicitConsent: false,
+			position : 'bottom',
+			scriptWrapper: cookieScripts, 
+			cookieScripts: 'Google Analytics', 
+			backgroundColor: '#52B54A',
+			linkColor: '#ffffff'
+		});
+	});
+</script>
+
+	
+  <!-- <header id="banner" class="body"> -->
+  <!--               <h1><a href="./"><img src="http://www.launchyard.com/images/logo.png" /></a></h1> -->
+  <!--       </header> --> 
+
+  <div class="LaunchyardDetail" style="align:right;">
+    <!-- <p> -->
+    <!-- <img src="./theme/images/blue-pin.png" width="100" height="100" alt="Graph icon"> -->
+    <!-- </p> -->
+    <p><a id="sitesubtitle" href="./">j-marjanovic.io</a></p>
+
+	<br>
+    <p style="float: right; margin-right: 50px;"><a id="aboutlink" href="./pages/about.html">About</a></p>
+
+    <br>
+	<p style="float: right; margin-right: 50px;"><img src="./theme/images/icons/rss.png"> <a id="aboutlink" href="./feeds/jan-marjanovic.atom.xml">Atom feed</a></p>
+    <br>
+
+  </div>
+
+<section id="content" >
+    <div class="body">
+      <article>
+        <header>
+          <h1 class="entry-title">
+            <a href="./usb-to-uart-cable-from-an-old-isdn-modem.html" rel="bookmark"
+               title="Permalink to USB-to-UART cable from an old ISDN modem">USB-to-UART cable from an old ISDN modem</a></h1>
+
+        </header>
+
+        <div class="entry-content">
+<div class="post-info">
+	<ul>
+        <li class="vcard author">
+                 by&nbsp;<a class="url fn" href="./author/jan-marjanovic.html">Jan Marjanovic</a>
+        </li>
+        <li class="published" title="2021-07-31T09:00:00+02:00">
+          on&nbsp;Sat 31 July 2021
+        </li>
+
+	</ul>
+
+</div><!-- /.post-info -->          <p>A short intermezzo from all FPGA-related stuff, this time we deal with an
+8051-based USB device. This blog post describes how I converted an ISDN modem
+(with a USB connection) to a USB-to-UART cable.</p>
+<p>During my vacation at my parents' house, I wanted to access the UART on the
+Ultra96 board to investigate the Linux boot procedure. Surprisingly, I did not
+manage to find a Raspberry Pi or anything else which can talk UART, but I found
+a box with old electronics. Among old phones, computer motherboards, GPUs, and
+other relics of the past I found a PCB with a USB and an RJ45 connector. My
+sixth sense for electronics made me think that this is a good starting point for
+a USB-to-UART cable; the device already has a USB, and there will likely be a
+UART port somewhere. </p>
+<p><em>Note: no half-sane person would go this way to implement a simple
+USB-to-UART bridge. If talking UART from your computer is your principal
+objective, just buy a cable, or use a Raspberry Pi.</em></p>
+<h1>Initial inspection</h1>
+<h2>USB</h2>
+<p>The first thing I did is plugging the device into a computer, mainly to verify
+that it is still somehow alive. The following was printed out in the <code>dmesg</code>
+output:</p>
+<div class="highlight"><pre><span></span><code><span class="m">[11816.274833] </span><span class="k">usb 1-4.1:</span> new full-speed USB device number 7 using xhci_hcd
+<span class="m">[11818.795110] </span><span class="k">usb 1-4.1:</span> New USB device found, idVendor=071d, idProduct=1000, bcdDevice= 0.3c
+<span class="m">[11818.795119] </span><span class="k">usb 1-4.1:</span> New USB device strings: Mfr=1, Product=2, SerialNumber=3
+<span class="m">[11818.795122] </span><span class="k">usb 1-4.1:</span> Product: Eicon DIVA USB
+<span class="m">[11818.795125] </span><span class="k">usb 1-4.1:</span> Manufacturer: Eicon Technology
+<span class="m">[11818.795128] </span><span class="k">usb 1-4.1:</span> SerialNumber: 0000001000
+</code></pre></div>
+
+<p>We see that the USB works, and we also got the product name (<code>Eicon DIVA USB</code>).
+A quick search on the internet revealed that this device is an ISDN modem, which
+matches the observation, an RJ45 socket and the date code of June 1999.</p>
+<p>There is even a web page dedicated to various ISDN cards, where the main
+characteristics of this device are listed: <a href="https://www.isdncards.com/eicon-diva-usb">ISDN Cards Central: Eicon Diva
+USB</a></p>
+<h2>PCB overview</h2>
+<p><img alt="Software in action" src="./images/2021_ez_usb/pcb_front_rear.jpg" style="width:50%; display: block; margin-left: auto; margin-right: auto;"></p>
+<p>There are several easily-identifiable components on the PCB:</p>
+<ul>
+<li><a href="https://media.digikey.com/pdf/Data%20Sheets/Cypress%20PDFs/AN2131SC,QC,AN2135SC,36SC.pdf">Cypress Semiconductor
+  AN2135SC</a>
+  "EZ-USB™" = an 8051-based microcontroller with a dedicated USB engine</li>
+<li><a href="https://www.renesas.com/eu/en/document/dst/qs32xl384-datasheet">Renesas IDTQS32XL384</a> - 20-bit bus switch and level translator</li>
+<li>Siemens PSB2115 - ISDN PC Adapter Circuit (this is where the ISDN magic happens)</li>
+<li>VAC 5054x005 ISDN transformer</li>
+<li>RJ45 socket</li>
+<li><a href="https://ww1.microchip.com/downloads/en/DeviceDoc/doc0336.pdf">Atmel AT24C32N</a>
+  32kbit I2C EEPROM (presumably to store manufacturer ID and maybe the program
+  for the EZ-USB)</li>
+<li>some power-section related ICs</li>
+</ul>
+<h1>EZ-USB™</h1>
+<p>The main microcontroller on this board (AN2135SC) was designed specifically to
+simplify the development of USB-based devices. EZ-USB Technical Reference Manual
+is from May 2000, while the USB 1.1 standard was released in August 1998. The
+TRM goes to a great length to explain the advantages of the USB ("Plug and
+Play") and also serves as an introduction of the protocol itself.</p>
+<h2>Resources</h2>
+<h3>EZ-USB on Linux</h3>
+<p><a href="http://www.linux-usb.org/ezusb/">http://www.linux-usb.org/ezusb/</a></p>
+<blockquote>
+<p>At this writing, all that firmware is statically linked into the appropriate mini-driver.</p>
+</blockquote>
+<h3>Linux drivers</h3>
+<p><a href="https://github.com/torvalds/linux/blob/v5.11/drivers/usb/misc/ezusb.c">https://github.com/torvalds/linux/blob/v5.11/drivers/usb/misc/ezusb.c</a></p>
+<p><a href="https://github.com/torvalds/linux/commit/8d733e26c076f47e7774c0e5baa74c9b1c01199a">https://github.com/torvalds/linux/commit/8d733e26c076f47e7774c0e5baa74c9b1c01199a</a></p>
+<h3>fxload</h3>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>apt info fxload
+<span class="go">Package: fxload</span>
+<span class="go">Version: 0.0.20081013-1ubuntu2</span>
+<span class="go">&lt;...&gt;</span>
+<span class="go">Description: Firmware download to EZ-USB devices</span>
+<span class="go"> This program is conveniently able to download firmware into FX and FX2</span>
+<span class="go"> ez-usb devices. It is intended to be invoked by hotplug scripts when</span>
+<span class="go"> the unprogrammed device appears on the bus.</span>
+</code></pre></div>
+
+<h1>Reverse-engineering the board</h1>
+<p>Since there are no BGA components on this board, and the main microcontroller
+has only 44 pins, one can easily use a multimeter to reverse engineer the
+connections between the most important components.</p>
+<p>I gathered the obtained knowledge in the schematics below:</p>
+<p><img alt="Reverse-engineered schematics for EICON DIVA USB" src="./images/2021_ez_usb/eicon_diva_schematics_partial.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"></p>
+<h1>Modifications</h1>
+<p>From the schematics it is clear that one can easily reach the UART port with
+some small modifications to the board:</p>
+<ul>
+<li>remove U103 MOSFET</li>
+<li>connect LED to PC6 (rotate R210 90deg to disconnect one pad, connect the
+  flying pad on the R210 to the uC)</li>
+<li>connect UART RX cable to PC0 (R208 pad)</li>
+<li>connect UART TX cable to PC1 (R210 pad)</li>
+<li>connect ground cable to GND</li>
+</ul>
+<h1>Firmware</h1>
+<p>With hardware in place, it was time to write some firmware for the
+microcontroller. I managed to find a project on GitHub, titled
+<a href="https://github.com/hansiglaser/ezusb-firmware">ezusb-firmware</a>, which can serve
+as a starting point for custom developments. It is licensed under GPLv2 or later
+and uses <a href="http://sdcc.sourceforge.net/">sdcc</a> compiler.</p>
+<h2>Programming the microcontroller</h2>
+<p>After modifying the code to match the pinout on the (modified) board, and
+compiling the code with <code>sdcc</code> a HEX file is produces. This gets then
+easily downloaded to the board with the aforementioned <code>fxload</code> utility:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>sudo fxload -D /dev/bus/usb/001/008 -s /usr/share/usb/a3load.hex -I firmware.hex -t an21 -v
+<span class="go">microcontroller type: an21</span>
+<span class="go">1st stage:  load 2nd stage loader</span>
+<span class="go">open RAM hexfile image /usr/share/usb/a3load.hex</span>
+<span class="go">stop CPU</span>
+<span class="go">write on-chip, addr 0x0357 len   23 (0x0017)</span>
+<span class="go">&lt;...&gt;</span>
+<span class="go">write on-chip, addr 0x036e len   12 (0x000c)</span>
+<span class="go">... WROTE: 775 bytes, 10 segments, avg 77</span>
+<span class="go">reset CPU</span>
+<span class="go">open RAM hexfile image firmware.hex</span>
+<span class="go">2nd stage:  write external memory</span>
+<span class="go">write external, addr 0x1b00 len   88 (0x0058)</span>
+<span class="go">stop CPU</span>
+<span class="go">2nd stage:  write on-chip memory</span>
+<span class="go">write on-chip, addr 0x0000 len    4 (0x0004)</span>
+<span class="go">write on-chip, addr 0x000b len    1 (0x0001)</span>
+<span class="go">&lt;...&gt;</span>
+<span class="go">write on-chip, addr 0x0862 len   32 (0x0020)</span>
+<span class="go">... WROTE: 2378 bytes, 33 segments, avg 72</span>
+<span class="go">reset CPU</span>
+</code></pre></div>
+
+<p>With the proverbial LED blinking, I was able to confirm that this method of
+programming the microcontroller works and that the firmware project works
+correctly.</p>
+<p>I have continued the development by adding a UART-related code and later
+implemented a method to retrieve the UART buffer over the USB and to transmit
+the data over the UART from the USB. The code can be found in
+<a href="https://github.com/j-marjanovic/ezusb-uart/tree/master/firmware">ezusb-uart/firmware</a>.</p>
+<h1>Software</h1>
+<p>As the last step, I hacked together an example from the
+<a href="https://libusb.info/">libusb</a> library and some code to manage the receive and
+transmit buffers. Ideally the terminal management (using the <code>termios</code> API)
+would be more elaborated, ideally one would also use a dedicated library for
+such a task. But since the goal was just to capture some data from the Ultra96,
+the current implementation is sufficient.</p>
+<p>The code is available in <a href="https://github.com/j-marjanovic/ezusb-uart/tree/master/software">ezusb-uart/software</a>.</p>
+<p>Shown in the screenshot below is the output of <code>ezuart</code> utility when connected
+to the Ultra96 board:</p>
+<p><img alt="Software in action" src="./images/2021_ez_usb/software_example.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"></p>
+<h1>Summary</h1>
+<p>Without too much effort, I was able to convert this ISDN modem to a USB-to-UART
+cable. Several factors contributed to this:</p>
+<ul>
+<li>the microcontroller on this board was specifically designed to facilitate
+  the development of USB devices</li>
+<li>the firmware for this device is downloaded over the USB, allowing easy 
+  modifications and development of custom firmware</li>
+<li>the PCB was relatively simple (no BGAs)</li>
+<li>a fantastic firmware project by Martin Schmoelzer and Johann Glaser as a
+  skeleton for my development</li>
+</ul>
+<p>There are a couple of limitations, the most jarring one is that this
+microcontroller does not support 115200 baud operation, making it not really
+suitable as a general-purpose UART cable. </p>
+<p>Nevertheless, I would classify this project as a success - I have managed to
+convert an old piece of junk to a device, which can provide some insight into
+the boot procedure of the Zynq on the Ultra96 board.</p>
+<p><img alt="EZ-USB board connected to Ultra96" src="./images/2021_ez_usb/ezusb_uart_connected_to_u96.jpg" style="width:50%; display: block; margin-left: auto; margin-right: auto;"></p>
+<hr>
+<p>EZ-USB® is a registered trademark of Cypress Semiconductor Corp. All other trademarks and registered
+trademarks are the property of their respective owners.</p><script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+        </div><!-- /.entry-content -->
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="janmarjanovic">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script><br/><br/>
+
+      </article>
+    </div>
+</section>
+        <section id="extras" >
+        
+        </section><!-- /#extras -->
+	
+        <footer id="contentinfo" >
+                <address id="about" class="vcard ">
+                Proudly powered by <a href="https://getpelican.com/" target="_blank">Pelican</a>, which takes
+                great advantage of <a href="https://python.org" target="_blank">Python</a>.
+		
+                </address><!-- /#about -->
+		
+
+                
+        </footer><!-- /#contentinfo -->
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-56555055-1', 'auto');
+  ga('send', 'pageview');
+
+</script></body>
+</html>

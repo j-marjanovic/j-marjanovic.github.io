@@ -1,5 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io - Jan Marjanovic</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/jan-marjanovic.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2021-06-26T04:00:00+02:00</updated><entry><title>Notes from Chisel Community Conference China 2021</title><link href="www.j-marjanovic.io/notes-from-chisel-community-conference-china-2021.html" rel="alternate"></link><published>2021-06-26T04:00:00+02:00</published><updated>2021-06-26T04:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2021-06-26:www.j-marjanovic.io/notes-from-chisel-community-conference-china-2021.html</id><summary type="html">&lt;p&gt;Here are my notes from the Chisel Community Conference China 2021. The
+<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io - Jan Marjanovic</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/jan-marjanovic.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2021-07-31T09:00:00+02:00</updated><entry><title>USB-to-UART cable from an old ISDN modem</title><link href="www.j-marjanovic.io/usb-to-uart-cable-from-an-old-isdn-modem.html" rel="alternate"></link><published>2021-07-31T09:00:00+02:00</published><updated>2021-07-31T09:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2021-07-31:www.j-marjanovic.io/usb-to-uart-cable-from-an-old-isdn-modem.html</id><summary type="html">&lt;p&gt;A short intermezzo from all FPGA-related stuff, this time we deal with an
+8051-based USB device. This blog post describes how I converted an ISDN modem
+(with a USB connection) to a USB-to-UART cable.&lt;/p&gt;
+&lt;p&gt;During my vacation at my parents' house, I wanted to access the UART on the
+Ultra96 …&lt;/p&gt;</summary><content type="html">&lt;p&gt;A short intermezzo from all FPGA-related stuff, this time we deal with an
+8051-based USB device. This blog post describes how I converted an ISDN modem
+(with a USB connection) to a USB-to-UART cable.&lt;/p&gt;
+&lt;p&gt;During my vacation at my parents' house, I wanted to access the UART on the
+Ultra96 board to investigate the Linux boot procedure. Surprisingly, I did not
+manage to find a Raspberry Pi or anything else which can talk UART, but I found
+a box with old electronics. Among old phones, computer motherboards, GPUs, and
+other relics of the past I found a PCB with a USB and an RJ45 connector. My
+sixth sense for electronics made me think that this is a good starting point for
+a USB-to-UART cable; the device already has a USB, and there will likely be a
+UART port somewhere. &lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note: no half-sane person would go this way to implement a simple
+USB-to-UART bridge. If talking UART from your computer is your principal
+objective, just buy a cable, or use a Raspberry Pi.&lt;/em&gt;&lt;/p&gt;
+&lt;h1&gt;Initial inspection&lt;/h1&gt;
+&lt;h2&gt;USB&lt;/h2&gt;
+&lt;p&gt;The first thing I did is plugging the device into a computer, mainly to verify
+that it is still somehow alive. The following was printed out in the &lt;code&gt;dmesg&lt;/code&gt;
+output:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="m"&gt;[11816.274833] &lt;/span&gt;&lt;span class="k"&gt;usb 1-4.1:&lt;/span&gt; new full-speed USB device number 7 using xhci_hcd
+&lt;span class="m"&gt;[11818.795110] &lt;/span&gt;&lt;span class="k"&gt;usb 1-4.1:&lt;/span&gt; New USB device found, idVendor=071d, idProduct=1000, bcdDevice= 0.3c
+&lt;span class="m"&gt;[11818.795119] &lt;/span&gt;&lt;span class="k"&gt;usb 1-4.1:&lt;/span&gt; New USB device strings: Mfr=1, Product=2, SerialNumber=3
+&lt;span class="m"&gt;[11818.795122] &lt;/span&gt;&lt;span class="k"&gt;usb 1-4.1:&lt;/span&gt; Product: Eicon DIVA USB
+&lt;span class="m"&gt;[11818.795125] &lt;/span&gt;&lt;span class="k"&gt;usb 1-4.1:&lt;/span&gt; Manufacturer: Eicon Technology
+&lt;span class="m"&gt;[11818.795128] &lt;/span&gt;&lt;span class="k"&gt;usb 1-4.1:&lt;/span&gt; SerialNumber: 0000001000
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;We see that the USB works, and we also got the product name (&lt;code&gt;Eicon DIVA USB&lt;/code&gt;).
+A quick search on the internet revealed that this device is an ISDN modem, which
+matches the observation, an RJ45 socket and the date code of June 1999.&lt;/p&gt;
+&lt;p&gt;There is even a web page dedicated to various ISDN cards, where the main
+characteristics of this device are listed: &lt;a href="https://www.isdncards.com/eicon-diva-usb"&gt;ISDN Cards Central: Eicon Diva
+USB&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;PCB overview&lt;/h2&gt;
+&lt;p&gt;&lt;img alt="Software in action" src="www.j-marjanovic.io/images/2021_ez_usb/pcb_front_rear.jpg" style="width:50%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;p&gt;There are several easily-identifiable components on the PCB:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://media.digikey.com/pdf/Data%20Sheets/Cypress%20PDFs/AN2131SC,QC,AN2135SC,36SC.pdf"&gt;Cypress Semiconductor
+  AN2135SC&lt;/a&gt;
+  "EZ-USB™" = an 8051-based microcontroller with a dedicated USB engine&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.renesas.com/eu/en/document/dst/qs32xl384-datasheet"&gt;Renesas IDTQS32XL384&lt;/a&gt; - 20-bit bus switch and level translator&lt;/li&gt;
+&lt;li&gt;Siemens PSB2115 - ISDN PC Adapter Circuit (this is where the ISDN magic happens)&lt;/li&gt;
+&lt;li&gt;VAC 5054x005 ISDN transformer&lt;/li&gt;
+&lt;li&gt;RJ45 socket&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://ww1.microchip.com/downloads/en/DeviceDoc/doc0336.pdf"&gt;Atmel AT24C32N&lt;/a&gt;
+  32kbit I2C EEPROM (presumably to store manufacturer ID and maybe the program
+  for the EZ-USB)&lt;/li&gt;
+&lt;li&gt;some power-section related ICs&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;EZ-USB™&lt;/h1&gt;
+&lt;p&gt;The main microcontroller on this board (AN2135SC) was designed specifically to
+simplify the development of USB-based devices. EZ-USB Technical Reference Manual
+is from May 2000, while the USB 1.1 standard was released in August 1998. The
+TRM goes to a great length to explain the advantages of the USB ("Plug and
+Play") and also serves as an introduction of the protocol itself.&lt;/p&gt;
+&lt;h2&gt;Resources&lt;/h2&gt;
+&lt;h3&gt;EZ-USB on Linux&lt;/h3&gt;
+&lt;p&gt;&lt;a href="http://www.linux-usb.org/ezusb/"&gt;http://www.linux-usb.org/ezusb/&lt;/a&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;At this writing, all that firmware is statically linked into the appropriate mini-driver.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3&gt;Linux drivers&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://github.com/torvalds/linux/blob/v5.11/drivers/usb/misc/ezusb.c"&gt;https://github.com/torvalds/linux/blob/v5.11/drivers/usb/misc/ezusb.c&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/torvalds/linux/commit/8d733e26c076f47e7774c0e5baa74c9b1c01199a"&gt;https://github.com/torvalds/linux/commit/8d733e26c076f47e7774c0e5baa74c9b1c01199a&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;fxload&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;apt info fxload
+&lt;span class="go"&gt;Package: fxload&lt;/span&gt;
+&lt;span class="go"&gt;Version: 0.0.20081013-1ubuntu2&lt;/span&gt;
+&lt;span class="go"&gt;&amp;lt;...&amp;gt;&lt;/span&gt;
+&lt;span class="go"&gt;Description: Firmware download to EZ-USB devices&lt;/span&gt;
+&lt;span class="go"&gt; This program is conveniently able to download firmware into FX and FX2&lt;/span&gt;
+&lt;span class="go"&gt; ez-usb devices. It is intended to be invoked by hotplug scripts when&lt;/span&gt;
+&lt;span class="go"&gt; the unprogrammed device appears on the bus.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h1&gt;Reverse-engineering the board&lt;/h1&gt;
+&lt;p&gt;Since there are no BGA components on this board, and the main microcontroller
+has only 44 pins, one can easily use a multimeter to reverse engineer the
+connections between the most important components.&lt;/p&gt;
+&lt;p&gt;I gathered the obtained knowledge in the schematics below:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Reverse-engineered schematics for EICON DIVA USB" src="www.j-marjanovic.io/images/2021_ez_usb/eicon_diva_schematics_partial.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;h1&gt;Modifications&lt;/h1&gt;
+&lt;p&gt;From the schematics it is clear that one can easily reach the UART port with
+some small modifications to the board:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;remove U103 MOSFET&lt;/li&gt;
+&lt;li&gt;connect LED to PC6 (rotate R210 90deg to disconnect one pad, connect the
+  flying pad on the R210 to the uC)&lt;/li&gt;
+&lt;li&gt;connect UART RX cable to PC0 (R208 pad)&lt;/li&gt;
+&lt;li&gt;connect UART TX cable to PC1 (R210 pad)&lt;/li&gt;
+&lt;li&gt;connect ground cable to GND&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Firmware&lt;/h1&gt;
+&lt;p&gt;With hardware in place, it was time to write some firmware for the
+microcontroller. I managed to find a project on GitHub, titled
+&lt;a href="https://github.com/hansiglaser/ezusb-firmware"&gt;ezusb-firmware&lt;/a&gt;, which can serve
+as a starting point for custom developments. It is licensed under GPLv2 or later
+and uses &lt;a href="http://sdcc.sourceforge.net/"&gt;sdcc&lt;/a&gt; compiler.&lt;/p&gt;
+&lt;h2&gt;Programming the microcontroller&lt;/h2&gt;
+&lt;p&gt;After modifying the code to match the pinout on the (modified) board, and
+compiling the code with &lt;code&gt;sdcc&lt;/code&gt; a HEX file is produces. This gets then
+easily downloaded to the board with the aforementioned &lt;code&gt;fxload&lt;/code&gt; utility:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;sudo fxload -D /dev/bus/usb/001/008 -s /usr/share/usb/a3load.hex -I firmware.hex -t an21 -v
+&lt;span class="go"&gt;microcontroller type: an21&lt;/span&gt;
+&lt;span class="go"&gt;1st stage:  load 2nd stage loader&lt;/span&gt;
+&lt;span class="go"&gt;open RAM hexfile image /usr/share/usb/a3load.hex&lt;/span&gt;
+&lt;span class="go"&gt;stop CPU&lt;/span&gt;
+&lt;span class="go"&gt;write on-chip, addr 0x0357 len   23 (0x0017)&lt;/span&gt;
+&lt;span class="go"&gt;&amp;lt;...&amp;gt;&lt;/span&gt;
+&lt;span class="go"&gt;write on-chip, addr 0x036e len   12 (0x000c)&lt;/span&gt;
+&lt;span class="go"&gt;... WROTE: 775 bytes, 10 segments, avg 77&lt;/span&gt;
+&lt;span class="go"&gt;reset CPU&lt;/span&gt;
+&lt;span class="go"&gt;open RAM hexfile image firmware.hex&lt;/span&gt;
+&lt;span class="go"&gt;2nd stage:  write external memory&lt;/span&gt;
+&lt;span class="go"&gt;write external, addr 0x1b00 len   88 (0x0058)&lt;/span&gt;
+&lt;span class="go"&gt;stop CPU&lt;/span&gt;
+&lt;span class="go"&gt;2nd stage:  write on-chip memory&lt;/span&gt;
+&lt;span class="go"&gt;write on-chip, addr 0x0000 len    4 (0x0004)&lt;/span&gt;
+&lt;span class="go"&gt;write on-chip, addr 0x000b len    1 (0x0001)&lt;/span&gt;
+&lt;span class="go"&gt;&amp;lt;...&amp;gt;&lt;/span&gt;
+&lt;span class="go"&gt;write on-chip, addr 0x0862 len   32 (0x0020)&lt;/span&gt;
+&lt;span class="go"&gt;... WROTE: 2378 bytes, 33 segments, avg 72&lt;/span&gt;
+&lt;span class="go"&gt;reset CPU&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;With the proverbial LED blinking, I was able to confirm that this method of
+programming the microcontroller works and that the firmware project works
+correctly.&lt;/p&gt;
+&lt;p&gt;I have continued the development by adding a UART-related code and later
+implemented a method to retrieve the UART buffer over the USB and to transmit
+the data over the UART from the USB. The code can be found in
+&lt;a href="https://github.com/j-marjanovic/ezusb-uart/tree/master/firmware"&gt;ezusb-uart/firmware&lt;/a&gt;.&lt;/p&gt;
+&lt;h1&gt;Software&lt;/h1&gt;
+&lt;p&gt;As the last step, I hacked together an example from the
+&lt;a href="https://libusb.info/"&gt;libusb&lt;/a&gt; library and some code to manage the receive and
+transmit buffers. Ideally the terminal management (using the &lt;code&gt;termios&lt;/code&gt; API)
+would be more elaborated, ideally one would also use a dedicated library for
+such a task. But since the goal was just to capture some data from the Ultra96,
+the current implementation is sufficient.&lt;/p&gt;
+&lt;p&gt;The code is available in &lt;a href="https://github.com/j-marjanovic/ezusb-uart/tree/master/software"&gt;ezusb-uart/software&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Shown in the screenshot below is the output of &lt;code&gt;ezuart&lt;/code&gt; utility when connected
+to the Ultra96 board:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Software in action" src="www.j-marjanovic.io/images/2021_ez_usb/software_example.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;h1&gt;Summary&lt;/h1&gt;
+&lt;p&gt;Without too much effort, I was able to convert this ISDN modem to a USB-to-UART
+cable. Several factors contributed to this:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;the microcontroller on this board was specifically designed to facilitate
+  the development of USB devices&lt;/li&gt;
+&lt;li&gt;the firmware for this device is downloaded over the USB, allowing easy 
+  modifications and development of custom firmware&lt;/li&gt;
+&lt;li&gt;the PCB was relatively simple (no BGAs)&lt;/li&gt;
+&lt;li&gt;a fantastic firmware project by Martin Schmoelzer and Johann Glaser as a
+  skeleton for my development&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;There are a couple of limitations, the most jarring one is that this
+microcontroller does not support 115200 baud operation, making it not really
+suitable as a general-purpose UART cable. &lt;/p&gt;
+&lt;p&gt;Nevertheless, I would classify this project as a success - I have managed to
+convert an old piece of junk to a device, which can provide some insight into
+the boot procedure of the Zynq on the Ultra96 board.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="EZ-USB board connected to Ultra96" src="www.j-marjanovic.io/images/2021_ez_usb/ezusb_uart_connected_to_u96.jpg" style="width:50%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;EZ-USB® is a registered trademark of Cypress Semiconductor Corp. All other trademarks and registered
+trademarks are the property of their respective owners.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="misc"></category></entry><entry><title>Notes from Chisel Community Conference China 2021</title><link href="www.j-marjanovic.io/notes-from-chisel-community-conference-china-2021.html" rel="alternate"></link><published>2021-06-26T04:00:00+02:00</published><updated>2021-06-26T04:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2021-06-26:www.j-marjanovic.io/notes-from-chisel-community-conference-china-2021.html</id><summary type="html">&lt;p&gt;Here are my notes from the Chisel Community Conference China 2021. The
 conference took place on June 26th 2021, and was organized as a hybrid
 conference, open to both on-site and remote participants (over Zoom). The
 organizers have promised that the recorded talks will be made available online

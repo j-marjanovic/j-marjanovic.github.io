@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>j-marjanovic.io - Jan Marjanovic</title><link>www.j-marjanovic.io/</link><description></description><lastBuildDate>Sat, 26 Jun 2021 04:00:00 +0200</lastBuildDate><item><title>Notes from Chisel Community Conference China 2021</title><link>www.j-marjanovic.io/notes-from-chisel-community-conference-china-2021.html</link><description>&lt;p&gt;Here are my notes from the Chisel Community Conference China 2021. The
+<rss version="2.0"><channel><title>j-marjanovic.io - Jan Marjanovic</title><link>www.j-marjanovic.io/</link><description></description><lastBuildDate>Sat, 31 Jul 2021 09:00:00 +0200</lastBuildDate><item><title>USB-to-UART cable from an old ISDN modem</title><link>www.j-marjanovic.io/usb-to-uart-cable-from-an-old-isdn-modem.html</link><description>&lt;p&gt;A short intermezzo from all FPGA-related stuff, this time we deal with an
+8051-based USB device. This blog post describes how I converted an ISDN modem
+(with a USB connection) to a USB-to-UART cable.&lt;/p&gt;
+&lt;p&gt;During my vacation at my parents' house, I wanted to access the UART on the
+Ultra96 …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Jan Marjanovic</dc:creator><pubDate>Sat, 31 Jul 2021 09:00:00 +0200</pubDate><guid isPermaLink="false">tag:None,2021-07-31:www.j-marjanovic.io/usb-to-uart-cable-from-an-old-isdn-modem.html</guid><category>misc</category></item><item><title>Notes from Chisel Community Conference China 2021</title><link>www.j-marjanovic.io/notes-from-chisel-community-conference-china-2021.html</link><description>&lt;p&gt;Here are my notes from the Chisel Community Conference China 2021. The
 conference took place on June 26th 2021, and was organized as a hybrid
 conference, open to both on-site and remote participants (over Zoom). The
 organizers have promised that the recorded talks will be made available online
