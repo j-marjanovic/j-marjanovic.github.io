@@ -205,6 +205,209 @@
 </li>
 <li>high level AIE API (independent of underlying AIE)</li>
 </ul>
+<h1>Day 2</h1>
+<h2>What's New in Vitis AI 1.4 and Vitis 2021.1 [George Wang (Xilinx)]</h2>
+<h3>Vitis</h3>
+<ul>
+<li>DPU</li>
+<li>libraries for AI engines: FIR, FFT, GEMM, vision</li>
+<li>GZIP, ZSTD library</li>
+<li>FIFO allocation with AI Engine</li>
+<li>x86 simulator for AIE</li>
+<li>Device Tree generator -&gt; ZOCL node</li>
+<li>Vitis HLS: Flow Navigator</li>
+</ul>
+<h3>Vitis AI 1.4</h3>
+<ul>
+<li>support for 2 Versals and Kria</li>
+<li>108 AI models in total in AI Model Zoo</li>
+<li>lidar, radar applications</li>
+<li>quantization-aware training, automatic network pruning</li>
+</ul>
+<h2>Introduction to Kria System on Module [Karan Kantharia (Xilinx)]</h2>
+<ul>
+<li>Xilinx idea: use SoM in final products</li>
+<li>vision market (becoming more fragmented): security camera, obj classifications, medial, AR/VR, emotion</li>
+</ul>
+<h3>KRIA K26 SOM</h3>
+<ul>
+<li>Zynq (ARM + FPGA)</li>
+<li>several interfaces: LVDS, USB, MIPI, Ethernet, HDMI, DisplayPort, ...</li>
+<li>Xilinx idea: no more RTL/HW design -&gt; up to 9 months faster Time to Market</li>
+<li>"no FPGA experience required"</li>
+<li>three options:<ul>
+<li>for AI Developer: use AI model</li>
+<li>for SW devloper: use Vitis</li>
+<li>for HW developer: use Vivado ML</li>
+</ul>
+</li>
+<li>Yocto and Ubuntu supported</li>
+<li>FCC, ... certified</li>
+</ul>
+<h2>Workshop: Vitis AI 101: End-to-End Model Deployment with Vitis AI [Fan Zhang (Xilinx)]</h2>
+<p>https://github.com/fanz-xlnx/Adapt_Workshop_VAI101</p>
+<div class="highlight"><pre><span></span><code><span class="n">ubuntu</span><span class="p">@</span><span class="n">ip</span><span class="o">-***:~</span><span class="n">$</span> <span class="n">lspci</span>
+<span class="mo">00</span><span class="o">:</span><span class="mf">00.0</span> <span class="n">Host</span> <span class="nl">bridge</span><span class="p">:</span> <span class="n">Intel</span> <span class="n">Corporation</span> <span class="mf">440F</span><span class="n">X</span> <span class="o">-</span> <span class="mf">82441F</span><span class="n">X</span> <span class="n">PMC</span> <span class="p">[</span><span class="n">Natoma</span><span class="p">]</span> <span class="p">(</span><span class="n">rev</span> <span class="mo">02</span><span class="p">)</span>
+<span class="mo">00</span><span class="o">:</span><span class="mf">01.0</span> <span class="n">ISA</span> <span class="nl">bridge</span><span class="p">:</span> <span class="n">Intel</span> <span class="n">Corporation</span> <span class="mi">82371</span><span class="n">SB</span> <span class="n">PIIX3</span> <span class="n">ISA</span> <span class="p">[</span><span class="n">Natoma</span><span class="o">/</span><span class="n">Triton</span> <span class="n">II</span><span class="p">]</span>
+<span class="mo">00</span><span class="o">:</span><span class="mf">01.1</span> <span class="n">IDE</span> <span class="nl">interface</span><span class="p">:</span> <span class="n">Intel</span> <span class="n">Corporation</span> <span class="mi">82371</span><span class="n">SB</span> <span class="n">PIIX3</span> <span class="n">IDE</span> <span class="p">[</span><span class="n">Natoma</span><span class="o">/</span><span class="n">Triton</span> <span class="n">II</span><span class="p">]</span>
+<span class="mo">00</span><span class="o">:</span><span class="mf">01.3</span> <span class="nl">Bridge</span><span class="p">:</span> <span class="n">Intel</span> <span class="n">Corporation</span> <span class="mi">82371</span><span class="n">AB</span><span class="o">/</span><span class="n">EB</span><span class="o">/</span><span class="n">MB</span> <span class="n">PIIX4</span> <span class="n">ACPI</span> <span class="p">(</span><span class="n">rev</span> <span class="mo">01</span><span class="p">)</span>
+<span class="mo">00</span><span class="o">:</span><span class="mf">02.0</span> <span class="n">VGA</span> <span class="n">compatible</span> <span class="nl">controller</span><span class="p">:</span> <span class="n">Cirrus</span> <span class="n">Logic</span> <span class="n">GD</span> <span class="mi">5446</span>
+<span class="mo">00</span><span class="o">:</span><span class="mf">03.0</span> <span class="n">Ethernet</span> <span class="nl">controller</span><span class="p">:</span> <span class="n">Amazon</span><span class="p">.</span><span class="n">com</span><span class="p">,</span> <span class="n">Inc</span><span class="p">.</span> <span class="n">Elastic</span> <span class="n">Network</span> <span class="n">Adapter</span> <span class="p">(</span><span class="n">ENA</span><span class="p">)</span>
+<span class="mo">00</span><span class="o">:</span><span class="mi">1</span><span class="n">e</span><span class="mf">.0</span> <span class="mi">3</span><span class="n">D</span> <span class="nl">controller</span><span class="p">:</span> <span class="n">NVIDIA</span> <span class="n">Corporation</span> <span class="n">GK210GL</span> <span class="p">[</span><span class="n">Tesla</span> <span class="n">K80</span><span class="p">]</span> <span class="p">(</span><span class="n">rev</span> <span class="n">a1</span><span class="p">)</span>
+<span class="mo">00</span><span class="o">:</span><span class="mf">1f.0</span> <span class="n">Unassigned</span> <span class="k">class</span> <span class="p">[</span><span class="n">ff80</span><span class="p">]</span><span class="o">:</span> <span class="n">XenSource</span><span class="p">,</span> <span class="n">Inc</span><span class="p">.</span> <span class="n">Xen</span> <span class="n">Platform</span> <span class="n">Device</span> <span class="p">(</span><span class="n">rev</span> <span class="mo">01</span><span class="p">)</span>
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="c">ubuntu@ip</span><span class="nb">-</span><span class="c">***:~$ nvidia</span><span class="nb">-</span><span class="c">smi</span>
+<span class="c">Wed Sep  8 17:20:50 2021</span>
+<span class="nb">+-----------------------------------------------------------------------------+</span><span class="c"></span>
+<span class="c">| NVIDIA</span><span class="nb">-</span><span class="c">SMI 470</span><span class="nt">.</span><span class="c">57</span><span class="nt">.</span><span class="c">02    Driver Version: 470</span><span class="nt">.</span><span class="c">57</span><span class="nt">.</span><span class="c">02    CUDA Version: 11</span><span class="nt">.</span><span class="c">4     |</span>
+<span class="c">|</span><span class="nb">-------------------------------+----------------------+----------------------+</span><span class="c"></span>
+<span class="c">| GPU  Name        Persistence</span><span class="nb">-</span><span class="c">M| Bus</span><span class="nb">-</span><span class="c">Id        Disp</span><span class="nt">.</span><span class="c">A | Volatile Uncorr</span><span class="nt">.</span><span class="c"> ECC |</span>
+<span class="c">| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory</span><span class="nb">-</span><span class="c">Usage | GPU</span><span class="nb">-</span><span class="c">Util  Compute M</span><span class="nt">.</span><span class="c"> |</span>
+<span class="c">|                               |                      |               MIG M</span><span class="nt">.</span><span class="c"> |</span>
+<span class="c">|===============================</span><span class="nb">+</span><span class="c">======================</span><span class="nb">+</span><span class="c">======================|</span>
+<span class="c">|   0  Tesla K80           On   | 00000000:00:1E</span><span class="nt">.</span><span class="c">0 Off |                    0 |</span>
+<span class="c">| N/A   55C    P0   121W / 149W |   4188MiB / 11441MiB |     94%      Default |</span>
+<span class="c">|                               |                      |                  N/A |</span>
+<span class="nb">+-------------------------------+----------------------+----------------------+</span><span class="c"></span>
+
+<span class="nb">+-----------------------------------------------------------------------------+</span><span class="c"></span>
+<span class="c">| Processes:                                                                  |</span>
+<span class="c">|  GPU   GI   CI        PID   Type   Process name                  GPU Memory |</span>
+<span class="c">|        ID   ID                                                   Usage      |</span>
+<span class="c">|=============================================================================|</span>
+<span class="c">|    0   N/A  N/A     19274      C   python                           4185MiB |</span>
+<span class="nb">+-----------------------------------------------------------------------------+</span><span class="c"></span>
+</code></pre></div>
+
+<ul>
+<li><em>IoU</em> = Intersection over Union = Area of Overlap / Area of Union</li>
+<li>XIR format</li>
+<li>KV260 (KRIA)</li>
+</ul>
+<div class="highlight"><pre><span></span><code>xcompiler -t DPUCZDX8G_ISA0_B4096_MAX_BG2 -i quantize_result/ENet_int.xmodel -o compilation_results/KV260/ENet_cityscapes_pt/ENet_cityscapes_pt.xmodel
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code>The compiled xmodel&#39;s md5sum is 4bf46f368e9ff2d51fea136a19270c75
+</code></pre></div>
+
+<h1>Day 3</h1>
+<h2>Expert Panel: Tips and Tricks</h2>
+<ul>
+<li>improvements in silicon<ul>
+<li>"PL is what Xilinx is famous for"</li>
+<li>"end of Moore's law, end of Amdahl's law, end of Dennard scaling" --&gt; more hardened IP (more like ASIC), e.g. DSP58</li>
+</ul>
+</li>
+<li>getting started guide for DFX ([xilinx.com/vivado/dfx])</li>
+<li>HDL (VHDL support)<ul>
+<li>simulation: working on the support for the VHDL-2008 (<em>it is 2021</em>), based on feature requests</li>
+<li>simulation: "current focus on SystemVerilog"</li>
+<li>synthesis: "at the advanced level"</li>
+</ul>
+</li>
+<li>open-source tools (providing the bitstream information)<ul>
+<li>"secret sauce"</li>
+<li>"hacking protection"</li>
+<li>open-source front-end for Vivado and Vitis</li>
+<li>"leave bitstream generation to experts"</li>
+</ul>
+</li>
+<li>ML in Vivado</li>
+<li>congestion when 70% CLBs utilized</li>
+<li>revision control</li>
+<li>RTL workflow<ul>
+<li>a couple of features require IPI (e.g. CIPS, NoC)</li>
+</ul>
+</li>
+<li>porting software to AI Engines<ul>
+<li>start from the C models</li>
+</ul>
+</li>
+<li>RapidWright</li>
+<li>QEMU</li>
+</ul>
+<h2>Team-Based Collaborative Features in IP Integrator</h2>
+<ul>
+<li>UG994</li>
+<li>Block Design Container<ul>
+<li>top-down workflow:<ol>
+<li>create hierarchy</li>
+<li>validate</li>
+<li><em>was distracted</em></li>
+</ol>
+</li>
+<li>e.g. debug vs no-debug version</li>
+<li>DFX flow</li>
+<li>Inter-NOC input</li>
+</ul>
+</li>
+</ul>
+<h2>Vitis HLS for High-Performance Kernels</h2>
+<ul>
+<li>v++</li>
+<li>optimizations<ul>
+<li>pipeline (<code>II</code>)</li>
+<li>SIMD</li>
+<li>dataflow (task parallelism, handshaking)</li>
+</ul>
+</li>
+<li>data types:<ul>
+<li>arrays: AXI4 Memory Mapped</li>
+<li>scalar: AXI4-Lite</li>
+<li>stream: AXI4-Stream</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="cp">#pragma HLS UNROLL factor=N</span>
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="n">__attribute__</span><span class="p">((</span><span class="n">vector_size</span><span class="p">(</span><span class="mi">64</span><span class="p">)))</span>
+</code></pre></div>
+
+<ul>
+<li>Cppcon 2019: Faster Code Through Parallelism on CPU and GPU</li>
+<li><code>RAM 1WnR</code></li>
+<li><code>#pragma HLS BIND STORAGE</code></li>
+<li>function call viewer</li>
+</ul>
+<h2>Versal Architecture Solutions for PCIe and Cache Coherent Interconnect [Eric Crabill (Xilinx)]</h2>
+<ul>
+<li>in Versal<ul>
+<li>CPM4 and CPM5 (gen 4 and gen 5)</li>
+<li>PL PCIE4 and PL PCIE5</li>
+<li>SRIOV</li>
+<li>integrated DMAs (QDMA and XDMA in hard IP)</li>
+<li>CCIX support</li>
+<li>connection to NoC</li>
+<li>CCIX to CHI bridge</li>
+</ul>
+</li>
+</ul>
+<h3>CPM vs PL PCIE</h3>
+<ul>
+<li>CPM - feature rich</li>
+<li>PL PCIE - migration from previous architectures</li>
+</ul>
+<h3>QDMA vs XDMA</h3>
+<h3>CCIX and CXL</h3>
+<ul>
+<li>hetergeneous computing<ul>
+<li>CPU + GPU</li>
+<li>CPU + ACAP</li>
+<li>CPU + Smart NIC</li>
+<li>...</li>
+</ul>
+</li>
+<li>classic PCIe = moving the data with DMA (SW-controlled)</li>
+<li>Cache cohherence = "move the data without using a driver"</li>
+<li>CCIX = symmetrical (CPU and accelerators are peers)</li>
+<li>CXL = CPU is the owner, multiple protocols: <code>cxl.io</code>, <code>cxl.mem</code>, <code>cxl.cache</code></li>
+</ul>
+<h3>Documentation</h3>
+<ul>
+<li>PG347 (for CPM)</li>
+</ul>
 <hr>
 <div style="font-size: 80%;" >
 Xilinx, Inc. Xilinx, the Xilinx logo, Alveo, Vivado, Vitis, Versal, Zynq are trademarks of Xilinx in the United States and
