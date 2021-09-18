@@ -277,6 +277,83 @@ __attribute__((vector_size(64)))
 * PG347 (for CPM)
 
 
+# Day 6
+
+## The Xilinx SN1000: Accelerate Your Cloud Data Centers for Scalability and Performance
+
+* evolution (according to Xilinx)
+    1. "traditional NIC"
+    2. "offload NIC"
+    3. "Programmable SmartNIC"
+* specific requirements, needs to adapt to changing workloads
+* Alveo SN1000 (PCIe gen3 x16, up to 16 A72)
+* Vitis Networking Stack (P4), HLS (C, C++), RTL
+* Architecture: plugins
+* Virtio, `vhost-vdpa`, VirtIO NET PF
+* vDPA - virtual Data-Path Acceleration (control plane managed by host)
+* example: NVME-over-fabric, Ceph, `virtio-blk`
+
+
+## Azure Quantum Optimizing on FPGAs
+
+- "Scaled Quantum Computing"
+- `Q#`, Python SDK
+- problem formulalation
+- PUBO [0, 1], Ising [-1, 1]
+- provides: Honeywell, IonQ, 1QBit
+- example
+    - scheduling problem
+    - CPU runtime - 3 min 12 sec
+    - ```python
+      from azure.quantum.optimization import SimulatedAnealing
+      ```
+    - ` ..., platform=HardwarePlatform.FPGA)`
+    - FPGA runtime - 23 sec
+    - "10x speedup"
+- `aka.ms/qsharp-blog`
+
+## FPGA-Accelerated Structured Query Language (FAStQL) for Azure Synapse Analytics
+
+- Apache Spark, Data Source v2 (DSv2) interface
+- FPGA handles: parsing, filter, projection
+- support for Decimal
+- profiling: 80% on parsing, 20% on query
+- plans for the future: compression/decompression, hash join, ...
+- architecture: row scheduler, N row parsers, row combiners
+- parsing: 6 - 7 GB/s
+- filtering: stack-based processor (same arch: scheduler, N proc, output)
+
+
+## Improving Spark Storage Efficiency with NoLoad Transparent Compression
+
+- "Data Tsunami"
+- computational storage
+- CSP (Computational Storage Processor): computation, no persistant storage
+- CSD (Compuational Storage Drive): computation + peristent data storage (FPGA + SSD)
+- *NVMe computation* - in the process of standardization, expected in 2022
+- NoLoad (r)
+    - NVMe-compilant front-end (looks like an NVMe device to the OS)
+    - certified by UNH-IOL
+    - accelerators: compression, decompression
+    - compute: analytics, ML, AI
+- NVMe-oF, Peer-to-Peer
+- Apache Spark (data size up to PB), NoLoadFS, ZLIB compression offload
+    - Cisco UCS
+
+
+## Breaking the Bonds of CPU-Centric AI Inferencing with NeuReality
+
+- "Server-on-a-Chip"
+- cost, complexity
+- current state
+    - training pods (NVIDIA, GRAPHCORE, SambaNova, Cerebras)
+    - Inferecne Servers: tenstorrent, untether.ai, nvidia, groq, Qualcomm
+- issue with current systems (according to NeuReality):
+    moving the data between NIC --> CPU --> DLA (Deep Learning Accelerator)
+- Versal ACAP + unique IP
+- Kubernetes-managed
+
+
 ---
 
 <div style="font-size: 80%;" >
