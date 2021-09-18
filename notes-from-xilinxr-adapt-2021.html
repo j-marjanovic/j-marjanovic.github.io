@@ -408,6 +408,87 @@
 <ul>
 <li>PG347 (for CPM)</li>
 </ul>
+<h1>Day 6</h1>
+<h2>The Xilinx SN1000: Accelerate Your Cloud Data Centers for Scalability and Performance</h2>
+<ul>
+<li>evolution (according to Xilinx)<ol>
+<li>"traditional NIC"</li>
+<li>"offload NIC"</li>
+<li>"Programmable SmartNIC"</li>
+</ol>
+</li>
+<li>specific requirements, needs to adapt to changing workloads</li>
+<li>Alveo SN1000 (PCIe gen3 x16, up to 16 A72)</li>
+<li>Vitis Networking Stack (P4), HLS (C, C++), RTL</li>
+<li>Architecture: plugins</li>
+<li>Virtio, <code>vhost-vdpa</code>, VirtIO NET PF</li>
+<li>vDPA - virtual Data-Path Acceleration (control plane managed by host)</li>
+<li>example: NVME-over-fabric, Ceph, <code>virtio-blk</code></li>
+</ul>
+<h2>Azure Quantum Optimizing on FPGAs</h2>
+<ul>
+<li>"Scaled Quantum Computing"</li>
+<li><code>Q#</code>, Python SDK</li>
+<li>problem formulalation</li>
+<li>PUBO [0, 1], Ising [-1, 1]</li>
+<li>provides: Honeywell, IonQ, 1QBit</li>
+<li>example<ul>
+<li>scheduling problem</li>
+<li>CPU runtime - 3 min 12 sec</li>
+<li><code>python
+  from azure.quantum.optimization import SimulatedAnealing</code></li>
+<li><code>..., platform=HardwarePlatform.FPGA)</code></li>
+<li>FPGA runtime - 23 sec</li>
+<li>"10x speedup"</li>
+</ul>
+</li>
+<li><code>aka.ms/qsharp-blog</code></li>
+</ul>
+<h2>FPGA-Accelerated Structured Query Language (FAStQL) for Azure Synapse Analytics</h2>
+<ul>
+<li>Apache Spark, Data Source v2 (DSv2) interface</li>
+<li>FPGA handles: parsing, filter, projection</li>
+<li>support for Decimal</li>
+<li>profiling: 80% on parsing, 20% on query</li>
+<li>plans for the future: compression/decompression, hash join, ...</li>
+<li>architecture: row scheduler, N row parsers, row combiners</li>
+<li>parsing: 6 - 7 GB/s</li>
+<li>filtering: stack-based processor (same arch: scheduler, N proc, output)</li>
+</ul>
+<h2>Improving Spark Storage Efficiency with NoLoad Transparent Compression</h2>
+<ul>
+<li>"Data Tsunami"</li>
+<li>computational storage</li>
+<li>CSP (Computational Storage Processor): computation, no persistant storage</li>
+<li>CSD (Compuational Storage Drive): computation + peristent data storage (FPGA + SSD)</li>
+<li><em>NVMe computation</em> - in the process of standardization, expected in 2022</li>
+<li>NoLoad (r)<ul>
+<li>NVMe-compilant front-end (looks like an NVMe device to the OS)</li>
+<li>certified by UNH-IOL</li>
+<li>accelerators: compression, decompression</li>
+<li>compute: analytics, ML, AI</li>
+</ul>
+</li>
+<li>NVMe-oF, Peer-to-Peer</li>
+<li>Apache Spark (data size up to PB), NoLoadFS, ZLIB compression offload<ul>
+<li>Cisco UCS</li>
+</ul>
+</li>
+</ul>
+<h2>Breaking the Bonds of CPU-Centric AI Inferencing with NeuReality</h2>
+<ul>
+<li>"Server-on-a-Chip"</li>
+<li>cost, complexity</li>
+<li>current state<ul>
+<li>training pods (NVIDIA, GRAPHCORE, SambaNova, Cerebras)</li>
+<li>Inferecne Servers: tenstorrent, untether.ai, nvidia, groq, Qualcomm</li>
+</ul>
+</li>
+<li>issue with current systems (according to NeuReality):
+    moving the data between NIC --&gt; CPU --&gt; DLA (Deep Learning Accelerator)</li>
+<li>Versal ACAP + unique IP</li>
+<li>Kubernetes-managed</li>
+</ul>
 <hr>
 <div style="font-size: 80%;" >
 Xilinx, Inc. Xilinx, the Xilinx logo, Alveo, Vivado, Vitis, Versal, Zynq are trademarks of Xilinx in the United States and
