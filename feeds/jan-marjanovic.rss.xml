@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>j-marjanovic.io - Jan Marjanovic</title><link>www.j-marjanovic.io/</link><description></description><lastBuildDate>Tue, 07 Sep 2021 21:00:00 +0200</lastBuildDate><item><title>Notes from Xilinx® Adapt 2021</title><link>www.j-marjanovic.io/notes-from-xilinxr-adapt-2021.html</link><description>&lt;p&gt;&lt;a href="https://xilinx.cventevents.com/event/f7c4412f-572a-4b8b-b8d0-6b92aae2cf0d"&gt;Xilinx Adapt 2021&lt;/a&gt;&lt;/p&gt;
+<rss version="2.0"><channel><title>j-marjanovic.io - Jan Marjanovic</title><link>www.j-marjanovic.io/</link><description></description><lastBuildDate>Sun, 31 Oct 2021 11:00:00 +0100</lastBuildDate><item><title>Stratix V accelerator card from eBay, part 8</title><link>www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-8.html</link><description>&lt;p&gt;My &lt;a href="stratix-v-accelerator-card-from-ebay-part-7.html"&gt;last blog&lt;/a&gt; post on this
+topic explored the PCI Express connections on this board. I have determined that
+the board contains a custom FPGA with two Hard IPs for PCIe, where the
+commercially-available part only contains one. At the end of the post I explored
+different options on how …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Jan Marjanovic</dc:creator><pubDate>Sun, 31 Oct 2021 11:00:00 +0100</pubDate><guid isPermaLink="false">tag:None,2021-10-31:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-8.html</guid><category>FPGA</category></item><item><title>Notes from Xilinx® Adapt 2021</title><link>www.j-marjanovic.io/notes-from-xilinxr-adapt-2021.html</link><description>&lt;p&gt;&lt;a href="https://xilinx.cventevents.com/event/f7c4412f-572a-4b8b-b8d0-6b92aae2cf0d"&gt;Xilinx Adapt 2021&lt;/a&gt;&lt;/p&gt;
 &lt;h1&gt;Day 1 (2021-09-07)&lt;/h1&gt;
 &lt;h2&gt;Adaptive Computing: Innovation Accelerated [Ivo Bolsens (Xilinx)]&lt;/h2&gt;
 &lt;ul&gt;

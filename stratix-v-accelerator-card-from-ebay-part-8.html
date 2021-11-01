@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Stratix V accelerator card from eBay, part 8</title>
+        <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="shortcut icon" href="./theme/images/favicon.ico"/>
+        <link rel="stylesheet" href="./theme/css/main.css" type="text/css" />
+        <link href="www.j-marjanovic.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="j-marjanovic.io Atom Feed" />
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie.css"/>
+                <script src="./js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie6.css"/><![endif]-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="theme/jquery.cookiesdirective.js"></script>
+
+</head>
+
+<body id="index" class="home">
+<script type="text/javascript">
+	// Using $(document).ready never hurts
+	$(document).ready(function(){
+
+		// Cookie setting script wrapper
+		var cookieScripts = function () {
+			// Internal javascript called
+			console.log("Running");
+		
+			// Loading external javascript file
+			$.cookiesDirective.loadScript({
+				uri:'external.js',
+				appendTo: 'eantics'
+			});
+		}
+	
+		/* Call cookiesDirective, overriding any default params
+		
+			*** These are the defaults ***
+				explicitConsent: true,
+				position: 'top',
+				duration: 10,
+				limit: 0,
+				message: null,				
+				cookieScripts: null,
+				privacyPolicyUri: 'privacy.html',
+				scriptWrapper: function(){},	
+				fontFamily: 'helvetica',
+				fontColor: '#FFFFFF',
+				fontSize: '13px',
+				backgroundColor: '#000000',
+				backgroundOpacity: '80',
+				linkColor: '#CA0000'
+				
+		*/
+		
+		$.cookiesDirective({
+			privacyPolicyUri: 'myprivacypolicy.html',
+			explicitConsent: false,
+			position : 'bottom',
+			scriptWrapper: cookieScripts, 
+			cookieScripts: 'Google Analytics', 
+			backgroundColor: '#52B54A',
+			linkColor: '#ffffff'
+		});
+	});
+</script>
+
+	
+  <!-- <header id="banner" class="body"> -->
+  <!--               <h1><a href="./"><img src="http://www.launchyard.com/images/logo.png" /></a></h1> -->
+  <!--       </header> --> 
+
+  <div class="LaunchyardDetail" style="align:right;">
+    <!-- <p> -->
+    <!-- <img src="./theme/images/blue-pin.png" width="100" height="100" alt="Graph icon"> -->
+    <!-- </p> -->
+    <p><a id="sitesubtitle" href="./">j-marjanovic.io</a></p>
+
+	<br>
+    <p style="float: right; margin-right: 50px;"><a id="aboutlink" href="./pages/about.html">About</a></p>
+
+    <br>
+	<p style="float: right; margin-right: 50px;"><img src="./theme/images/icons/rss.png"> <a id="aboutlink" href="./feeds/jan-marjanovic.atom.xml">Atom feed</a></p>
+    <br>
+
+  </div>
+
+<section id="content" >
+    <div class="body">
+      <article>
+        <header>
+          <h1 class="entry-title">
+            <a href="./stratix-v-accelerator-card-from-ebay-part-8.html" rel="bookmark"
+               title="Permalink to Stratix V accelerator card from eBay, part 8">Stratix V accelerator card from eBay, part 8</a></h1>
+
+        </header>
+
+        <div class="entry-content">
+<div class="post-info">
+	<ul>
+        <li class="vcard author">
+                 by&nbsp;<a class="url fn" href="./author/jan-marjanovic.html">Jan Marjanovic</a>
+        </li>
+        <li class="published" title="2021-10-31T11:00:00+01:00">
+          on&nbsp;Sun 31 October 2021
+        </li>
+
+	</ul>
+
+</div><!-- /.post-info -->          <p>My <a href="stratix-v-accelerator-card-from-ebay-part-7.html">last blog</a> post on this
+topic explored the PCI Express connections on this board. I have determined that
+the board contains a custom FPGA with two Hard IPs for PCIe, where the
+commercially-available part only contains one. At the end of the post I explored
+different options on how to access/enable the second IP, and none of my attempts
+were successful. The post concluded on an optimistic note, with an expectation
+that this obstacle will somehow be solved.</p>
+<p>Luckily, a couple of weeks after my post, while I was still contemplating how to
+approach this obstacle, <a href="https://twitter.com/gatecatte">@gatecatte</a> managed to
+figure out how to convince Quartus to let us generate a bitstream with two Hard
+IP blocks; one just needs to override
+<code>DEV_DIE_INFO::is_global_id_enabled</code> function to return <code>true</code>.
+<a href="https://twitter.com/rombik_su">@rombik_su</a> then prepared an easy-to-use patch,
+available
+<a href="https://gist.github.com/wirebond/9e75db58112bb49c6b2debad7dc13cb2">here</a>.</p>
+<p>This discovery enabled me to continue with the preparation of an example design
+for the Pikes Peak and Storey Peaks boards.</p>
+<p>In this blog post I describe the work done to get the PCIe interface (including
+a high-performance DMA) up and running and present some results of integration
+tests with two different computers.</p>
+<h1>Introduction</h1>
+<h2>Existing IPs</h2>
+<p>Quartus contains several IPs for PCI Express, where the Hard IP is wrapped with
+different interfaces. The easiest one to use would be the <em>Avalon-MM Stratix V
+Hard IP for PCI Express</em>; this IP provides an Avalon-MM Host interface to handle
+the Memory Reads and Memory Writes as well as an Avalon-MM Agent interface to
+provide a Direct Memory Access (DMA) port. Another IP already contained in
+Quartus, called <em>Modular Scatter-Gather DMA</em> can be directly connected to this
+port to transfer the data between the on-board DDR3 memory and the system
+memory.</p>
+<p>Unfortunately, for some reason, this IP does not support the operation in Gen3
+x8 mode.</p>
+<p><img alt="PCIe IP with Avalon-MM interface" src="./images/2021_fpga_card_part_8/avalon_pcie_sv_hip_avmm.png" style="width:50%; display: block; margin-left: auto; margin-right: auto;"></p>
+<h2>Development of a new IP</h2>
+<p>At this point I have decided to have some fun and develop a PCIe endpoint IP
+from scratch. The following were my requirements/guidelines:</p>
+<ul>
+<li><strong>integration with Stratix V Hard IP</strong></li>
+<li><strong>high throughput</strong>: the IP should be able to operate with a 256-bit-wide
+  interface at 250 MHz, and achieve high interface utilization</li>
+<li><strong>relatively simple</strong>: it is reasonable to sacrifice a small amount of
+  performance to keep the IP simple. For example I do not use the "Multiple
+    packets per cycle" option - this reduces the maximum throughput by roughly
+    6% (16 bytes per 256-byte packet), but makes the logic much simpler.</li>
+<li><strong>use of standardized interfaces</strong>: e.g. Avalon-MM and Avalon-ST</li>
+<li><strong>a base for custom developments</strong>: I want to reuse this IP for other
+  applications with this board, and the IP should be general enough to allow
+    different use cases</li>
+<li><strong>written in <a href="https://www.chisel-lang.org/">Chisel HDL</a></strong></li>
+</ul>
+<p>After several weekends of development I am proud to present my creation: 
+<a href="https://github.com/j-marjanovic/chisel-stuff/tree/master/example-14-pcie-endpoint">PCIe endpoint with a high-performance DMA and an Avalon-MM interface</a></p>
+<p>The IP is currently in version 0.7 - it is usable and it works, but some
+edge cases are not yet handled (one is described in this blog post) and
+some smaller improvements are also expected in the future.</p>
+<h2>Architecture</h2>
+<p>The figure below shows the main building block of the IP; several
+modules are responsible for the reception part and several modules
+responsible for the transmission part.</p>
+<p><img alt="PCIe endpoint" src="./images/2021_fpga_card_part_8/pcie_endpoint.drawio.png" style="width:50%; display: block; margin-left: auto; margin-right: auto;"> </p>
+<ul>
+<li><strong>MemoryReadWriteCompl</strong> parses the received packet and forwards it to the
+  next corresponding module</li>
+<li><strong>AvalonAgent</strong> converts MWr and MRd PCIe packets into transactions on
+  Avalon-MM interface; it is able to handle both 32-bit and 64-bit requests (by
+  performing two accesses on the 32-bit interface)</li>
+<li><strong>CompletionRecv</strong> parses the received completion packets and forwards them on
+  an Avalon-ST interface. It informs the <strong>BusManagerEngine</strong> about the received
+  completion packets so that the later can keep the track of the number of dwords in
+  flight.</li>
+<li><strong>BusManagerRegs</strong> provides a read and write access to registers (similar to
+  <strong>AvalonAgent</strong>) which are needed for the DMA engine (e.g. destination address,
+    number of bytes to transfer, ...)</li>
+<li><strong>BusManagerEngine</strong> is the main module which performs the DMA function - it
+  generates either MWr or MRd (depending on the instructions from software). When
+    the transfer is complete it informs the <strong>InterruptCtrl</strong></li>
+<li><strong>CompletionGen</strong> generates a completion packet after a MRd packets with the
+  information provided by a corresponding module</li>
+<li><strong>TxArbiter</strong> manages the access to the <code>tx_st</code> port</li>
+<li><strong>InterruptCtrl</strong> generates interrupt requests on the behalf of other
+  modules and from the external interface</li>
+</ul>
+<h2>Test suite</h2>
+<p>The project includes a non-very-extensive, but still very useful test
+suite:</p>
+<p><img alt="The result of Chisel test" src="./images/2021_fpga_card_part_8/scala_test.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"> </p>
+<p>Here it is clear that this is a hobby project, a serious IP would have more
+unit tests and also some more high-level tests.</p>
+<h2>Data generator and data checker</h2>
+<p>To validate the IP in real hardware, I have developed two auxiliary IPs:
+<a href="https://github.com/j-marjanovic/pp-sp-reference-design/tree/92452f3ea6e52a95f841efe127d4e728a6295013/ip_cores/avalon_st_generator">Avalon-ST
+Generator</a>
+and <a href="https://github.com/j-marjanovic/pp-sp-reference-design/tree/92452f3ea6e52a95f841efe127d4e728a6295013/ip_cores/avalon_st_checker">Avalon-ST
+Checker</a>.
+The first one generates a 256-bit-wide data stream composed of 16-bit counter
+values and the second one checks the received data stream against a reference
+counter and stores the results in internal registers. Both IPs also contain
+Avalon-MM interface which can be used to control the IPs. Shown in the figure
+below are the connections between all relevant IPs for the PCIe test.</p>
+<p><img alt="Block diagram of the example design" src="./images/2021_fpga_card_part_8/example_design_block_diagram.png" style="width:50%; display: block; margin-left: auto; margin-right: auto;"> </p>
+<h2>Integration with Quartus Platform Designer</h2>
+<p>Below is an screenshot of the PCIe endpoint IP connected to the <em>Stratix V
+Hard IP for PCI Express</em> in Quartus Platform Designer:</p>
+<p><img alt="PCIe endpoint in Quartus Platform Designer (aka QSys)" src="./images/2021_fpga_card_part_8/example_usage.png" style="width:50%; display: block; margin-left: auto; margin-right: auto;"> </p>
+<h1>Linux driver, test program and TUI</h1>
+<p>The FPGA design is only one half of this story, the second half is a Linux
+driver. The driver is also available on my GitHub page: 
+<a href="https://github.com/j-marjanovic/pp-sp-linux-driver">Linux driver for Unofficial Pikes Peak/Storey Peak reference design</a>.</p>
+<p>The driver is a relatively standard Linux PCIe driver, it registers its <code>probe</code>
+function with the PCIe subsystem based on <a href="https://devicehunt.com/view/type/pci/vendor/1172/device/00A7">vendor ID/device ID for Altera
+Stratix V</a> and
+subsystem vendor ID of <code>0x01a2</code> (for JAN) and devices IDs of <code>0x0001</code> for the
+first interface, <code>0x0002</code> for the second interface and <code>0x0a00</code> for custom
+applications.</p>
+<p>Once the match is found, it performs the house-keeping tasks (allocating memory,
+claiming BARs, allocating DMA buffer, enabling the device) and it finally
+creates a character device (in <code>/dev</code>) with a name derived from the PCIe
+address.</p>
+<p>The user-space programs interact with the driver in two ways. To access the
+registers on BAR0 (i.e. reads and writes) the programs can <code>mmap()</code> the char
+device and dereference a pointer to <code>uint32_t</code> or <code>uint64_t</code>. Two <code>ioctl</code>s can
+be used to exchange the DMA buffer with the user-space program, one for
+retrieving the buffer content and another for setting it. Finally, another
+<code>ioctl</code> can be used to start the DMA transfer; the user-space program should
+provide the transfer size and the direction, and the driver will perform the
+desired request. To reduce the CPU utilization, the thread is put to sleep while
+the DMA transfer is running and is waken up by an interrupt request from the DMA
+engine in the FPGA.</p>
+<h2>Test program</h2>
+<p><code>pp_sp_test</code> is a small test program that can be used to exercise the driver
+and perform DMA transfers with the DMA engine in the FPGA. The program uses
+the Avalon-ST Checker and Avalon-ST Generator IPs to verify the content of
+the transfer.</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>./pp_sp_test --help                                                               
+<span class="go">Usage: ./pp_sp_test --dev DEV [--write] [--read]</span>
+
+<span class="go">Perform DMA transfers using the DMA engine in PP/SP FPGA</span>
+
+<span class="go">options:</span>
+<span class="go">  --help      print these help and exit</span>
+<span class="go">  --dev       char device (e.g. /dev/pp_sp_pcie...)</span>
+<span class="go">  --write     card to host (DMA write) transfer</span>
+<span class="go">  --read      host to card (DMA read) transfer</span>
+<span class="go">  --nr_bytes  number of bytes to transfer (default 256)</span>
+<span class="go">  --count     count of loops to perform the reads and/or writes (default 1)</span>
+<span class="go">  --msleep    sleep (in milliseconds) during each loop (default 0)</span>
+</code></pre></div>
+
+<p>Here is an example where 8 KiB of data was transferred in both directions. First
+the data was transferred from the card to the host (<code>c2h</code>), and then from the
+host to the card (<code>h2c</code>). In the end, the result of the check (in the FPGA) is
+printed.</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>./pp_sp_test --dev /dev/pp_sp_pcie_0000:42:00.0 --write --read --nr_bytes <span class="m">8192</span>
+<span class="go">Arguments:</span>
+<span class="go">  dev = /dev/pp_sp_pcie_0000:42:00.0</span>
+<span class="go">  c2h = 1, h2c = 1</span>
+<span class="go">  nr_bytes = 8192, count = 1</span>
+<span class="go">===================================</span>
+<span class="go">[loop] i = 0</span>
+<span class="go">[gen] id reg = a51579e2</span>
+<span class="go">[gen] state = 1</span>
+<span class="go">[gen] nr samp = 64</span>
+<span class="go">[c2h] DMA duration 0.024146 ms</span>
+<span class="go">[c2h] ioctl took 0.021000 ms</span>
+<span class="go">[gen] state = 0</span>
+<span class="go">[gen] nr samp = 8192</span>
+<span class="go">[check] id reg = a5157c8c</span>
+<span class="go">[h2c] DMA duration 0.021397 ms</span>
+<span class="go">[h2c] ioctl took 0.019000 ms</span>
+<span class="go">[check] samp = 8192 / 8192</span>
+</code></pre></div>
+
+<h2>TUI</h2>
+<p>A more elaborate program to control the DMA engine and the corresponding
+example application is provided in the form of a Terminal User Interface in the
+<a href="https://github.com/j-marjanovic/pp-sp-linux-driver/tree/main/tui">tui
+directory</a>.
+With this program a user can select the size and the direction of the transfer
+for both interfaces. The interface displays the result of the <a href="https://github.com/j-marjanovic/pp-sp-linux-driver/blob/aaf043ed50befd2f23a8faf77294604050e597c6/pp_sp_pcie.c#L136-L146">throughput
+measurement in kernel
+space</a>
+and the statistics (minimum, average, and maximum value) for the last 100
+measurements.</p>
+<p>Some screenshots of TUI are shown in the next chapters.</p>
+<h1>Test setups</h1>
+<p>I have used Storey Peak board (in PCIe form-factor) with two systems to test the
+PCI express:</p>
+<ul>
+<li>FUJITSU D3642-B1 motherboard with Intel i5-9600K</li>
+<li>Dell PowerEdge R720 with two Intel E5-2680</li>
+</ul>
+<p>R720 has an x16 PCIe slot but does not support bifurcation, while the x16
+PCIe slot on the Fujitsu motherboard can be split into the x8x8 configuration with
+a BIOS setting.</p>
+<p>The system with the Fujitsu motherboard ran Ubuntu 18.04 LTS with Linux kernel
+4.15.0-161 while the R720 ran Ubuntu 20.04 LTS with Linux kernel 5.11.22 (custom
+build with CMA enabled but not used in this experiment).</p>
+<p>I have prepared three different FPGA designs: </p>
+<ul>
+<li>one with only lower 8 lanes connected and the Hard IP on the right side of the device,</li>
+<li>one with only upper 8 lanes connected and the Hard IP on the left side of the device, and</li>
+<li>one with all 16 lanes connected (in x8x8 configuration) and with both Hard IPs</li>
+</ul>
+<p>The Quartus project for the last one is available in the commit 
+<a href="https://github.com/j-marjanovic/pp-sp-reference-design/commit/3cb9c506e68fc4c4a60922f7d382fb888ff03713">3cb9c50 Change subsystem device id for the second PCIe</a></p>
+<table>
+<thead>
+<tr>
+<th align="center">only PCIE lanes 0 to 7</th>
+<th align="center">only PCIe lanes 8 to 15</th>
+<th align="center">PCIe lanes 0 to 7 and 8 to 15</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><img alt="PCIe lanes 0 - 7" src="./images/2021_fpga_card_part_8/device_right.png" style="width:90%; display: block; margin-left: auto; margin-right: auto;"></td>
+<td align="center"><img alt="PCIe lanes 8 - 15" src="./images/2021_fpga_card_part_8/device_left.png" style="width:90%; display: block; margin-left: auto; margin-right: auto;"></td>
+<td align="center"><img alt="PCIe lanes 0 - 7, 8 - 15" src="./images/2021_fpga_card_part_8/device_both.png" style="width:90%; display: block; margin-left: auto; margin-right: auto;"></td>
+</tr>
+</tbody>
+</table>
+<p>As an aside, it can be noted that the JTAG pins are located in the lower-left
+corner, and it is interesting to see how the fitter decided to place some of
+the logic halfway between the PCIe core on the right side and the JTAG pins on
+the left side.</p>
+<h1>Measurements</h1>
+<h2>Fujitsu motherboard with right side PCIe link (lanes 0 to 7)</h2>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>sudo lspci -d <span class="m">1172</span>: -vv
+<span class="go">01:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)</span>
+<span class="go">    Subsystem: Device 01a2:0001</span>
+<span class="go">[...]</span>
+<span class="go">    Region 0: Memory at a1000000 (32-bit, non-prefetchable) [size=4M]</span>
+<span class="go">    Region 2: Memory at a1400000 (32-bit, non-prefetchable) [size=256K]</span>
+<span class="go">    Capabilities: [50] MSI: Enable+ Count=1/4 Maskable- 64bit+</span>
+<span class="go">        Address: 00000000fee003f8  Data: 0000</span>
+<span class="go">[...]</span>
+<span class="go">        LnkCap: Port #1, Speed 8GT/s, Width x8, ASPM not supported, Exit Latency L0s &lt;4us, L1 &lt;1us</span>
+<span class="go">            ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp+</span>
+<span class="go">        LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk+</span>
+<span class="go">            ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-</span>
+<span class="go">        LnkSta: Speed 8GT/s, Width x8, TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-</span>
+<span class="go">[...]</span>
+<span class="go">    Kernel driver in use: pp_sp_pcie</span>
+<span class="go">[...]</span>
+</code></pre></div>
+
+<p><img alt="DMA write on Fujitsu MB, right interface" src="./images/2021_fpga_card_part_8/fujitsu_right_x8_write.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"></p>
+<p><img alt="DMA read on Fujitsu MB, right interface" src="./images/2021_fpga_card_part_8/fujitsu_right_x8_read.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"></p>
+<p>Here we see something interesting - the Avalon-ST Checker reports that some
+of the samples do not match the reference values. I investigate this issue
+in the following chapter.</p>
+<h2>Fujitsu motherboard with left side PCIe link (lanes 8 to 15)</h2>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>sudo lspci -d <span class="m">1172</span>: -vv
+<span class="go">02:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)</span>
+<span class="go">    Subsystem: Device 01a2:0001</span>
+<span class="go">[...]</span>
+<span class="go">    Region 0: Memory at a1000000 (32-bit, non-prefetchable) [size=4M]</span>
+<span class="go">    Region 2: Memory at a1400000 (32-bit, non-prefetchable) [size=256K]</span>
+<span class="go">    Capabilities: [50] MSI: Enable+ Count=1/4 Maskable- 64bit+</span>
+<span class="go">        Address: 00000000fee00438  Data: 0000</span>
+<span class="go">[...]</span>
+<span class="go">        LnkCap: Port #2, Speed 8GT/s, Width x8, ASPM not supported, Exit Latency L0s &lt;4us, L1 &lt;1us</span>
+<span class="go">            ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp+</span>
+<span class="go">        LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk+</span>
+<span class="go">            ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-</span>
+<span class="go">        LnkSta: Speed 8GT/s, Width x8, TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-</span>
+<span class="go">[...]</span>
+<span class="go">    Kernel driver in use: pp_sp_pcie</span>
+<span class="go">[...]</span>
+</code></pre></div>
+
+<p><img alt="DMA write on Fujitsu MB, left interface" src="./images/2021_fpga_card_part_8/fujitsu_left_x8_write.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"></p>
+<p><img alt="DMA read on Fujitsu MB, left interface" src="./images/2021_fpga_card_part_8/fujitsu_left_x8_read.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"></p>
+<p>Similarly, also here the the Avalon-ST Checker reports corrupted samples.</p>
+<h2>Fujitsu motherboard with both PCIe links (lanes 0 to 7 and 8 to 15)</h2>
+<div class="highlight"><pre><span></span><code>pp_sp_example &gt; pcie status
+pcie 0:
+  id = 2c1e57a7
+  version = 10000
+  status.cur speed   = 3
+  status.LTTSM state = f
+  status.lane act    = 8
+  status.DL up       = 1
+pcie 1:
+  id = 2c1e57a7
+  version = 10000
+  status.cur speed   = 3
+  status.LTTSM state = f
+  status.lane act    = 8
+  status.DL up       = 1
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>sudo lspci -d <span class="m">1172</span>: -vv <span class="p">|</span> egrep <span class="s1">&#39;Altera|LnkSta|Subsystem&#39;</span>
+<span class="go">01:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)</span>
+<span class="go">    Subsystem: Device 01a2:0001</span>
+<span class="go">        LnkSta: Speed 8GT/s, Width x8, TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-</span>
+<span class="go">        LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationComplete+, EqualizationPhase1+</span>
+<span class="go">02:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)</span>
+<span class="go">    Subsystem: Device 01a2:0001</span>
+<span class="go">        LnkSta: Speed 8GT/s, Width x8, TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-</span>
+<span class="go">        LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationComplete+, EqualizationPhase1+</span>
+</code></pre></div>
+
+<p><img alt="DMA write on Fujitsu MB, both interfaces" src="./images/2021_fpga_card_part_8/fujitsu_both_x8_write.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"></p>
+<p><img alt="DMA read on Fujitsu MB, both interfaces" src="./images/2021_fpga_card_part_8/fujitsu_both_x8_read.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"></p>
+<p>And not surprisingly, when using both interfaces to read the Avalon-ST Checker
+reports some corrupted samples as well.</p>
+<h2>Dell PowerEdge R720</h2>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>sudo lspci -d <span class="m">1172</span>: -vv <span class="p">|</span> egrep <span class="s1">&#39;Altera|LnkSta|Subsys&#39;</span>
+<span class="go">42:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)</span>
+<span class="go">    Subsystem: Device 01a2:0001</span>
+<span class="go">        LnkSta: Speed 8GT/s (ok), Width x8 (ok)</span>
+<span class="go">        LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete+, EqualizationPhase1+</span>
+</code></pre></div>
+
+<p><img alt="DMA write on R720" src="./images/2021_fpga_card_part_8/r720_x8_write.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"></p>
+<p><img alt="DMA read on R720" src="./images/2021_fpga_card_part_8/r720_x8_read.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"></p>
+<h1>Issues</h1>
+<h2>Handling of out-of-order CplD packets</h2>
+<p>As we have seen above, when running in combination with Intel i5-9600K there is
+a small percentage of the samples that Avalon-ST Checker reports as corrupted.</p>
+<p>To observe what is going on, I have placed a SignalTap on the important signals
+of the Avalon-ST Checker, and let it trigger on invalid packets.</p>
+<p><img alt="SignalTap capture" src="./images/2021_fpga_card_part_8/issue_signaltap.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"></p>
+<p>We can note that for a couple of cycles the <code>data_valid_p</code> signal is high, but
+<code>data_ok_p</code> is low, indicating that the received data does not match the
+reference data. After a couple of clock cycles the data stream seems to recover.</p>
+<p>If we store the data from this SignalTap capture into a <code>.csv</code> file and
+highlight the important fields in the header (blue is <em>Length</em>, magenta is
+<em>Tag</em>, black is the payload data), we can observe that two of the packets are
+returned out of order. We can observe that first a packet with the tag <code>0xb</code> is
+returned (in the sample at time -11), but only the first 0x30 dwords - there are
+still 0x10 dwords outstanding to fulfill the 0x40 dwords (256 bytes) long
+request. Instead of continuing with the remaining part of the packet with the
+tag <code>0xb</code>, the next packet contains the tag <code>0xc</code> (in the sample at time -4).
+Only after this packet, the transaction with the tag <code>0xb</code> is completed (in the
+sample at time -1).</p>
+<p><img alt="Out-of-order CplD packets" src="./images/2021_fpga_card_part_8/out_of_order_cpld.png" style="width:60%; display: block; margin-left: auto; margin-right: auto;"></p>
+<p>PCI Express devices are allowed to return completion packets out-of-order:</p>
+<blockquote>
+<p>Completions with different Transaction IDs are permitted to pass each other.</p>
+</blockquote>
+<p>My PCIe endpoint IP currently does not support out-of-order CplD packets, but
+adding support for this case should be relatively straightforward: the
+receiving side needs to keep track of the number of dwords remaining per each
+tag, and queue the packets when the current tag is not yet complete.</p>
+<h1>Summary</h1>
+<p>In this blog post I have summarized my current experience with PCIe on Storey
+Peak board. With a small hack one is able to use both PCIe Hard IPs available
+in this device and use the PCIe interface in the full Gen3 x8x8 mode. </p>
+<p>I have developed a PCIe endpoint IP that connects to the PCIe Hard IP and
+provides register access and DMA capabilities. The DMA is able to achieve 6.5
+GB/s in both read and write direction on one interface. With both interfaces
+active it achieves 11 GB/s in write direction and 12 GB/s in read direction.
+I would consider this to be a good result.</p>
+<p>We can now declare the PCIe part "solved", and this concludes the last major
+effort in reverse engineering of this board. The last remaining part is
+providing an example for the use of QSFP connectors, and some general clean-up
+of the <a href="https://github.com/j-marjanovic/pp-sp-reference-design/">reference
+design</a>.</p>
+<hr>
+<h1>Appendix</h1>
+<h2>lspci on Fujitsu motherboard</h2>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>sudo lspci -d <span class="m">1172</span>: -vv
+<span class="go">01:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)</span>
+<span class="go">    Subsystem: Device 01a2:0001</span>
+<span class="go">    Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+</span>
+<span class="go">    Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast &gt;TAbort- &lt;TAbort- &lt;MAbort- &gt;SERR- &lt;PERR- INTx-</span>
+<span class="go">    Latency: 0, Cache Line Size: 64 bytes</span>
+<span class="go">    Interrupt: pin A routed to IRQ 136</span>
+<span class="go">    Region 0: Memory at a1000000 (32-bit, non-prefetchable) [size=4M]</span>
+<span class="go">    Region 2: Memory at a1400000 (32-bit, non-prefetchable) [size=256K]</span>
+<span class="go">    Capabilities: [50] MSI: Enable+ Count=1/4 Maskable- 64bit+</span>
+<span class="go">        Address: 00000000fee003f8  Data: 0000</span>
+<span class="go">    Capabilities: [78] Power Management version 3</span>
+<span class="go">        Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)</span>
+<span class="go">        Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-</span>
+<span class="go">    Capabilities: [80] Express (v2) Endpoint, MSI 00</span>
+<span class="go">        DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s &lt;64ns, L1 &lt;1us</span>
+<span class="go">            ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset- SlotPowerLimit 75.000W</span>
+<span class="go">        DevCtl: Report errors: Correctable- Non-Fatal- Fatal- Unsupported-</span>
+<span class="go">            RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+</span>
+<span class="go">            MaxPayload 256 bytes, MaxReadReq 512 bytes</span>
+<span class="go">        DevSta: CorrErr- UncorrErr- FatalErr- UnsuppReq- AuxPwr- TransPend-</span>
+<span class="go">        LnkCap: Port #1, Speed 8GT/s, Width x8, ASPM not supported, Exit Latency L0s &lt;4us, L1 &lt;1us</span>
+<span class="go">            ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp+</span>
+<span class="go">        LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk+</span>
+<span class="go">            ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-</span>
+<span class="go">        LnkSta: Speed 8GT/s, Width x8, TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-</span>
+<span class="go">        DevCap2: Completion Timeout: Range ABCD, TimeoutDis+, LTR-, OBFF Not Supported</span>
+<span class="go">        DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR-, OBFF Disabled</span>
+<span class="go">        LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-</span>
+<span class="go">             Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-</span>
+<span class="go">             Compliance De-emphasis: -6dB</span>
+<span class="go">        LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationComplete+, EqualizationPhase1+</span>
+<span class="go">             EqualizationPhase2-, EqualizationPhase3-, LinkEqualizationRequest-</span>
+<span class="go">    Capabilities: [100 v1] Virtual Channel</span>
+<span class="go">        Caps:   LPEVC=0 RefClk=100ns PATEntryBits=1</span>
+<span class="go">        Arb:    Fixed- WRR32- WRR64- WRR128-</span>
+<span class="go">        Ctrl:   ArbSelect=Fixed</span>
+<span class="go">        Status: InProgress-</span>
+<span class="go">        VC0:    Caps:   PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-</span>
+<span class="go">            Arb:    Fixed- WRR32- WRR64- WRR128- TWRR128- WRR256-</span>
+<span class="go">            Ctrl:   Enable+ ID=0 ArbSelect=Fixed TC/VC=ff</span>
+<span class="go">            Status: NegoPending- InProgress-</span>
+<span class="go">    Capabilities: [200 v1] Vendor Specific Information: ID=1172 Rev=0 Len=044 &lt;?&gt;</span>
+<span class="go">    Capabilities: [300 v1] #19</span>
+<span class="go">    Capabilities: [800 v1] Advanced Error Reporting</span>
+<span class="go">        UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-</span>
+<span class="go">        UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-</span>
+<span class="go">        UESvrt: DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-</span>
+<span class="go">        CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- NonFatalErr-</span>
+<span class="go">        CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- NonFatalErr+</span>
+<span class="go">        AERCap: First Error Pointer: 00, GenCap+ CGenEn- ChkCap+ ChkEn-</span>
+<span class="go">    Kernel driver in use: pp_sp_pcie</span>
+<span class="go">    Kernel modules: altera_cvp</span>
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>sudo lspci -d <span class="m">1172</span>: -vv
+<span class="go">02:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)</span>
+<span class="go">    Subsystem: Device 01a2:0001</span>
+<span class="go">    Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+</span>
+<span class="go">    Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast &gt;TAbort- &lt;TAbort- &lt;MAbort- &gt;SERR- &lt;PERR- INTx-</span>
+<span class="go">    Latency: 0, Cache Line Size: 64 bytes</span>
+<span class="go">    Interrupt: pin A routed to IRQ 137</span>
+<span class="go">    Region 0: Memory at a1000000 (32-bit, non-prefetchable) [size=4M]</span>
+<span class="go">    Region 2: Memory at a1400000 (32-bit, non-prefetchable) [size=256K]</span>
+<span class="go">    Capabilities: [50] MSI: Enable+ Count=1/4 Maskable- 64bit+</span>
+<span class="go">        Address: 00000000fee00438  Data: 0000</span>
+<span class="go">    Capabilities: [78] Power Management version 3</span>
+<span class="go">        Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)</span>
+<span class="go">        Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-</span>
+<span class="go">    Capabilities: [80] Express (v2) Endpoint, MSI 00</span>
+<span class="go">        DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s &lt;64ns, L1 &lt;1us</span>
+<span class="go">            ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset- SlotPowerLimit 75.000W</span>
+<span class="go">        DevCtl: Report errors: Correctable- Non-Fatal- Fatal- Unsupported-</span>
+<span class="go">            RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+</span>
+<span class="go">            MaxPayload 256 bytes, MaxReadReq 512 bytes</span>
+<span class="go">        DevSta: CorrErr+ UncorrErr- FatalErr- UnsuppReq- AuxPwr- TransPend-</span>
+<span class="go">        LnkCap: Port #2, Speed 8GT/s, Width x8, ASPM not supported, Exit Latency L0s &lt;4us, L1 &lt;1us</span>
+<span class="go">            ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp+</span>
+<span class="go">        LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk+</span>
+<span class="go">            ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-</span>
+<span class="go">        LnkSta: Speed 8GT/s, Width x8, TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-</span>
+<span class="go">        DevCap2: Completion Timeout: Range ABCD, TimeoutDis+, LTR-, OBFF Not Supported</span>
+<span class="go">        DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR-, OBFF Disabled</span>
+<span class="go">        LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-</span>
+<span class="go">             Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-</span>
+<span class="go">             Compliance De-emphasis: -6dB</span>
+<span class="go">        LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationComplete+, EqualizationPhase1+</span>
+<span class="go">             EqualizationPhase2+, EqualizationPhase3+, LinkEqualizationRequest-</span>
+<span class="go">    Capabilities: [100 v1] Virtual Channel</span>
+<span class="go">        Caps:   LPEVC=0 RefClk=100ns PATEntryBits=1</span>
+<span class="go">        Arb:    Fixed- WRR32- WRR64- WRR128-</span>
+<span class="go">        Ctrl:   ArbSelect=Fixed</span>
+<span class="go">        Status: InProgress-</span>
+<span class="go">        VC0:    Caps:   PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-</span>
+<span class="go">            Arb:    Fixed- WRR32- WRR64- WRR128- TWRR128- WRR256-</span>
+<span class="go">            Ctrl:   Enable+ ID=0 ArbSelect=Fixed TC/VC=ff</span>
+<span class="go">            Status: NegoPending- InProgress-</span>
+<span class="go">    Capabilities: [200 v1] Vendor Specific Information: ID=1172 Rev=0 Len=044 &lt;?&gt;</span>
+<span class="go">    Capabilities: [300 v1] #19</span>
+<span class="go">    Capabilities: [800 v1] Advanced Error Reporting</span>
+<span class="go">        UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-</span>
+<span class="go">        UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-</span>
+<span class="go">        UESvrt: DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-</span>
+<span class="go">        CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- NonFatalErr-</span>
+<span class="go">        CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- NonFatalErr+</span>
+<span class="go">        AERCap: First Error Pointer: 00, GenCap+ CGenEn- ChkCap+ ChkEn-</span>
+<span class="go">    Kernel driver in use: pp_sp_pcie</span>
+<span class="go">    Kernel modules: altera_cvp</span>
+</code></pre></div>
+
+<h2>lspci on Dell R720</h2>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>sudo lspci -d <span class="m">1172</span>: -vv
+<span class="go">42:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)</span>
+<span class="go">    Subsystem: Device 01a2:0001</span>
+<span class="go">    Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+</span>
+<span class="go">    Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast &gt;TAbort- &lt;TAbort- &lt;MAbort- &gt;SERR- &lt;PERR- INTx-</span>
+<span class="go">    Latency: 0, Cache Line Size: 64 bytes</span>
+<span class="go">    Interrupt: pin A routed to IRQ 167</span>
+<span class="go">    NUMA node: 1</span>
+<span class="go">    Region 0: Memory at d5000000 (32-bit, non-prefetchable) [size=4M]</span>
+<span class="go">    Region 2: Memory at d57c0000 (32-bit, non-prefetchable) [size=256K]</span>
+<span class="go">    Capabilities: [50] MSI: Enable+ Count=1/4 Maskable- 64bit+</span>
+<span class="go">        Address: 00000000fee00918  Data: 0000</span>
+<span class="go">    Capabilities: [78] Power Management version 3</span>
+<span class="go">        Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)</span>
+<span class="go">        Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-</span>
+<span class="go">    Capabilities: [80] Express (v2) Endpoint, MSI 00</span>
+<span class="go">        DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s &lt;64ns, L1 &lt;1us</span>
+<span class="go">            ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset- SlotPowerLimit 25.000W</span>
+<span class="go">        DevCtl: CorrErr- NonFatalErr+ FatalErr+ UnsupReq+</span>
+<span class="go">            RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+</span>
+<span class="go">            MaxPayload 256 bytes, MaxReadReq 512 bytes</span>
+<span class="go">        DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-</span>
+<span class="go">        LnkCap: Port #1, Speed 8GT/s, Width x8, ASPM not supported</span>
+<span class="go">            ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp+</span>
+<span class="go">        LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk+</span>
+<span class="go">            ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-</span>
+<span class="go">        LnkSta: Speed 8GT/s (ok), Width x8 (ok)</span>
+<span class="go">            TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-</span>
+<span class="go">        DevCap2: Completion Timeout: Range ABCD, TimeoutDis+, NROPrPrP-, LTR-</span>
+<span class="go">             10BitTagComp-, 10BitTagReq-, OBFF Not Supported, ExtFmt-, EETLPPrefix-</span>
+<span class="go">             EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-</span>
+<span class="go">             FRS-, TPHComp-, ExtTPHComp-</span>
+<span class="go">             AtomicOpsCap: 32bit- 64bit- 128bitCAS-</span>
+<span class="go">        DevCtl2: Completion Timeout: 65ms to 210ms, TimeoutDis-, LTR-, OBFF Disabled</span>
+<span class="go">             AtomicOpsCtl: ReqEn-</span>
+<span class="go">        LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-</span>
+<span class="go">             Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-</span>
+<span class="go">             Compliance De-emphasis: -6dB</span>
+<span class="go">        LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete+, EqualizationPhase1+</span>
+<span class="go">             EqualizationPhase2+, EqualizationPhase3+, LinkEqualizationRequest-</span>
+<span class="go">    Capabilities: [100 v1] Virtual Channel</span>
+<span class="go">        Caps:   LPEVC=0 RefClk=100ns PATEntryBits=1</span>
+<span class="go">        Arb:    Fixed- WRR32- WRR64- WRR128-</span>
+<span class="go">        Ctrl:   ArbSelect=Fixed</span>
+<span class="go">        Status: InProgress-</span>
+<span class="go">        VC0:    Caps:   PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-</span>
+<span class="go">            Arb:    Fixed- WRR32- WRR64- WRR128- TWRR128- WRR256-</span>
+<span class="go">            Ctrl:   Enable+ ID=0 ArbSelect=Fixed TC/VC=ff</span>
+<span class="go">            Status: NegoPending- InProgress-</span>
+<span class="go">    Capabilities: [200 v1] Vendor Specific Information: ID=1172 Rev=0 Len=044 &lt;?&gt;</span>
+<span class="go">    Capabilities: [300 v1] Secondary PCI Express</span>
+<span class="go">        LnkCtl3: LnkEquIntrruptEn-, PerformEqu-</span>
+<span class="go">        LaneErrStat: 0</span>
+<span class="go">    Capabilities: [800 v1] Advanced Error Reporting</span>
+<span class="go">        UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-</span>
+<span class="go">        UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt+ UnxCmplt+ RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-</span>
+<span class="go">        UESvrt: DLP+ SDES+ TLP+ FCP+ CmpltTO+ CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC+ UnsupReq- ACSViol-</span>
+<span class="go">        CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-</span>
+<span class="go">        CEMsk:  RxErr+ BadTLP+ BadDLLP+ Rollover+ Timeout+ AdvNonFatalErr+</span>
+<span class="go">        AERCap: First Error Pointer: 00, ECRCGenCap+ ECRCGenEn- ECRCChkCap+ ECRCChkEn-</span>
+<span class="go">            MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-</span>
+<span class="go">        HeaderLog: 00000000 00000000 00000000 00000000</span>
+<span class="go">    Kernel driver in use: pp_sp_pcie</span>
+<span class="go">    Kernel modules: altera_cvp</span>
+</code></pre></div>
+
+<hr>
+<div style="font-size: 80%;" >
+Intel, the Intel logo, Altera, Nios, Quartus and Stratix words and logos are
+trademarks of Intel  Corporation  or  its subsidiaries  in  the  U.S.  and/or
+other  countries.
+</div>
+
+<div style="font-size: 80%;" >
+PCI Express® and PCIe® are registered trademarks of PCI-SIG.
+</div>
+
+<div style="font-size: 80%;" >
+Linux® is the registered trademark of Linus Torvalds in the U.S. and other countries.
+</div>
+
+<div style="font-size: 80%;" >
+All trademarks and registered trademarks are the property of their respective owners.
+</div><script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+        </div><!-- /.entry-content -->
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="janmarjanovic">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script><br/><br/>
+
+      </article>
+    </div>
+</section>
+        <section id="extras" >
+        
+        </section><!-- /#extras -->
+	
+        <footer id="contentinfo" >
+                <address id="about" class="vcard ">
+                Proudly powered by <a href="https://getpelican.com/" target="_blank">Pelican</a>, which takes
+                great advantage of <a href="https://python.org" target="_blank">Python</a>.
+		
+                </address><!-- /#about -->
+		
+
+                
+        </footer><!-- /#contentinfo -->
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-56555055-1', 'auto');
+  ga('send', 'pageview');
+
+</script></body>
+</html>
