@@ -1,7 +1,6 @@
 Title: Books read: 97 Things Every Programmer Should Know
 Date: 2016-06-05 22:00
-Category: Books read
-Tags: Software Engineering
+Tags: Books, Software Engineering
 
 
 I have seen this book referenced on several occasions when the software

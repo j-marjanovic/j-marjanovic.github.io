@@ -1,7 +1,7 @@
 Title: Books read: E. Stavinov: 100 Power Tips for FPGA Designers
 Date: 2016-10-18 23:00
 Category: Projects
-Tags: FPGA, Xilinx
+Tags: FPGA, Xilinx, Books
 
 
 I recently found a great book explaining in details FPGA workflow for Xilinx

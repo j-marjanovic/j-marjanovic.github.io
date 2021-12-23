@@ -1,6 +1,6 @@
 Title: Books read: Synchrotron Radiation Sources
 Date: 2019-11-02 12:30
-Category: Books read
+Tags: Books
 
 Here are my notes on the book "Synchrotron Radiation Sources: A Primer", edited
 by H. Winick. Although a little bit dated (the book is from 1995) it gives a
