@@ -1,5 +1,457 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io - misc</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/misc.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2021-09-07T21:00:00+02:00</updated><entry><title>Notes from Xilinx® Adapt 2021</title><link href="www.j-marjanovic.io/notes-from-xilinxr-adapt-2021.html" rel="alternate"></link><published>2021-09-07T21:00:00+02:00</published><updated>2021-09-07T21:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2021-09-07:www.j-marjanovic.io/notes-from-xilinxr-adapt-2021.html</id><summary type="html">&lt;p&gt;&lt;a href="https://xilinx.cventevents.com/event/f7c4412f-572a-4b8b-b8d0-6b92aae2cf0d"&gt;Xilinx Adapt 2021&lt;/a&gt;&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io - misc</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/misc.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2021-12-23T16:00:00+01:00</updated><entry><title>Notes on "A Primer on Memory Consistency and Cache Coherence"</title><link href="www.j-marjanovic.io/notes-on-a-primer-on-memory-consistency-and-cache-coherence.html" rel="alternate"></link><published>2021-12-23T16:00:00+01:00</published><updated>2021-12-23T16:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2021-12-23:www.j-marjanovic.io/notes-on-a-primer-on-memory-consistency-and-cache-coherence.html</id><summary type="html">&lt;p&gt;&lt;a href="https://www.morganclaypool.com/doi/abs/10.2200/S00962ED2V01Y201910CAC049"&gt;A Primer on Memory Consistency and Cache Coherence, Second Edition&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Authors:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Vijay Nagarajan, University of Edinburgh&lt;/li&gt;
+&lt;li&gt;Daniel J. Sorin, Duke University&lt;/li&gt;
+&lt;li&gt;Mark D. Hill, University of Wisconsin, Madison&lt;/li&gt;
+&lt;li&gt;David A. Wood, University of Wisconsin, Madison&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;"This primer is intended for readers who have encountered memory consistency
+and cache coherence informally …&lt;/p&gt;&lt;/blockquote&gt;</summary><content type="html">&lt;p&gt;&lt;a href="https://www.morganclaypool.com/doi/abs/10.2200/S00962ED2V01Y201910CAC049"&gt;A Primer on Memory Consistency and Cache Coherence, Second Edition&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Authors:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Vijay Nagarajan, University of Edinburgh&lt;/li&gt;
+&lt;li&gt;Daniel J. Sorin, Duke University&lt;/li&gt;
+&lt;li&gt;Mark D. Hill, University of Wisconsin, Madison&lt;/li&gt;
+&lt;li&gt;David A. Wood, University of Wisconsin, Madison&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;"This primer is intended for readers who have encountered memory consistency
+and cache coherence informally, but now want to understand what they entail
+in more detail."&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;[this book talks to me]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 1&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;memory consistency&lt;/em&gt; - effects of stores and loads on the memory, correct behavior&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;cache coherence&lt;/em&gt; - HW implementation to ensure correct behavior when caches are involved&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;memory (consistency) model&lt;/em&gt; - the specification about allowed behavior of MT programs&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;snooping&lt;/em&gt; - cache controller performs a broadcast&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 2&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;memory-side cache&lt;/em&gt; (last-level cache) - not a concern in regards to coherence, just reduces the latency&lt;/li&gt;
+&lt;li&gt;"Informally, a coherence protocol must ensure that writes are made visible to all processors."&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;consistency-agnostic&lt;/em&gt; coherence (atomic writes) vs &lt;em&gt;consistency-directed&lt;/em&gt; coherence ([posted] writes, ordering rules)&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;single-writer-multiple-reader (SWMR) invariant&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;data-value invariant&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;other definitions of invariants&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 3&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;reordering, write buffer&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;MC (memory consistency) model&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;core pipeline can have an impact on the consistency&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Sequential consistency&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://lamport.azurewebsites.net/pubs/lamport-how-to-make.pdf"&gt;L. Lamport: How to Make a Correct Multiprocess Program Execute Correctly on a Multiprocessor&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;program order&lt;/em&gt;, &lt;em&gt;memory order&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;op1 &amp;lt;m op2&lt;/code&gt;, &lt;code&gt;op1 &amp;lt;p op2&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;for SC&lt;/strong&gt;: &lt;code&gt;op1 &amp;lt;p op2 ==&amp;gt; op1 &amp;lt;m op2&lt;/code&gt; (&lt;code&gt;==&amp;gt;&lt;/code&gt; = implies)&lt;/li&gt;
+&lt;li&gt;requirement: LL, LS, SS, SL dependencies, loads get the value of the last store, atomic RWM&lt;/li&gt;
+&lt;li&gt;naive implementation: &lt;strong&gt;the switch&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;speculative loads are just discarded, speculative stores only present the address and not the data --&amp;gt;
+  cache can check if (or inform) other caches have the datum&lt;/li&gt;
+&lt;li&gt;multi-threading: other threads must have independent write buffer (so to behave like other processors);
+  normal write buffers (with queue) are anyway not possible in SC&lt;/li&gt;
+&lt;li&gt;[ &lt;a href="https://www.youtube.com/watch?v=EYmEaF4qJ9I"&gt;Mod-01 Lec-32 Case study: MIPS R10000&lt;/a&gt; ]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 4&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;total store order (TSO)&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;"[TSO] model astonishes some people..."&lt;/li&gt;
+&lt;li&gt;TSO behaves equally for programs that: 1. store data first, 2. then store &lt;code&gt;done&lt;/code&gt; flag&lt;/li&gt;
+&lt;li&gt;write buffer, FIFO&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;FENCE&lt;/code&gt; instr&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 5&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;relaxed (weak) memory consistency&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;most application do not require strong consistency&lt;/li&gt;
+&lt;li&gt;accesses can be re-ordered, &lt;em&gt;Coalescing Write Buffer&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Example Relaxed Consistency Model (XC)&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;FENCE&lt;/code&gt; instruction&lt;/li&gt;
+&lt;li&gt;TSO for accessing the same address (LL, LS, SS)&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;data race&lt;/em&gt; - two or more programs accessing the same memory, at least one access is a write&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Release Consistency&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;ACQUIRE&lt;/code&gt;, &lt;code&gt;RELEASE&lt;/code&gt; instead of &lt;code&gt;FENCE&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;RVWMO&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;dependency-induced ordering&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;same address ordering&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Atomic Memory Operation (AMO)&lt;/em&gt; and &lt;em&gt;Load Reserve/Store Conditional&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;IBM POWER&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;"On a first pass of this primer, readers may wish to skim or skip this
+section; this memory model is significantly more complicated than the models
+presented thus far in this primer."&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;ARMv7, ARMv8&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;ARMv7 similar to POWER&lt;/li&gt;
+&lt;li&gt;ARMv8 provides a total memory order, has &lt;code&gt;ACQUIRE&lt;/code&gt; and &lt;code&gt;RELEASE&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;High-level Language Models&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;SC for DRF&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 6&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;two invariants: SWMR, data-value&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;coherence controller&lt;/em&gt;: a FSM, one per each cache (&lt;em&gt;cache controller&lt;/em&gt;) or memory (&lt;em&gt;memory controller&lt;/em&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;coherence protocol&lt;/em&gt;: communication between FSM&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;"Other agents, such as I/O devices, may behave like cache controllers, memory
+controllers, or both depending upon their specific requirements."&lt;/p&gt;
+&lt;h2&gt;States&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;four characteristics:&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;validity&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;dirtiness&lt;/li&gt;
+&lt;li&gt;exclusivity&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;ownership&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;stable states:&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;M&lt;/strong&gt;odified: valid and potentially dirty&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;O&lt;/strong&gt;wned: valid and owned, possibly stale, read-only&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;E&lt;/strong&gt;xclusive: no other cache has a copy, read-only&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;S&lt;/strong&gt;hared: valid but not exclusive and not dirty, read-only&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;I&lt;/strong&gt;nvalid: not present in the cache or stale&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;transient states:
+  &lt;div class="math"&gt;$$ XY^Z $$&lt;/div&gt;
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;snooping&lt;/em&gt; vs &lt;em&gt;directory&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;invalidate&lt;/em&gt; vs &lt;em&gt;update&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 7&lt;/h1&gt;
+&lt;p&gt;"all coherence controllers observe (snoop) coherence requests in the same order
+and collectively "do the right thing" to maintain coherence."&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;transactions need to be ordered&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;serialization (ordering) point&lt;/em&gt;, e.g. bus arbitration&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;baseline: MSI&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;atomic requests and atomic transactions&lt;/li&gt;
+&lt;li&gt;processor loads go from Invalid to Shared&lt;/li&gt;
+&lt;li&gt;processor stores go from Invalid to Modified&lt;/li&gt;
+&lt;li&gt;both loads and stores wait for the data before transitioning to the steady state&lt;/li&gt;
+&lt;li&gt;if Modified, GetS and GetM from other cores transition to Shared and Invalid, respectively&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Non-atomic requests, atomic transactions&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;queue or buffer between the cache controller and the bus (or interconnect)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Exclusive state&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;handles case when the block is first read and then written -&amp;gt; no need to inform other cores&lt;/li&gt;
+&lt;li&gt;GetS brings the block state to S or E (depends on states of other controllers)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Owned state&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;when a block is in state M or E and receives GetS&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Non-atomic bus&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;in-order&lt;/em&gt; vs &lt;em&gt;out-of-order&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;FIFO queues between the controller and request and response bus&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Interconnect network&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;tree topology&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Timestamp Snooping&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 8&lt;/h1&gt;
+&lt;p&gt;"Directory protocols were originally developed to address the lack of
+scalability of snooping protocols."&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;directory&lt;/em&gt; with a global view&lt;/li&gt;
+&lt;li&gt;transactions typically involve 2 or 3 steps:&lt;/li&gt;
+&lt;li&gt;a request by the controller and a reply by the directory&lt;/li&gt;
+&lt;li&gt;a request by the controller, requests to other controllers and replies from other controllers&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;4th step is also possible&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;directory&lt;/em&gt; as the serialization point&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;for some requests (e.g. GetM) all caches with a block in state S must ACK&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;MSI&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;an entry (per each block) consists of the state bits, owner id (if in state M)
+  and sharer list (bit vector, if in state S)&lt;/li&gt;
+&lt;li&gt;I or S to M: directory returns to the requestor the number of controllers which must ACK&lt;/li&gt;
+&lt;li&gt;PutM: contains data (from the controller to the directory)&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;virtual networks&lt;/em&gt; (message class) to avoid deadlocks (requests blocking responses)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Exclusive state&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;GetS and not shared by other controllers --&amp;gt; E&lt;/li&gt;
+&lt;li&gt;a core can silently (no coherence request required) upgrade E to M&lt;/li&gt;
+&lt;li&gt;E block: owned vs not-owned&lt;/li&gt;
+&lt;li&gt;PutE (directory from E to I)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Owned state&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;[how did it got dirty if it is read-only?]&lt;/li&gt;
+&lt;li&gt;Owned is basically a frozen Modified state&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Directory state&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;full representation only for smaller number of cores&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;coarse directory&lt;/em&gt;: more controllers are "grouped" in a same bit&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;limited pointer directory&lt;/em&gt;: broadcast after I sharers, invalidate one of the sharers, trap to a SW handler&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Directory organization&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;one entry per each block of the memory&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;directory cache&lt;/em&gt;: accesses have (usually) good locality, smaller datums ([ROMANES EUNT DOMUS])--&amp;gt; even small caches have a high hit rate&lt;/li&gt;
+&lt;li&gt;backed by DRAM&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;inclusive&lt;/em&gt;: only for blocks cached, a miss indicates the I state&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Null Directory Cache&lt;/em&gt;: [this sounds more like a snooping protocol]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Optimizations&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;"The typical, general solution to the problem of a centralized bottleneck is
+ to distribute the resource."&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;distributed directories&lt;/li&gt;
+&lt;li&gt;non-stalling directory protocols&lt;/li&gt;
+&lt;li&gt;eviction of blocks in S state&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 9&lt;/h1&gt;
+&lt;h2&gt;Instruction caches&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;"[...] truly self-modifying code is rare,"&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;core writes to D&lt;span class="math"&gt;\(, I\)&lt;/span&gt; only observers writes&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;icbi&lt;/code&gt; (instruction cache block invalidate) instruction on POWER&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Virtual caches&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;advantage: no need for address translation (on the critical path)&lt;/li&gt;
+&lt;li&gt;require reverse address translation&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;synonyms&lt;/em&gt;: same virtual address mapped to multiple physical addresses&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Write-true caches&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;two-state protocol (VI)&lt;/li&gt;
+&lt;li&gt;simpler evictions&lt;/li&gt;
+&lt;li&gt;some issues with multi-threading&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Coherent DMA&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;"DMA controllers have very different locality patterns than conventional cores"
+- GetMs are wasteful, the entire block is typically overwritten --&amp;gt; special requests&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;Multi-level caches&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;inclusive cache&lt;/em&gt;: e.g. L2 contains a superset of L1&lt;/li&gt;
+&lt;li&gt;multiple multi-processors: LLC as a &lt;em&gt;memory-side&lt;/em&gt; or &lt;em&gt;core-side&lt;/em&gt; cache&lt;/li&gt;
+&lt;li&gt;hierarchical protocol: &lt;em&gt;intra-chip&lt;/em&gt;, &lt;em&gt;inter-chip&lt;/em&gt; (e.g. intra-chip snooping, inter-chip directory)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Performance optimization&lt;/h2&gt;
+&lt;h3&gt;Migratory sharing&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;one thread reads and writes, then another thread reads and writes, ...&lt;/li&gt;
+&lt;li&gt;E state already helps&lt;/li&gt;
+&lt;li&gt;HW to detect GetS and then GetM&lt;/li&gt;
+&lt;li&gt;alternatively, add Migratory M state (I -&amp;gt; S -&amp;gt; M)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;False sharing&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;more cores accessing the same block without actually dependencies; solutions: sub-block coherence, speculation&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Liveness&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;deadlock - cyclical dependencies&lt;/li&gt;
+&lt;li&gt;protocol deadlock&lt;/li&gt;
+&lt;li&gt;cache resource deadlock&lt;/li&gt;
+&lt;li&gt;virtual networks&lt;/li&gt;
+&lt;li&gt;livelock - a special case of starvation&lt;/li&gt;
+&lt;li&gt;starvation (solved with fair arbitration)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Token Coherence&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;a third method (alongside snooping and directory-based protocols)&lt;/li&gt;
+&lt;li&gt;tokens instead of status bits&lt;/li&gt;
+&lt;li&gt;cores exchange tokens&lt;/li&gt;
+&lt;li&gt;a core with one token can read, a core with all tokens can write to a block&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 10&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;"This is the age of specialization."&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;SoC share one physical memories, e.g. GPUs have two separate physical memories&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;cooperative thread array (CTA)&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;SIMT - Single-Instruction-Multiple-Thread&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;http://www0.cs.ucl.ac.uk/staff/j.alglave/papers/asplos15.pdf&lt;/li&gt;
+&lt;li&gt;GPU: relaxed memory order&lt;/li&gt;
+&lt;li&gt;one approach: consistency-agnostics coherence protocol - not suitable for GPUs (large L1 caches, many threads = many transactions)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Temporal coherence&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;lease (limited amount of time), block gets automatically invalidated&lt;/li&gt;
+&lt;li&gt;global notion of time&lt;/li&gt;
+&lt;li&gt;GetV(t), Write, WriteV(t)&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;stalled writes (until the lease expires)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;GWCT (Global Write Completion Time) - all FENCE must stall until this time&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;performance sensitive to the selection of lease time&lt;/li&gt;
+&lt;li&gt;timestamp complexity (e.g. rollover)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Release consistency-directed coherence&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;atomic operations which order memory accesses in one direction (in contrast with FENCE)&lt;/li&gt;
+&lt;li&gt;scope (CTA vs GPU)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Heterogeneous systems&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;more devices with different memory consistency models&lt;/li&gt;
+&lt;li&gt;intuition: the weaker model of the two&lt;/li&gt;
+&lt;li&gt;OpenCL: SC for HRF (Heterogeneous-Race-Free)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Heterogeneous coherence protocols&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;global controller&lt;/li&gt;
+&lt;li&gt;local controllers contain shims (or translators)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;"the global coherence interface must disambiguate CPU sharers from GPU
+sharers"&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;coherence tracking at a larger granularity (e.g. page instead of a cache line)&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;scratchpads&lt;/em&gt; in GPUs (programmer-controlled memories)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 11&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;specification = contract between the user and the implementation&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;input actions&lt;/em&gt;, &lt;em&gt;internal actions&lt;/em&gt;, &lt;em&gt;output actions&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;safety&lt;/em&gt; and &lt;em&gt;liveness&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Operational specification&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;state machine&lt;/li&gt;
+&lt;li&gt;liveness ensured with &lt;em&gt;temporal logic&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;linearizability&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://mclab.di.uniroma1.it/site/index.php/software/18-cmurphi"&gt;CMurphi&lt;/a&gt; and TLA&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Axiomatic specification&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Alloy, Herd&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Litmus tests&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;https://www.cl.cam.ac.uk/~sf502/regressions/rmem/&lt;/li&gt;
+&lt;li&gt;https://github.com/nvlabs/litmustestgen&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Validation&lt;/h2&gt;
+&lt;h3&gt;Formal methods&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;manual methods (e.g. assigning timestamps as values)&lt;/li&gt;
+&lt;li&gt;model checkers (state space becomes quickly very large)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Testing&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Off-line testing&lt;/li&gt;
+&lt;li&gt;On-line testing (checker implemented in HW)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="misc"></category><category term="Books"></category></entry><entry><title>Notes from Xilinx® Adapt 2021</title><link href="www.j-marjanovic.io/notes-from-xilinxr-adapt-2021.html" rel="alternate"></link><published>2021-09-07T21:00:00+02:00</published><updated>2021-09-07T21:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2021-09-07:www.j-marjanovic.io/notes-from-xilinxr-adapt-2021.html</id><summary type="html">&lt;p&gt;&lt;a href="https://xilinx.cventevents.com/event/f7c4412f-572a-4b8b-b8d0-6b92aae2cf0d"&gt;Xilinx Adapt 2021&lt;/a&gt;&lt;/p&gt;
 &lt;h1&gt;Day 1 (2021-09-07)&lt;/h1&gt;
 &lt;h2&gt;Adaptive Computing: Innovation Accelerated [Ivo Bolsens (Xilinx)]&lt;/h2&gt;
 &lt;ul&gt;
@@ -1330,7 +1782,209 @@ A: yes&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;CocoTB instead of Chisel-testers&lt;/li&gt;
 &lt;li&gt;Pipeline abstraction (PhD thesis, a DSL on top of Chisel)&lt;/li&gt;
-&lt;/ul&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="misc"></category><category term="FPGA"></category><category term="Scala"></category><category term="Chisel"></category></entry><entry><title>New Ubuntu, old problems with ModelSim</title><link href="www.j-marjanovic.io/new-ubuntu-old-problems-with-modelsim.html" rel="alternate"></link><published>2019-04-20T08:40:00+02:00</published><updated>2019-04-20T08:40:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2019-04-20:www.j-marjanovic.io/new-ubuntu-old-problems-with-modelsim.html</id><summary type="html">&lt;p&gt;A couple of days ago a new release of Ubuntu, Ubuntu 19.04 Disco Dingo was
+&lt;/ul&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="misc"></category><category term="FPGA"></category><category term="Scala"></category><category term="Chisel"></category></entry><entry><title>Books read: Synchrotron Radiation Sources</title><link href="www.j-marjanovic.io/books-read-synchrotron-radiation-sources.html" rel="alternate"></link><published>2019-11-02T12:30:00+01:00</published><updated>2019-11-02T12:30:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2019-11-02:www.j-marjanovic.io/books-read-synchrotron-radiation-sources.html</id><summary type="html">&lt;p&gt;Here are my notes on the book "Synchrotron Radiation Sources: A Primer", edited
+by H. Winick. Although a little bit dated (the book is from 1995) it gives a
+nice overview of all components of a modern synchrotron and helps with better
+understanding of how all subsystem interconnect together. It …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Here are my notes on the book "Synchrotron Radiation Sources: A Primer", edited
+by H. Winick. Although a little bit dated (the book is from 1995) it gives a
+nice overview of all components of a modern synchrotron and helps with better
+understanding of how all subsystem interconnect together. It also serves as a
+good introduction in the field of machine physics, which was for me (I have a
+diploma degree in electronics) quite effective to better understand the
+challenges faced in synchrotrons of the 4th generation (diffraction-limited
+storage rings).&lt;/p&gt;
+&lt;p style="width:80%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="Synchrotron Radiation Sources: A Primer" src="www.j-marjanovic.io/images/synchrotron_light_sources.jpg"&gt;&lt;/p&gt;
+&lt;h1&gt;Chapter 1&lt;/h1&gt;
+&lt;p&gt;page 2: "electron (or positrons)" --&amp;gt; how would a a SLS with protons look like?
+larger insertions devices? different SR wavelengths?&lt;/p&gt;
+&lt;p&gt;page 4: betatron - early machines, vertical magnetic field (spatially const,
+time varying)&lt;/p&gt;
+&lt;p&gt;page 7: non top-up mode --&amp;gt; from what I heard it took several hours to start
+the machine&lt;/p&gt;
+&lt;p&gt;page 9: &lt;span class="math"&gt;\(\gamma = \frac{mc^2}{E}\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;page 12: time structure - ESRF hybrid mode: "pulsed experiments in us, ns and ps
+time scale" (&lt;em&gt;M. Wulff et al., Time-resolved structures of macromolecules at the
+ESRF&lt;/em&gt;)&lt;/p&gt;
+&lt;p&gt;page 13: are the main advantage of FELs short pulses or higher brightness?&lt;/p&gt;
+&lt;p&gt;page 15: TESLA CDR published in 1988, the book is from 1994.&lt;/p&gt;
+&lt;h1&gt;Chapter 2&lt;/h1&gt;
+&lt;p&gt;page 34: theory on strong focusing --&amp;gt; very interesting, study &lt;em&gt;E. D. Curant et
+al., Theory of the alternating-gradient synchrotron&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;page 35: are betatron oscillations period or is there a phase advance?&lt;/p&gt;
+&lt;p&gt;page 39: (slightly) rotated quadrupoles introduce x-y coupling&lt;/p&gt;
+&lt;p&gt;page 41: correctors at the beggining and at the end of the insertion device --&amp;gt;
+modern take presented in &lt;em&gt;G. Rehm et al.: First projects at Diamond Light Source
+involving MTCA&lt;/em&gt;
+(https://indico.desy.de/indico/event/20703/session/0/contribution/77/material/slides/1.pdf, page 9)&lt;/p&gt;
+&lt;p&gt;page 41: what is a "tune shift"?&lt;/p&gt;
+&lt;p&gt;page 43: planar design --&amp;gt; prevents orbit "growth" in y (apart from coupling from quadrupoles)&lt;/p&gt;
+&lt;p&gt;page 44: dispersion-free region&lt;/p&gt;
+&lt;p&gt;page 46: dynamic aperture: max betatron osc that can be sustained&lt;/p&gt;
+&lt;p&gt;page 48: for how much do insertion devices reduce the energy? is this important
+for the orbit?&lt;/p&gt;
+&lt;p&gt;page 49: vertical/horizontal emittance ratio for most machines: 0.01 to 0.03&lt;/p&gt;
+&lt;h1&gt;Chapter 3&lt;/h1&gt;
+&lt;p&gt;page 60: septum magnets: what is the purpose, how do they work&lt;/p&gt;
+&lt;p&gt;page 62: off axis &amp;lt;-/-&amp;gt; on axis&lt;/p&gt;
+&lt;p&gt;page 68: max booster boost ratio of 50, in reality a little less. example 1:
+DESY II (injection at 450 MeV, ejection at 6 GeV - factor 13). example 2: SPS
+(max energy 450 GeV) to LHC (max energy 6500 GeV), factor 14&lt;/p&gt;
+&lt;p&gt;page 65: RF photo cathode gun now more popular&lt;/p&gt;
+&lt;p&gt;page 73: "brute force" used at MedAustron&lt;/p&gt;
+&lt;p&gt;page 75: 3 kA, 13 kV!!!&lt;/p&gt;
+&lt;p&gt;page 78: high-Z = high atomic number (e.g. W, Pb)&lt;/p&gt;
+&lt;p&gt;page 81: harmonic nr = number of buckets&lt;/p&gt;
+&lt;h1&gt;Chapter 4&lt;/h1&gt;
+&lt;p&gt;page 95: first mention of time-resolved measurement&lt;/p&gt;
+&lt;p&gt;page 91: synchrotron osc = longitudinal, betatron osc = transversal&lt;/p&gt;
+&lt;p&gt;page 96: cavity impedance scales lineraly with the number of cells&lt;/p&gt;
+&lt;p&gt;page 105: what about traveling-wave cavity? is this used in SLS?&lt;/p&gt;
+&lt;p&gt;page 111: How a Klystron amplifier works (https://www.youtube.com/watch?v=Fvud81pYGOg)&lt;/p&gt;
+&lt;p&gt;page 117: protection for kylstron: Klystron Lifetime Management (http://accelconf.web.cern.ch/AccelConf/ICALEPCS2013/talks/tucoca09_talk.pdf)&lt;/p&gt;
+&lt;h1&gt;Chapter 5&lt;/h1&gt;
+&lt;p&gt;page 122: photon BPMs to global orbit feedback also possible - Diamond, ELETTRA
+(here only local feedback is described)&lt;/p&gt;
+&lt;p&gt;page 132: "DIAMOND at Deresbury"&lt;/p&gt;
+&lt;p&gt;page 145: "the designer is relying very much on the good will of the stell
+company" --&amp;gt; the reality we work in&lt;/p&gt;
+&lt;h1&gt;Chapter 6&lt;/h1&gt;
+&lt;p&gt;page 159: digital feedback have taken over since the book was written&lt;/p&gt;
+&lt;h1&gt;Chapter 7&lt;/h1&gt;
+&lt;p&gt;page 163: book is from 1994, more modern methods could be used -&amp;gt; PXI or MTCA
+crate with motor controller and fast ADC&lt;/p&gt;
+&lt;p&gt;page 194: corrector magnets are not mentioned, but it would be convenient (and
+interesting) to measure the resp with high freq (e.g. at 1 kHz)&lt;/p&gt;
+&lt;h1&gt;Chapter 8&lt;/h1&gt;
+&lt;p&gt;page 197: "the beam would propagate only a few meters in atmosphere" --&amp;gt; more
+than I would expect&lt;/p&gt;
+&lt;p&gt;page 199: desorption &amp;lt;-/-&amp;gt; absorption (photon- and electron-stimulated desorbtion)&lt;/p&gt;
+&lt;p&gt;page 203: beam stop - photones after diploe --&amp;gt; more than 10 kW of power&lt;/p&gt;
+&lt;p&gt;page 211: 1e-11 Torr = still 1e11 molecules per L (= 2.5e22 molecules/L of air *
+1e-11 Tor in atm)&lt;/p&gt;
+&lt;h1&gt;Chapter 9&lt;/h1&gt;
+&lt;p&gt;page 218: AI: last wave of AI, Lisp-based, very advanced but still very limited (=specific)&lt;/p&gt;
+&lt;p&gt;page 219: interesting from historical point of view - only EPICS is mentioned&lt;/p&gt;
+&lt;p&gt;page 220: communication protocols from the past Bitbus (http://accelconf.web.cern.ch/accelconf/p91/PDF/PAC1991_1496.PDF)
+and Multibus &lt;/p&gt;
+&lt;p&gt;page 220: reflective memory techniques (for FOFB)&lt;/p&gt;
+&lt;p&gt;page 225: drift and negative drift sounds very hackish; wouldn't it be easier to
+take the position and angle of the insertion device (2 step simulation)&lt;/p&gt;
+&lt;p&gt;page 226: check ref 27: "Computer Codes for Particle Accelerator Design and
+Analysis: A Compendium"&lt;/p&gt;
+&lt;p&gt;page 227: phase-space 6D - x, x', y, y' dp/p, ds - each coordinate relative
+to ideal orbit&lt;/p&gt;
+&lt;p&gt;page 228: R matrix sometimes 2x2, should is be 6x6 in "normal" case? find some
+examples for individual elements ...&lt;/p&gt;
+&lt;p&gt;page 228: beta-function is a solution for single particle motion&lt;/p&gt;
+&lt;p&gt;page 229: Twiss parameters &amp;lt;-&amp;gt; beta func and beta' (alfa, beta, gamma)&lt;/p&gt;
+&lt;p&gt;page 239: read again G. Strang: Linear Algebra and Its Applications&lt;/p&gt;
+&lt;h1&gt;Chapter 10&lt;/h1&gt;
+&lt;p&gt;page 245: time-resolved spectroscopy - learn more on this&lt;/p&gt;
+&lt;p&gt;page 251: "Signal Processing" chapter was written before DSP became mainstream&lt;/p&gt;
+&lt;p&gt;page 262: section on BPM is rather short --&amp;gt; study ref 61: K. Wittenburg "Beam
+Loss Detection"&lt;/p&gt;
+&lt;p&gt;page 271: wire scan is not mentioned?&lt;/p&gt;
+&lt;h1&gt;Chapter 11&lt;/h1&gt;
+&lt;p&gt;page 297: successive alignment steps: non-converging, circling around 0 in
+N-dim space&lt;/p&gt;
+&lt;p&gt;page 301: "Cultural noise at DESY" :D&lt;/p&gt;
+&lt;h1&gt;Chapter 12&lt;/h1&gt;
+&lt;p&gt;page 306: "resonate for a long time" - wake field decay --&amp;gt; check at FLASH&lt;/p&gt;
+&lt;p&gt;page 308: slightly of topic: we are dealing with 18 orders of magnitude&lt;/p&gt;
+&lt;p&gt;page 312: wake functions = causal functions; here i do not understand enough
+physics, isn't the field also present in front of the bunch? or is this
+valid only for ultra-relativistic bunches?&lt;/p&gt;
+&lt;h1&gt;Chapter 13&lt;/h1&gt;
+&lt;p&gt;page 346: three types of motion, three different time scales: longitudinal osc,
+transversal osc and closed orbit errors&lt;/p&gt;
+&lt;p&gt;page 349: Fig 13.2 (SSRL) --&amp;gt; feedback too slow to suppres 60 Hz and harmonics&lt;/p&gt;
+&lt;p&gt;page 351: phBPM: gap few times RMS of the beam&lt;/p&gt;
+&lt;p&gt;page 353: a mention of feedback simulation, no references given&lt;/p&gt;
+&lt;p&gt;page 358: Z transform: http://techteach.no/publications/discretetime_signals_systems/discrete.pdf&lt;/p&gt;
+&lt;p&gt;page 358: "beyond the Nyquist freq" --&amp;gt; not entirely true, undersampling is
+possible&lt;/p&gt;
+&lt;p&gt;page 362: MIMO, check:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ref 19&lt;/li&gt;
+&lt;li&gt;ref 20&lt;/li&gt;
+&lt;li&gt;ref 21&lt;/li&gt;
+&lt;li&gt;ref 22&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 14 and 15&lt;/h1&gt;
+&lt;p&gt;no relevant notes&lt;/p&gt;
+&lt;h1&gt;Chapter 16&lt;/h1&gt;
+&lt;p&gt;page 432: "safety is a part of doing things"&lt;/p&gt;
+&lt;p&gt;page 435: general observation: unreliable safety feature (i.e. interlock) will
+increase the danger&lt;/p&gt;
+&lt;p&gt;page 440: "The OPCOs have [...] the authority to stop any activity where safety
+[...] is in question" - everybody has (or should have) the Stop Work Authority&lt;/p&gt;
+&lt;p&gt;page 448: tungsten --&amp;gt; impossible to melt with beam&lt;/p&gt;
+&lt;p&gt;page 456: interlock testing: each input --&amp;gt; response&lt;/p&gt;
+&lt;p&gt;page 457: for PLCs the standard for functional safety (IEC 61508) should be
+mentioned. The standard was first published in 1998, while the book is from
+1994.&lt;/p&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="misc"></category><category term="Books"></category></entry><entry><title>New Ubuntu, old problems with ModelSim</title><link href="www.j-marjanovic.io/new-ubuntu-old-problems-with-modelsim.html" rel="alternate"></link><published>2019-04-20T08:40:00+02:00</published><updated>2019-04-20T08:40:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2019-04-20:www.j-marjanovic.io/new-ubuntu-old-problems-with-modelsim.html</id><summary type="html">&lt;p&gt;A couple of days ago a new release of Ubuntu, Ubuntu 19.04 Disco Dingo was
 released. On my personal laptop I follow the non-LTS line, which brings
 me cool features and updated programs (e.g. Python 3.7, GCC 8.3, ...)
 out-of-the-box.&lt;/p&gt;
@@ -1718,7 +2372,121 @@ and "Load executable" fields under "Startup tab".&lt;/p&gt;
 &lt;p&gt;And we are good to go. After pressing the "Debug" button, the debugging
 perspective will show up. Now we can access &lt;code&gt;__log_buf&lt;/code&gt; buffer to determine
 what is stopping the kernel boot.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Creation of new project in Eclipse" src="www.j-marjanovic.io/images/debugging_cyclone_soc_openocd/eclipse_debug_final.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="misc"></category><category term="FPGA"></category><category term="Altera"></category><category term="Linux"></category><category term="OpenOCD"></category></entry><entry><title>Hello world</title><link href="www.j-marjanovic.io/hello-world.html" rel="alternate"></link><published>2014-11-02T13:00:00+01:00</published><updated>2014-11-02T13:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-02:www.j-marjanovic.io/hello-world.html</id><summary type="html">&lt;p&gt;Hi and welcome to my blog.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Creation of new project in Eclipse" src="www.j-marjanovic.io/images/debugging_cyclone_soc_openocd/eclipse_debug_final.png" style="width:800px; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="misc"></category><category term="FPGA"></category><category term="Altera"></category><category term="Linux"></category><category term="OpenOCD"></category></entry><entry><title>Books read: 97 Things Every Programmer Should Know</title><link href="www.j-marjanovic.io/books-read-97-things-every-programmer-should-know.html" rel="alternate"></link><published>2016-06-05T22:00:00+02:00</published><updated>2016-06-05T22:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2016-06-05:www.j-marjanovic.io/books-read-97-things-every-programmer-should-know.html</id><summary type="html">&lt;p&gt;I have seen this book referenced on several occasions when the software
+engineering was discussed, but I never had the time to read from first page to
+the last. I bought the dead-tree version, which gives you a better motivation
+to read the whole book. Here are my comments and …&lt;/p&gt;</summary><content type="html">&lt;p&gt;I have seen this book referenced on several occasions when the software
+engineering was discussed, but I never had the time to read from first page to
+the last. I bought the dead-tree version, which gives you a better motivation
+to read the whole book. Here are my comments and thoughts about each
+contribution in this book.&lt;/p&gt;
+&lt;p style="width:70%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;img alt="97 Things Every Programmer Should Know" src="www.j-marjanovic.io/images/97_thing_every_programmer_should_know.jpg"&gt;&lt;/p&gt;
+&lt;h2&gt;(1) Act with Prudence by Seb Rose&lt;/h2&gt;
+&lt;p&gt;Technical debt is (similarly to a cash debt) a good way to kickstart the
+development, but I agree with the author that is should be kept under control
+and paid back as soon as possible. I much enjoy when a sub-optimal solution
+gets fixed and the worries about possible problems with it vanish away.&lt;/p&gt;
+&lt;h2&gt;(2) Apply Functional Programming Principles by Edward Garson&lt;/h2&gt;
+&lt;p&gt;Yes, I am already excited about this book. The functional programming
+principles (even in OO code) greatly improve testability of smaller components.
+It also gives a programmer a different insight on how algorithms work, which
+its a little more detached from how a classical computer works. Programming in
+C feels like explaining complicated science to a 7 year old ("lets have a
+number i, which is is set to 0. each time we will check if this number is less
+than some other number n..."), while programming in Haskell feels like a
+discussion with a philosopher ("there is this function fact for which the
+value for 1 is 1. - oh, i see. - and for every other positive number, the
+value is the argument itself multiplied by the value of function for an
+argument minus one. - well, this is everything i needed to know about this
+function, i think i know how to calculate it."&lt;/p&gt;
+&lt;h2&gt;(3) Ask, "What Would the User Do?" (You Are Not the User) by Giles Colborne&lt;/h2&gt;
+&lt;p&gt;This contribution is quite similar to Joel Spolsky
+&lt;a href="http://www.joelonsoftware.com/uibook/chapters/fog0000000064.html"&gt;comment&lt;/a&gt; on
+how to test the use interface: "One good way to evaluate the usability of a
+program or dialog you've never seen before is to act a little stupid".  The
+important reminder to take away from this is to try being conservative with
+the user interface, to minimize the learning how to use your program or
+application.&lt;/p&gt;
+&lt;h2&gt;(4) Automate Your Coding Standard by Filip van Laenen&lt;/h2&gt;
+&lt;p&gt;Nicely formatted code demonstrates that the person who wrote it has put in a
+little effort to make it nicer and that the same person is somebody who like
+to keep things organized. On the contrary, when you see a messy code with
+sections of the code commented out, you know that there is almost surely
+something wrong with its behavior as well. Clearly defined language-prescribed
+formating standard (such as PEP8) and the tools to support it (such as pep8
+tool and pylint) are much welcomed. Meanwhile, the &lt;a href="htt
+ps://github.com/isocpp/CppCoreGuidelines/blob/5eb0b587af06dc5d1d9cda0dd8c6b399
+bdc1e230/CppCoreGuidelines.md"&gt;C++ coding guidelines&lt;/a&gt; currently looks more like a brainstorming
+session (why is there std::endl if you are not supposed to use it?)&lt;/p&gt;
+&lt;h2&gt;(5) Beauty Is in Simplicity by Jørn Ølmheim&lt;/h2&gt;
+&lt;p&gt;Simple solution are often the ones who work better, not only in software but
+also in other fields, such as rock music. Trying to write the most legendary
+rock riff of all time? You only need 4 notes (Yngwie does not agree with this:
+&lt;a href="https://www.youtube.com/watch?v=QHZ48AE3TOI"&gt;More is more&lt;/a&gt; ). As an example
+lets look at one  of the biggest code bases ever made: Linux kernel. The style
+itself (tabs are 8 spaces, line is 80 characters) prevent you from writing too
+complicated solution. The style guide for Linux kernel is a little extreme,
+but since the kernel should be as lean as possible it produces indisputably
+good results.&lt;/p&gt;
+&lt;h2&gt;(6) Before You Refactor by Rajith Attapattu&lt;/h2&gt;
+&lt;p&gt;This contribution is again very similar to one of Joel Spolsky's &lt;a href="http://www.joelonsoftware.com/articles/fog0000000069.html"&gt;blog
+posts&lt;/a&gt;. Since
+reading code is harder than writing it everybody assumes that a complete
+rewrite will create better code. All the ugly patches in the code are actual
+bugfixes and the software (although with ugly code) works.&lt;/p&gt;
+&lt;h2&gt;(7) Beware the Share by Udi Dahan&lt;/h2&gt;
+&lt;p&gt;Using already written libraries is a nice practice, and this contribution
+talks about creating unwanted dependencies in the code base. The discussion
+here regards the internally developed libraries. The case described in this
+contribution can be also analyzed in terms of the time spent maintaining
+reusable code, something which is described in The Mythical Man-Month. Use of
+public (external) stable libraries should be encouraged, although I would in
+the controversial case of leftPad function prefer to have the leftPad function
+embedded directly in code.&lt;/p&gt;
+&lt;h2&gt;(8) The Boy Scout Rule by Robert C. Martin&lt;/h2&gt;
+&lt;p&gt;This is one of the most famous contribution in this book, I don't think there
+is much to add to it. It is always nice when you look back at the clean
+campground (I sometimes like to admire the cleanup in side-by-side diff).&lt;/p&gt;
+&lt;h2&gt;(9) Check Your Code First Before Looking to Blame Others by Allan Kelly&lt;/h2&gt;
+&lt;p&gt;I would also like to add that a really good understanding of the language
+(read the standard) and the compiler (read  the manual) can help you resolve
+the problem without blaming the compiler. Personally I know about some miner
+differences between Verilog compilers from Xilinx and Altera, which could let
+someone think that the compiler is buggy.&lt;/p&gt;
+&lt;h2&gt;(10) Choose Your Tools with Care by Giovanni Asproni&lt;/h2&gt;
+&lt;p&gt;The author of this contribution mentions that he likes to isolate external
+tools from his own business logic. I see this approach sometimes in open
+source FPGA development when a wrapper around some commonly used IP cores is
+build (e.g. wrapper around block RAM for both Altera and Xilinx which gets
+chosen based on a parameter or a macro).&lt;/p&gt;
+&lt;h2&gt;(11) Code in the Language of the Domain by Dan North&lt;/h2&gt;
+&lt;p&gt;This contribution could be summarized as a call to use sensible
+variable/functions/object/methods names. This could be as well extended to
+writing informative comments, and not have comments like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;maxLim&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="ss"&gt;)&lt;/span&gt; &lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="nv"&gt;checks&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nv"&gt;max&lt;/span&gt; &lt;span class="nv"&gt;limit&lt;/span&gt; &lt;span class="nv"&gt;is&lt;/span&gt; &lt;span class="nv"&gt;negative&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;(12) Code Is Design by Ryan Brush&lt;/h2&gt;
+&lt;p&gt;The abstract process of making virtual artifacts (software) from nothing
+cannot be compared with construction process. The possibility to experiment
+with the real product gives direct feedback, which can be easily incorporated
+into design process. I often see everyday physical objects which weren't
+optimized to perfection, probably because of high iteration cost. The location
+of power button on my HTC Desire is one of this design flaws, it cannot be
+reached without changing the grip on the phone.&lt;/p&gt;
+&lt;h2&gt;(13) Code Layout Matters by Steve Freeman&lt;/h2&gt;
+&lt;p&gt;Indentation of the code is important, it provides the overview of the
+complexity on the first glance. I look forward to GCC6 new warning on wrongly
+indented C/C++ code.&lt;/p&gt;
+&lt;h2&gt;(14) Code Reviews by Mattias Karlsson&lt;/h2&gt;
+&lt;p&gt;Code reviews are important because they introduce all-seeing-eye in the code
+writing process, and this makes programmers care more about code quality. One
+cannot just make a ugly patch and hide in somewhere in the code base. The
+ultimate code review is the release of the code to the public or to the
+clients. In this case one can be sure that the company will be judged by the
+quality of the released code. The same is true for the examples which
+demonstrates the use of someone own tools.&lt;/p&gt;
+&lt;p&gt;To be continued in the next blog post...&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="misc"></category><category term="Books"></category><category term="Software Engineering"></category></entry><entry><title>Hello world</title><link href="www.j-marjanovic.io/hello-world.html" rel="alternate"></link><published>2014-11-02T13:00:00+01:00</published><updated>2014-11-02T13:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2014-11-02:www.j-marjanovic.io/hello-world.html</id><summary type="html">&lt;p&gt;Hi and welcome to my blog.&lt;/p&gt;
 &lt;p&gt;This is a "hello world" style post, I am curently testing pelican static blog generator.
 Since I don't know how much time I will have to manage this blog I prefer that everything 
 is static. If I some day stop writing this blog, at …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Hi and welcome to my blog.&lt;/p&gt;

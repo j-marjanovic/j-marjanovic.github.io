@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Notes on "A Primer on Memory Consistency and Cache Coherence"</title>
+        <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="shortcut icon" href="./theme/images/favicon.ico"/>
+        <link rel="stylesheet" href="./theme/css/main.css" type="text/css" />
+        <link href="www.j-marjanovic.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="j-marjanovic.io Atom Feed" />
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie.css"/>
+                <script src="./js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie6.css"/><![endif]-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="theme/jquery.cookiesdirective.js"></script>
+
+</head>
+
+<body id="index" class="home">
+<script type="text/javascript">
+	// Using $(document).ready never hurts
+	$(document).ready(function(){
+
+		// Cookie setting script wrapper
+		var cookieScripts = function () {
+			// Internal javascript called
+			console.log("Running");
+		
+			// Loading external javascript file
+			$.cookiesDirective.loadScript({
+				uri:'external.js',
+				appendTo: 'eantics'
+			});
+		}
+	
+		/* Call cookiesDirective, overriding any default params
+		
+			*** These are the defaults ***
+				explicitConsent: true,
+				position: 'top',
+				duration: 10,
+				limit: 0,
+				message: null,				
+				cookieScripts: null,
+				privacyPolicyUri: 'privacy.html',
+				scriptWrapper: function(){},	
+				fontFamily: 'helvetica',
+				fontColor: '#FFFFFF',
+				fontSize: '13px',
+				backgroundColor: '#000000',
+				backgroundOpacity: '80',
+				linkColor: '#CA0000'
+				
+		*/
+		
+		$.cookiesDirective({
+			privacyPolicyUri: 'myprivacypolicy.html',
+			explicitConsent: false,
+			position : 'bottom',
+			scriptWrapper: cookieScripts, 
+			cookieScripts: 'Google Analytics', 
+			backgroundColor: '#52B54A',
+			linkColor: '#ffffff'
+		});
+	});
+</script>
+
+	
+  <!-- <header id="banner" class="body"> -->
+  <!--               <h1><a href="./"><img src="http://www.launchyard.com/images/logo.png" /></a></h1> -->
+  <!--       </header> --> 
+
+  <div class="LaunchyardDetail" style="align:right;">
+    <!-- <p> -->
+    <!-- <img src="./theme/images/blue-pin.png" width="100" height="100" alt="Graph icon"> -->
+    <!-- </p> -->
+    <p><a id="sitesubtitle" href="./">j-marjanovic.io</a></p>
+
+	<br>
+    <p style="float: right; margin-right: 50px;"><a id="aboutlink" href="./pages/about.html">About</a></p>
+
+    <br>
+	<p style="float: right; margin-right: 50px;"><img src="./theme/images/icons/rss.png"> <a id="aboutlink" href="./feeds/jan-marjanovic.atom.xml">Atom feed</a></p>
+    <br>
+
+  </div>
+
+<section id="content" >
+    <div class="body">
+      <article>
+        <header>
+          <h1 class="entry-title">
+            <a href="./notes-on-a-primer-on-memory-consistency-and-cache-coherence.html" rel="bookmark"
+               title="Permalink to Notes on "A Primer on Memory Consistency and Cache Coherence"">Notes on "A Primer on Memory Consistency and Cache Coherence"</a></h1>
+
+        </header>
+
+        <div class="entry-content">
+<div class="post-info">
+	<ul>
+        <li class="vcard author">
+                 by&nbsp;<a class="url fn" href="./author/jan-marjanovic.html">Jan Marjanovic</a>
+        </li>
+        <li class="published" title="2021-12-23T16:00:00+01:00">
+          on&nbsp;Thu 23 December 2021
+        </li>
+
+	</ul>
+<p>Category: <a href="./tag/books.html">Books</a>, </p>
+</div><!-- /.post-info -->          <p><a href="https://www.morganclaypool.com/doi/abs/10.2200/S00962ED2V01Y201910CAC049">A Primer on Memory Consistency and Cache Coherence, Second Edition</a></p>
+<p>Authors:</p>
+<ul>
+<li>Vijay Nagarajan, University of Edinburgh</li>
+<li>Daniel J. Sorin, Duke University</li>
+<li>Mark D. Hill, University of Wisconsin, Madison</li>
+<li>David A. Wood, University of Wisconsin, Madison</li>
+</ul>
+<blockquote>
+<p>"This primer is intended for readers who have encountered memory consistency
+and cache coherence informally, but now want to understand what they entail
+in more detail."</p>
+</blockquote>
+<ul>
+<li>[this book talks to me]</li>
+</ul>
+<h1>Chapter 1</h1>
+<ul>
+<li><em>memory consistency</em> - effects of stores and loads on the memory, correct behavior</li>
+<li><em>cache coherence</em> - HW implementation to ensure correct behavior when caches are involved</li>
+<li><em>memory (consistency) model</em> - the specification about allowed behavior of MT programs</li>
+<li><em>snooping</em> - cache controller performs a broadcast</li>
+</ul>
+<h1>Chapter 2</h1>
+<ul>
+<li><em>memory-side cache</em> (last-level cache) - not a concern in regards to coherence, just reduces the latency</li>
+<li>"Informally, a coherence protocol must ensure that writes are made visible to all processors."</li>
+<li><em>consistency-agnostic</em> coherence (atomic writes) vs <em>consistency-directed</em> coherence ([posted] writes, ordering rules)</li>
+<li><em>single-writer-multiple-reader (SWMR) invariant</em></li>
+<li><em>data-value invariant</em></li>
+<li>other definitions of invariants</li>
+</ul>
+<h1>Chapter 3</h1>
+<ul>
+<li>reordering, write buffer</li>
+<li><em>MC (memory consistency) model</em></li>
+<li>core pipeline can have an impact on the consistency</li>
+</ul>
+<h2>Sequential consistency</h2>
+<ul>
+<li><a href="https://lamport.azurewebsites.net/pubs/lamport-how-to-make.pdf">L. Lamport: How to Make a Correct Multiprocess Program Execute Correctly on a Multiprocessor</a></li>
+<li><em>program order</em>, <em>memory order</em></li>
+<li><code>op1 &lt;m op2</code>, <code>op1 &lt;p op2</code></li>
+<li><strong>for SC</strong>: <code>op1 &lt;p op2 ==&gt; op1 &lt;m op2</code> (<code>==&gt;</code> = implies)</li>
+<li>requirement: LL, LS, SS, SL dependencies, loads get the value of the last store, atomic RWM</li>
+<li>naive implementation: <strong>the switch</strong></li>
+<li>speculative loads are just discarded, speculative stores only present the address and not the data --&gt;
+  cache can check if (or inform) other caches have the datum</li>
+<li>multi-threading: other threads must have independent write buffer (so to behave like other processors);
+  normal write buffers (with queue) are anyway not possible in SC</li>
+<li>[ <a href="https://www.youtube.com/watch?v=EYmEaF4qJ9I">Mod-01 Lec-32 Case study: MIPS R10000</a> ]</li>
+</ul>
+<h1>Chapter 4</h1>
+<ul>
+<li><em>total store order (TSO)</em></li>
+<li>"[TSO] model astonishes some people..."</li>
+<li>TSO behaves equally for programs that: 1. store data first, 2. then store <code>done</code> flag</li>
+<li>write buffer, FIFO</li>
+<li><code>FENCE</code> instr</li>
+</ul>
+<h1>Chapter 5</h1>
+<ul>
+<li><em>relaxed (weak) memory consistency</em></li>
+<li>most application do not require strong consistency</li>
+<li>accesses can be re-ordered, <em>Coalescing Write Buffer</em></li>
+</ul>
+<h2>Example Relaxed Consistency Model (XC)</h2>
+<ul>
+<li><code>FENCE</code> instruction</li>
+<li>TSO for accessing the same address (LL, LS, SS)</li>
+<li><em>data race</em> - two or more programs accessing the same memory, at least one access is a write</li>
+</ul>
+<h2>Release Consistency</h2>
+<ul>
+<li><code>ACQUIRE</code>, <code>RELEASE</code> instead of <code>FENCE</code></li>
+</ul>
+<h2>RVWMO</h2>
+<ul>
+<li><em>dependency-induced ordering</em></li>
+<li><em>same address ordering</em></li>
+<li><em>Atomic Memory Operation (AMO)</em> and <em>Load Reserve/Store Conditional</em></li>
+</ul>
+<h2>IBM POWER</h2>
+<blockquote>
+<p>"On a first pass of this primer, readers may wish to skim or skip this
+section; this memory model is significantly more complicated than the models
+presented thus far in this primer."</p>
+</blockquote>
+<h2>ARMv7, ARMv8</h2>
+<ul>
+<li>ARMv7 similar to POWER</li>
+<li>ARMv8 provides a total memory order, has <code>ACQUIRE</code> and <code>RELEASE</code></li>
+</ul>
+<h2>High-level Language Models</h2>
+<ul>
+<li>SC for DRF</li>
+</ul>
+<h1>Chapter 6</h1>
+<ul>
+<li>two invariants: SWMR, data-value</li>
+<li><em>coherence controller</em>: a FSM, one per each cache (<em>cache controller</em>) or memory (<em>memory controller</em>)</li>
+<li><em>coherence protocol</em>: communication between FSM</li>
+</ul>
+<p>"Other agents, such as I/O devices, may behave like cache controllers, memory
+controllers, or both depending upon their specific requirements."</p>
+<h2>States</h2>
+<ul>
+<li>
+<p>four characteristics:</p>
+</li>
+<li>
+<p>validity</p>
+</li>
+<li>dirtiness</li>
+<li>exclusivity</li>
+<li>
+<p>ownership</p>
+</li>
+<li>
+<p>stable states:</p>
+</li>
+<li>
+<p><strong>M</strong>odified: valid and potentially dirty</p>
+</li>
+<li><strong>O</strong>wned: valid and owned, possibly stale, read-only</li>
+<li><strong>E</strong>xclusive: no other cache has a copy, read-only</li>
+<li><strong>S</strong>hared: valid but not exclusive and not dirty, read-only</li>
+<li>
+<p><strong>I</strong>nvalid: not present in the cache or stale</p>
+</li>
+<li>
+<p>transient states:
+  <div class="math">$$ XY^Z $$</div>
+</p>
+</li>
+<li>
+<p><em>snooping</em> vs <em>directory</em></p>
+</li>
+<li><em>invalidate</em> vs <em>update</em></li>
+</ul>
+<h1>Chapter 7</h1>
+<p>"all coherence controllers observe (snoop) coherence requests in the same order
+and collectively "do the right thing" to maintain coherence."</p>
+<ul>
+<li>transactions need to be ordered</li>
+<li><em>serialization (ordering) point</em>, e.g. bus arbitration</li>
+</ul>
+<h2>baseline: MSI</h2>
+<ul>
+<li>atomic requests and atomic transactions</li>
+<li>processor loads go from Invalid to Shared</li>
+<li>processor stores go from Invalid to Modified</li>
+<li>both loads and stores wait for the data before transitioning to the steady state</li>
+<li>if Modified, GetS and GetM from other cores transition to Shared and Invalid, respectively</li>
+</ul>
+<h2>Non-atomic requests, atomic transactions</h2>
+<ul>
+<li>queue or buffer between the cache controller and the bus (or interconnect)</li>
+</ul>
+<h2>Exclusive state</h2>
+<ul>
+<li>handles case when the block is first read and then written -&gt; no need to inform other cores</li>
+<li>GetS brings the block state to S or E (depends on states of other controllers)</li>
+</ul>
+<h2>Owned state</h2>
+<ul>
+<li>when a block is in state M or E and receives GetS</li>
+</ul>
+<h2>Non-atomic bus</h2>
+<ul>
+<li><em>in-order</em> vs <em>out-of-order</em></li>
+<li>FIFO queues between the controller and request and response bus</li>
+</ul>
+<h2>Interconnect network</h2>
+<ul>
+<li>tree topology</li>
+<li><em>Timestamp Snooping</em></li>
+</ul>
+<h1>Chapter 8</h1>
+<p>"Directory protocols were originally developed to address the lack of
+scalability of snooping protocols."</p>
+<ul>
+<li><em>directory</em> with a global view</li>
+<li>transactions typically involve 2 or 3 steps:</li>
+<li>a request by the controller and a reply by the directory</li>
+<li>a request by the controller, requests to other controllers and replies from other controllers</li>
+<li>
+<p>4th step is also possible</p>
+</li>
+<li>
+<p><em>directory</em> as the serialization point</p>
+</li>
+<li>for some requests (e.g. GetM) all caches with a block in state S must ACK</li>
+</ul>
+<h2>MSI</h2>
+<ul>
+<li>an entry (per each block) consists of the state bits, owner id (if in state M)
+  and sharer list (bit vector, if in state S)</li>
+<li>I or S to M: directory returns to the requestor the number of controllers which must ACK</li>
+<li>PutM: contains data (from the controller to the directory)</li>
+<li><em>virtual networks</em> (message class) to avoid deadlocks (requests blocking responses)</li>
+</ul>
+<h2>Exclusive state</h2>
+<ul>
+<li>GetS and not shared by other controllers --&gt; E</li>
+<li>a core can silently (no coherence request required) upgrade E to M</li>
+<li>E block: owned vs not-owned</li>
+<li>PutE (directory from E to I)</li>
+</ul>
+<h2>Owned state</h2>
+<ul>
+<li>[how did it got dirty if it is read-only?]</li>
+<li>Owned is basically a frozen Modified state</li>
+</ul>
+<h2>Directory state</h2>
+<ul>
+<li>full representation only for smaller number of cores</li>
+<li><em>coarse directory</em>: more controllers are "grouped" in a same bit</li>
+<li><em>limited pointer directory</em>: broadcast after I sharers, invalidate one of the sharers, trap to a SW handler</li>
+</ul>
+<h2>Directory organization</h2>
+<ul>
+<li>one entry per each block of the memory</li>
+<li><em>directory cache</em>: accesses have (usually) good locality, smaller datums ([ROMANES EUNT DOMUS])--&gt; even small caches have a high hit rate</li>
+<li>backed by DRAM</li>
+<li><em>inclusive</em>: only for blocks cached, a miss indicates the I state</li>
+<li><em>Null Directory Cache</em>: [this sounds more like a snooping protocol]</li>
+</ul>
+<h2>Optimizations</h2>
+<blockquote>
+<p>"The typical, general solution to the problem of a centralized bottleneck is
+ to distribute the resource."</p>
+</blockquote>
+<ul>
+<li>distributed directories</li>
+<li>non-stalling directory protocols</li>
+<li>eviction of blocks in S state</li>
+</ul>
+<h1>Chapter 9</h1>
+<h2>Instruction caches</h2>
+<blockquote>
+<p>"[...] truly self-modifying code is rare,"</p>
+</blockquote>
+<ul>
+<li>core writes to D<span class="math">\(, I\)</span> only observers writes</li>
+<li><code>icbi</code> (instruction cache block invalidate) instruction on POWER</li>
+</ul>
+<h2>Virtual caches</h2>
+<ul>
+<li>advantage: no need for address translation (on the critical path)</li>
+<li>require reverse address translation</li>
+<li><em>synonyms</em>: same virtual address mapped to multiple physical addresses</li>
+</ul>
+<h2>Write-true caches</h2>
+<ul>
+<li>two-state protocol (VI)</li>
+<li>simpler evictions</li>
+<li>some issues with multi-threading</li>
+</ul>
+<h2>Coherent DMA</h2>
+<blockquote>
+<p>"DMA controllers have very different locality patterns than conventional cores"
+- GetMs are wasteful, the entire block is typically overwritten --&gt; special requests</p>
+</blockquote>
+<h2>Multi-level caches</h2>
+<ul>
+<li><em>inclusive cache</em>: e.g. L2 contains a superset of L1</li>
+<li>multiple multi-processors: LLC as a <em>memory-side</em> or <em>core-side</em> cache</li>
+<li>hierarchical protocol: <em>intra-chip</em>, <em>inter-chip</em> (e.g. intra-chip snooping, inter-chip directory)</li>
+</ul>
+<h2>Performance optimization</h2>
+<h3>Migratory sharing</h3>
+<ul>
+<li>one thread reads and writes, then another thread reads and writes, ...</li>
+<li>E state already helps</li>
+<li>HW to detect GetS and then GetM</li>
+<li>alternatively, add Migratory M state (I -&gt; S -&gt; M)</li>
+</ul>
+<h3>False sharing</h3>
+<ul>
+<li>more cores accessing the same block without actually dependencies; solutions: sub-block coherence, speculation</li>
+</ul>
+<h2>Liveness</h2>
+<ul>
+<li>deadlock - cyclical dependencies</li>
+<li>protocol deadlock</li>
+<li>cache resource deadlock</li>
+<li>virtual networks</li>
+<li>livelock - a special case of starvation</li>
+<li>starvation (solved with fair arbitration)</li>
+</ul>
+<h2>Token Coherence</h2>
+<ul>
+<li>a third method (alongside snooping and directory-based protocols)</li>
+<li>tokens instead of status bits</li>
+<li>cores exchange tokens</li>
+<li>a core with one token can read, a core with all tokens can write to a block</li>
+</ul>
+<h1>Chapter 10</h1>
+<blockquote>
+<p>"This is the age of specialization."</p>
+</blockquote>
+<ul>
+<li>SoC share one physical memories, e.g. GPUs have two separate physical memories</li>
+<li><em>cooperative thread array (CTA)</em></li>
+<li><em>SIMT - Single-Instruction-Multiple-Thread</em></li>
+<li>http://www0.cs.ucl.ac.uk/staff/j.alglave/papers/asplos15.pdf</li>
+<li>GPU: relaxed memory order</li>
+<li>one approach: consistency-agnostics coherence protocol - not suitable for GPUs (large L1 caches, many threads = many transactions)</li>
+</ul>
+<h2>Temporal coherence</h2>
+<ul>
+<li>lease (limited amount of time), block gets automatically invalidated</li>
+<li>global notion of time</li>
+<li>GetV(t), Write, WriteV(t)</li>
+<li>
+<p>stalled writes (until the lease expires)</p>
+</li>
+<li>
+<p>GWCT (Global Write Completion Time) - all FENCE must stall until this time</p>
+</li>
+<li>performance sensitive to the selection of lease time</li>
+<li>timestamp complexity (e.g. rollover)</li>
+</ul>
+<h2>Release consistency-directed coherence</h2>
+<ul>
+<li>atomic operations which order memory accesses in one direction (in contrast with FENCE)</li>
+<li>scope (CTA vs GPU)</li>
+</ul>
+<h2>Heterogeneous systems</h2>
+<ul>
+<li>more devices with different memory consistency models</li>
+<li>intuition: the weaker model of the two</li>
+<li>OpenCL: SC for HRF (Heterogeneous-Race-Free)</li>
+</ul>
+<h2>Heterogeneous coherence protocols</h2>
+<ul>
+<li>global controller</li>
+<li>local controllers contain shims (or translators)</li>
+</ul>
+<blockquote>
+<p>"the global coherence interface must disambiguate CPU sharers from GPU
+sharers"</p>
+</blockquote>
+<ul>
+<li>coherence tracking at a larger granularity (e.g. page instead of a cache line)</li>
+<li><em>scratchpads</em> in GPUs (programmer-controlled memories)</li>
+</ul>
+<h1>Chapter 11</h1>
+<ul>
+<li>specification = contract between the user and the implementation</li>
+<li><em>input actions</em>, <em>internal actions</em>, <em>output actions</em></li>
+<li><em>safety</em> and <em>liveness</em></li>
+</ul>
+<h2>Operational specification</h2>
+<ul>
+<li>state machine</li>
+<li>liveness ensured with <em>temporal logic</em></li>
+<li><em>linearizability</em></li>
+<li><a href="http://mclab.di.uniroma1.it/site/index.php/software/18-cmurphi">CMurphi</a> and TLA</li>
+</ul>
+<h2>Axiomatic specification</h2>
+<ul>
+<li>Alloy, Herd</li>
+</ul>
+<h2>Litmus tests</h2>
+<ul>
+<li>https://www.cl.cam.ac.uk/~sf502/regressions/rmem/</li>
+<li>https://github.com/nvlabs/litmustestgen</li>
+</ul>
+<h2>Validation</h2>
+<h3>Formal methods</h3>
+<ul>
+<li>manual methods (e.g. assigning timestamps as values)</li>
+<li>model checkers (state space becomes quickly very large)</li>
+</ul>
+<h2>Testing</h2>
+<ul>
+<li>Off-line testing</li>
+<li>On-line testing (checker implemented in HW)</li>
+</ul>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script><script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+        </div><!-- /.entry-content -->
+<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="janmarjanovic">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script><br/><br/>
+
+      </article>
+    </div>
+</section>
+        <section id="extras" >
+        
+        </section><!-- /#extras -->
+	
+        <footer id="contentinfo" >
+                <address id="about" class="vcard ">
+                Proudly powered by <a href="https://getpelican.com/" target="_blank">Pelican</a>, which takes
+                great advantage of <a href="https://python.org" target="_blank">Python</a>.
+		
+                </address><!-- /#about -->
+		
+
+                
+        </footer><!-- /#contentinfo -->
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-56555055-1', 'auto');
+  ga('send', 'pageview');
+
+</script></body>
+</html>

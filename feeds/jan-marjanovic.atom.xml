@@ -1,5 +1,457 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io - Jan Marjanovic</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/jan-marjanovic.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2021-10-31T11:00:00+01:00</updated><entry><title>Stratix V accelerator card from eBay, part 8</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-8.html" rel="alternate"></link><published>2021-10-31T11:00:00+01:00</published><updated>2021-10-31T11:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2021-10-31:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-8.html</id><summary type="html">&lt;p&gt;My &lt;a href="stratix-v-accelerator-card-from-ebay-part-7.html"&gt;last blog&lt;/a&gt; post on this
+<feed xmlns="http://www.w3.org/2005/Atom"><title>j-marjanovic.io - Jan Marjanovic</title><link href="www.j-marjanovic.io/" rel="alternate"></link><link href="www.j-marjanovic.io/feeds/jan-marjanovic.atom.xml" rel="self"></link><id>www.j-marjanovic.io/</id><updated>2021-12-23T16:00:00+01:00</updated><entry><title>Notes on "A Primer on Memory Consistency and Cache Coherence"</title><link href="www.j-marjanovic.io/notes-on-a-primer-on-memory-consistency-and-cache-coherence.html" rel="alternate"></link><published>2021-12-23T16:00:00+01:00</published><updated>2021-12-23T16:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2021-12-23:www.j-marjanovic.io/notes-on-a-primer-on-memory-consistency-and-cache-coherence.html</id><summary type="html">&lt;p&gt;&lt;a href="https://www.morganclaypool.com/doi/abs/10.2200/S00962ED2V01Y201910CAC049"&gt;A Primer on Memory Consistency and Cache Coherence, Second Edition&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Authors:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Vijay Nagarajan, University of Edinburgh&lt;/li&gt;
+&lt;li&gt;Daniel J. Sorin, Duke University&lt;/li&gt;
+&lt;li&gt;Mark D. Hill, University of Wisconsin, Madison&lt;/li&gt;
+&lt;li&gt;David A. Wood, University of Wisconsin, Madison&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;"This primer is intended for readers who have encountered memory consistency
+and cache coherence informally …&lt;/p&gt;&lt;/blockquote&gt;</summary><content type="html">&lt;p&gt;&lt;a href="https://www.morganclaypool.com/doi/abs/10.2200/S00962ED2V01Y201910CAC049"&gt;A Primer on Memory Consistency and Cache Coherence, Second Edition&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Authors:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Vijay Nagarajan, University of Edinburgh&lt;/li&gt;
+&lt;li&gt;Daniel J. Sorin, Duke University&lt;/li&gt;
+&lt;li&gt;Mark D. Hill, University of Wisconsin, Madison&lt;/li&gt;
+&lt;li&gt;David A. Wood, University of Wisconsin, Madison&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;"This primer is intended for readers who have encountered memory consistency
+and cache coherence informally, but now want to understand what they entail
+in more detail."&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;[this book talks to me]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 1&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;memory consistency&lt;/em&gt; - effects of stores and loads on the memory, correct behavior&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;cache coherence&lt;/em&gt; - HW implementation to ensure correct behavior when caches are involved&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;memory (consistency) model&lt;/em&gt; - the specification about allowed behavior of MT programs&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;snooping&lt;/em&gt; - cache controller performs a broadcast&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 2&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;memory-side cache&lt;/em&gt; (last-level cache) - not a concern in regards to coherence, just reduces the latency&lt;/li&gt;
+&lt;li&gt;"Informally, a coherence protocol must ensure that writes are made visible to all processors."&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;consistency-agnostic&lt;/em&gt; coherence (atomic writes) vs &lt;em&gt;consistency-directed&lt;/em&gt; coherence ([posted] writes, ordering rules)&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;single-writer-multiple-reader (SWMR) invariant&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;data-value invariant&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;other definitions of invariants&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 3&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;reordering, write buffer&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;MC (memory consistency) model&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;core pipeline can have an impact on the consistency&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Sequential consistency&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://lamport.azurewebsites.net/pubs/lamport-how-to-make.pdf"&gt;L. Lamport: How to Make a Correct Multiprocess Program Execute Correctly on a Multiprocessor&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;program order&lt;/em&gt;, &lt;em&gt;memory order&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;op1 &amp;lt;m op2&lt;/code&gt;, &lt;code&gt;op1 &amp;lt;p op2&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;for SC&lt;/strong&gt;: &lt;code&gt;op1 &amp;lt;p op2 ==&amp;gt; op1 &amp;lt;m op2&lt;/code&gt; (&lt;code&gt;==&amp;gt;&lt;/code&gt; = implies)&lt;/li&gt;
+&lt;li&gt;requirement: LL, LS, SS, SL dependencies, loads get the value of the last store, atomic RWM&lt;/li&gt;
+&lt;li&gt;naive implementation: &lt;strong&gt;the switch&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;speculative loads are just discarded, speculative stores only present the address and not the data --&amp;gt;
+  cache can check if (or inform) other caches have the datum&lt;/li&gt;
+&lt;li&gt;multi-threading: other threads must have independent write buffer (so to behave like other processors);
+  normal write buffers (with queue) are anyway not possible in SC&lt;/li&gt;
+&lt;li&gt;[ &lt;a href="https://www.youtube.com/watch?v=EYmEaF4qJ9I"&gt;Mod-01 Lec-32 Case study: MIPS R10000&lt;/a&gt; ]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 4&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;total store order (TSO)&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;"[TSO] model astonishes some people..."&lt;/li&gt;
+&lt;li&gt;TSO behaves equally for programs that: 1. store data first, 2. then store &lt;code&gt;done&lt;/code&gt; flag&lt;/li&gt;
+&lt;li&gt;write buffer, FIFO&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;FENCE&lt;/code&gt; instr&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 5&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;relaxed (weak) memory consistency&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;most application do not require strong consistency&lt;/li&gt;
+&lt;li&gt;accesses can be re-ordered, &lt;em&gt;Coalescing Write Buffer&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Example Relaxed Consistency Model (XC)&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;FENCE&lt;/code&gt; instruction&lt;/li&gt;
+&lt;li&gt;TSO for accessing the same address (LL, LS, SS)&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;data race&lt;/em&gt; - two or more programs accessing the same memory, at least one access is a write&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Release Consistency&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;ACQUIRE&lt;/code&gt;, &lt;code&gt;RELEASE&lt;/code&gt; instead of &lt;code&gt;FENCE&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;RVWMO&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;dependency-induced ordering&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;same address ordering&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Atomic Memory Operation (AMO)&lt;/em&gt; and &lt;em&gt;Load Reserve/Store Conditional&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;IBM POWER&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;"On a first pass of this primer, readers may wish to skim or skip this
+section; this memory model is significantly more complicated than the models
+presented thus far in this primer."&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;ARMv7, ARMv8&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;ARMv7 similar to POWER&lt;/li&gt;
+&lt;li&gt;ARMv8 provides a total memory order, has &lt;code&gt;ACQUIRE&lt;/code&gt; and &lt;code&gt;RELEASE&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;High-level Language Models&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;SC for DRF&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 6&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;two invariants: SWMR, data-value&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;coherence controller&lt;/em&gt;: a FSM, one per each cache (&lt;em&gt;cache controller&lt;/em&gt;) or memory (&lt;em&gt;memory controller&lt;/em&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;coherence protocol&lt;/em&gt;: communication between FSM&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;"Other agents, such as I/O devices, may behave like cache controllers, memory
+controllers, or both depending upon their specific requirements."&lt;/p&gt;
+&lt;h2&gt;States&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;four characteristics:&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;validity&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;dirtiness&lt;/li&gt;
+&lt;li&gt;exclusivity&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;ownership&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;stable states:&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;M&lt;/strong&gt;odified: valid and potentially dirty&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;O&lt;/strong&gt;wned: valid and owned, possibly stale, read-only&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;E&lt;/strong&gt;xclusive: no other cache has a copy, read-only&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;S&lt;/strong&gt;hared: valid but not exclusive and not dirty, read-only&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;I&lt;/strong&gt;nvalid: not present in the cache or stale&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;transient states:
+  &lt;div class="math"&gt;$$ XY^Z $$&lt;/div&gt;
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;snooping&lt;/em&gt; vs &lt;em&gt;directory&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;invalidate&lt;/em&gt; vs &lt;em&gt;update&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 7&lt;/h1&gt;
+&lt;p&gt;"all coherence controllers observe (snoop) coherence requests in the same order
+and collectively "do the right thing" to maintain coherence."&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;transactions need to be ordered&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;serialization (ordering) point&lt;/em&gt;, e.g. bus arbitration&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;baseline: MSI&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;atomic requests and atomic transactions&lt;/li&gt;
+&lt;li&gt;processor loads go from Invalid to Shared&lt;/li&gt;
+&lt;li&gt;processor stores go from Invalid to Modified&lt;/li&gt;
+&lt;li&gt;both loads and stores wait for the data before transitioning to the steady state&lt;/li&gt;
+&lt;li&gt;if Modified, GetS and GetM from other cores transition to Shared and Invalid, respectively&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Non-atomic requests, atomic transactions&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;queue or buffer between the cache controller and the bus (or interconnect)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Exclusive state&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;handles case when the block is first read and then written -&amp;gt; no need to inform other cores&lt;/li&gt;
+&lt;li&gt;GetS brings the block state to S or E (depends on states of other controllers)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Owned state&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;when a block is in state M or E and receives GetS&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Non-atomic bus&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;in-order&lt;/em&gt; vs &lt;em&gt;out-of-order&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;FIFO queues between the controller and request and response bus&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Interconnect network&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;tree topology&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Timestamp Snooping&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 8&lt;/h1&gt;
+&lt;p&gt;"Directory protocols were originally developed to address the lack of
+scalability of snooping protocols."&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;directory&lt;/em&gt; with a global view&lt;/li&gt;
+&lt;li&gt;transactions typically involve 2 or 3 steps:&lt;/li&gt;
+&lt;li&gt;a request by the controller and a reply by the directory&lt;/li&gt;
+&lt;li&gt;a request by the controller, requests to other controllers and replies from other controllers&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;4th step is also possible&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;directory&lt;/em&gt; as the serialization point&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;for some requests (e.g. GetM) all caches with a block in state S must ACK&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;MSI&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;an entry (per each block) consists of the state bits, owner id (if in state M)
+  and sharer list (bit vector, if in state S)&lt;/li&gt;
+&lt;li&gt;I or S to M: directory returns to the requestor the number of controllers which must ACK&lt;/li&gt;
+&lt;li&gt;PutM: contains data (from the controller to the directory)&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;virtual networks&lt;/em&gt; (message class) to avoid deadlocks (requests blocking responses)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Exclusive state&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;GetS and not shared by other controllers --&amp;gt; E&lt;/li&gt;
+&lt;li&gt;a core can silently (no coherence request required) upgrade E to M&lt;/li&gt;
+&lt;li&gt;E block: owned vs not-owned&lt;/li&gt;
+&lt;li&gt;PutE (directory from E to I)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Owned state&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;[how did it got dirty if it is read-only?]&lt;/li&gt;
+&lt;li&gt;Owned is basically a frozen Modified state&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Directory state&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;full representation only for smaller number of cores&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;coarse directory&lt;/em&gt;: more controllers are "grouped" in a same bit&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;limited pointer directory&lt;/em&gt;: broadcast after I sharers, invalidate one of the sharers, trap to a SW handler&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Directory organization&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;one entry per each block of the memory&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;directory cache&lt;/em&gt;: accesses have (usually) good locality, smaller datums ([ROMANES EUNT DOMUS])--&amp;gt; even small caches have a high hit rate&lt;/li&gt;
+&lt;li&gt;backed by DRAM&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;inclusive&lt;/em&gt;: only for blocks cached, a miss indicates the I state&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Null Directory Cache&lt;/em&gt;: [this sounds more like a snooping protocol]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Optimizations&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;"The typical, general solution to the problem of a centralized bottleneck is
+ to distribute the resource."&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;distributed directories&lt;/li&gt;
+&lt;li&gt;non-stalling directory protocols&lt;/li&gt;
+&lt;li&gt;eviction of blocks in S state&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 9&lt;/h1&gt;
+&lt;h2&gt;Instruction caches&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;"[...] truly self-modifying code is rare,"&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;core writes to D&lt;span class="math"&gt;\(, I\)&lt;/span&gt; only observers writes&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;icbi&lt;/code&gt; (instruction cache block invalidate) instruction on POWER&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Virtual caches&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;advantage: no need for address translation (on the critical path)&lt;/li&gt;
+&lt;li&gt;require reverse address translation&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;synonyms&lt;/em&gt;: same virtual address mapped to multiple physical addresses&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Write-true caches&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;two-state protocol (VI)&lt;/li&gt;
+&lt;li&gt;simpler evictions&lt;/li&gt;
+&lt;li&gt;some issues with multi-threading&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Coherent DMA&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;"DMA controllers have very different locality patterns than conventional cores"
+- GetMs are wasteful, the entire block is typically overwritten --&amp;gt; special requests&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;Multi-level caches&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;inclusive cache&lt;/em&gt;: e.g. L2 contains a superset of L1&lt;/li&gt;
+&lt;li&gt;multiple multi-processors: LLC as a &lt;em&gt;memory-side&lt;/em&gt; or &lt;em&gt;core-side&lt;/em&gt; cache&lt;/li&gt;
+&lt;li&gt;hierarchical protocol: &lt;em&gt;intra-chip&lt;/em&gt;, &lt;em&gt;inter-chip&lt;/em&gt; (e.g. intra-chip snooping, inter-chip directory)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Performance optimization&lt;/h2&gt;
+&lt;h3&gt;Migratory sharing&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;one thread reads and writes, then another thread reads and writes, ...&lt;/li&gt;
+&lt;li&gt;E state already helps&lt;/li&gt;
+&lt;li&gt;HW to detect GetS and then GetM&lt;/li&gt;
+&lt;li&gt;alternatively, add Migratory M state (I -&amp;gt; S -&amp;gt; M)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;False sharing&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;more cores accessing the same block without actually dependencies; solutions: sub-block coherence, speculation&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Liveness&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;deadlock - cyclical dependencies&lt;/li&gt;
+&lt;li&gt;protocol deadlock&lt;/li&gt;
+&lt;li&gt;cache resource deadlock&lt;/li&gt;
+&lt;li&gt;virtual networks&lt;/li&gt;
+&lt;li&gt;livelock - a special case of starvation&lt;/li&gt;
+&lt;li&gt;starvation (solved with fair arbitration)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Token Coherence&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;a third method (alongside snooping and directory-based protocols)&lt;/li&gt;
+&lt;li&gt;tokens instead of status bits&lt;/li&gt;
+&lt;li&gt;cores exchange tokens&lt;/li&gt;
+&lt;li&gt;a core with one token can read, a core with all tokens can write to a block&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 10&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;"This is the age of specialization."&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;SoC share one physical memories, e.g. GPUs have two separate physical memories&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;cooperative thread array (CTA)&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;SIMT - Single-Instruction-Multiple-Thread&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;http://www0.cs.ucl.ac.uk/staff/j.alglave/papers/asplos15.pdf&lt;/li&gt;
+&lt;li&gt;GPU: relaxed memory order&lt;/li&gt;
+&lt;li&gt;one approach: consistency-agnostics coherence protocol - not suitable for GPUs (large L1 caches, many threads = many transactions)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Temporal coherence&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;lease (limited amount of time), block gets automatically invalidated&lt;/li&gt;
+&lt;li&gt;global notion of time&lt;/li&gt;
+&lt;li&gt;GetV(t), Write, WriteV(t)&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;stalled writes (until the lease expires)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;GWCT (Global Write Completion Time) - all FENCE must stall until this time&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;performance sensitive to the selection of lease time&lt;/li&gt;
+&lt;li&gt;timestamp complexity (e.g. rollover)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Release consistency-directed coherence&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;atomic operations which order memory accesses in one direction (in contrast with FENCE)&lt;/li&gt;
+&lt;li&gt;scope (CTA vs GPU)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Heterogeneous systems&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;more devices with different memory consistency models&lt;/li&gt;
+&lt;li&gt;intuition: the weaker model of the two&lt;/li&gt;
+&lt;li&gt;OpenCL: SC for HRF (Heterogeneous-Race-Free)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Heterogeneous coherence protocols&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;global controller&lt;/li&gt;
+&lt;li&gt;local controllers contain shims (or translators)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;"the global coherence interface must disambiguate CPU sharers from GPU
+sharers"&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;coherence tracking at a larger granularity (e.g. page instead of a cache line)&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;scratchpads&lt;/em&gt; in GPUs (programmer-controlled memories)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Chapter 11&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;specification = contract between the user and the implementation&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;input actions&lt;/em&gt;, &lt;em&gt;internal actions&lt;/em&gt;, &lt;em&gt;output actions&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;safety&lt;/em&gt; and &lt;em&gt;liveness&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Operational specification&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;state machine&lt;/li&gt;
+&lt;li&gt;liveness ensured with &lt;em&gt;temporal logic&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;linearizability&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://mclab.di.uniroma1.it/site/index.php/software/18-cmurphi"&gt;CMurphi&lt;/a&gt; and TLA&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Axiomatic specification&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Alloy, Herd&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Litmus tests&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;https://www.cl.cam.ac.uk/~sf502/regressions/rmem/&lt;/li&gt;
+&lt;li&gt;https://github.com/nvlabs/litmustestgen&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Validation&lt;/h2&gt;
+&lt;h3&gt;Formal methods&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;manual methods (e.g. assigning timestamps as values)&lt;/li&gt;
+&lt;li&gt;model checkers (state space becomes quickly very large)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Testing&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Off-line testing&lt;/li&gt;
+&lt;li&gt;On-line testing (checker implemented in HW)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="misc"></category><category term="Books"></category></entry><entry><title>Stratix V accelerator card from eBay, part 8</title><link href="www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-8.html" rel="alternate"></link><published>2021-10-31T11:00:00+01:00</published><updated>2021-10-31T11:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2021-10-31:www.j-marjanovic.io/stratix-v-accelerator-card-from-ebay-part-8.html</id><summary type="html">&lt;p&gt;My &lt;a href="stratix-v-accelerator-card-from-ebay-part-7.html"&gt;last blog&lt;/a&gt; post on this
 topic explored the PCI Express connections on this board. I have determined that
 the board contains a custom FPGA with two Hard IPs for PCIe, where the
 commercially-available part only contains one. At the end of the post I explored
@@ -4288,7 +4740,7 @@ mentioned. The standard was first published in 1998, while the book is from
     (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Books read"></category></entry><entry><title>New Ubuntu, old problems with ModelSim</title><link href="www.j-marjanovic.io/new-ubuntu-old-problems-with-modelsim.html" rel="alternate"></link><published>2019-04-20T08:40:00+02:00</published><updated>2019-04-20T08:40:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2019-04-20:www.j-marjanovic.io/new-ubuntu-old-problems-with-modelsim.html</id><summary type="html">&lt;p&gt;A couple of days ago a new release of Ubuntu, Ubuntu 19.04 Disco Dingo was
+&lt;/script&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="misc"></category><category term="Books"></category></entry><entry><title>New Ubuntu, old problems with ModelSim</title><link href="www.j-marjanovic.io/new-ubuntu-old-problems-with-modelsim.html" rel="alternate"></link><published>2019-04-20T08:40:00+02:00</published><updated>2019-04-20T08:40:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2019-04-20:www.j-marjanovic.io/new-ubuntu-old-problems-with-modelsim.html</id><summary type="html">&lt;p&gt;A couple of days ago a new release of Ubuntu, Ubuntu 19.04 Disco Dingo was
 released. On my personal laptop I follow the non-LTS line, which brings
 me cool features and updated programs (e.g. Python 3.7, GCC 8.3, ...)
 out-of-the-box.&lt;/p&gt;
@@ -5428,7 +5880,7 @@ of the entire project directly from the source code in the repository.&lt;/p&gt;
 &lt;p&gt;Another tools which could be added to this list is &lt;a href="http://www.ohwr.org/projects/hdl-make"&gt;hdlmake&lt;/a&gt;
 which is meant to be an equivalent of Make for FPGA projects. Currently it is
 not able to tackle more complex compilation procedures, such as re-compiling
-vendor IP cores or handling Vivado Block Diagrams.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Projects"></category><category term="FPGA"></category><category term="Xilinx"></category></entry><entry><title>Debugging Linux start-up on Altera Cyclone V SoC with OpenOCD</title><link href="www.j-marjanovic.io/debugging-linux-start-up-on-altera-cyclone-v-soc-with-openocd.html" rel="alternate"></link><published>2016-07-12T22:00:00+02:00</published><updated>2016-07-12T22:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2016-07-12:www.j-marjanovic.io/debugging-linux-start-up-on-altera-cyclone-v-soc-with-openocd.html</id><summary type="html">&lt;p&gt;This blog post will show you how one can use the OpenOCD debugger with Altera
+vendor IP cores or handling Vivado Block Diagrams.&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Projects"></category><category term="FPGA"></category><category term="Xilinx"></category><category term="Books"></category></entry><entry><title>Debugging Linux start-up on Altera Cyclone V SoC with OpenOCD</title><link href="www.j-marjanovic.io/debugging-linux-start-up-on-altera-cyclone-v-soc-with-openocd.html" rel="alternate"></link><published>2016-07-12T22:00:00+02:00</published><updated>2016-07-12T22:00:00+02:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2016-07-12:www.j-marjanovic.io/debugging-linux-start-up-on-altera-cyclone-v-soc-with-openocd.html</id><summary type="html">&lt;p&gt;This blog post will show you how one can use the OpenOCD debugger with Altera
 Cyclone V SoC. Altera Cyclone V SoC is a very interesting integrated circuit,
 combining dual-core ARM processor and a decent FPGA, allowing a wide variety
 of possibilities to partition the application between the two.&lt;/p&gt;
@@ -5736,7 +6188,7 @@ ultimate code review is the release of the code to the public or to the
 clients. In this case one can be sure that the company will be judged by the
 quality of the released code. The same is true for the examples which
 demonstrates the use of someone own tools.&lt;/p&gt;
-&lt;p&gt;To be continued in the next blog post...&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="Books read"></category><category term="Software Engineering"></category></entry><entry><title>HDL data type for Python parser implementations</title><link href="www.j-marjanovic.io/hdl-data-type-for-python-parser-implementations.html" rel="alternate"></link><published>2015-11-15T22:00:00+01:00</published><updated>2015-11-15T22:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2015-11-15:www.j-marjanovic.io/hdl-data-type-for-python-parser-implementations.html</id><summary type="html">&lt;p&gt;Recently I had to implement a parser for the PCIe protocol. The data was
+&lt;p&gt;To be continued in the next blog post...&lt;/p&gt;&lt;script src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;</content><category term="misc"></category><category term="Books"></category><category term="Software Engineering"></category></entry><entry><title>HDL data type for Python parser implementations</title><link href="www.j-marjanovic.io/hdl-data-type-for-python-parser-implementations.html" rel="alternate"></link><published>2015-11-15T22:00:00+01:00</published><updated>2015-11-15T22:00:00+01:00</updated><author><name>Jan Marjanovic</name></author><id>tag:None,2015-11-15:www.j-marjanovic.io/hdl-data-type-for-python-parser-implementations.html</id><summary type="html">&lt;p&gt;Recently I had to implement a parser for the PCIe protocol. The data was
 captured with Xilinx ChipScope and saved as TSV (tab-separated value) text file.
 I wanted to implement a parser in Python, my favorite language for this kind of
 tasks. I have stumbled to a problem when I …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Recently I had to implement a parser for the PCIe protocol. The data was
