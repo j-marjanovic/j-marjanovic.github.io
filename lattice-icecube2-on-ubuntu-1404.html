@@ -18,58 +18,10 @@
         <!--[if lt IE 7]>
                 <link rel="stylesheet" type="text/css" media="all" href="./css/ie6.css"/><![endif]-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" type="text/javascript"></script>
-<script type="text/javascript" src="theme/jquery.cookiesdirective.js"></script>
 
 </head>
 
 <body id="index" class="home">
-<script type="text/javascript">
-	// Using $(document).ready never hurts
-	$(document).ready(function(){
-
-		// Cookie setting script wrapper
-		var cookieScripts = function () {
-			// Internal javascript called
-			console.log("Running");
-		
-			// Loading external javascript file
-			$.cookiesDirective.loadScript({
-				uri:'external.js',
-				appendTo: 'eantics'
-			});
-		}
-	
-		/* Call cookiesDirective, overriding any default params
-		
-			*** These are the defaults ***
-				explicitConsent: true,
-				position: 'top',
-				duration: 10,
-				limit: 0,
-				message: null,				
-				cookieScripts: null,
-				privacyPolicyUri: 'privacy.html',
-				scriptWrapper: function(){},	
-				fontFamily: 'helvetica',
-				fontColor: '#FFFFFF',
-				fontSize: '13px',
-				backgroundColor: '#000000',
-				backgroundOpacity: '80',
-				linkColor: '#CA0000'
-				
-		*/
-		
-		$.cookiesDirective({
-			privacyPolicyUri: 'myprivacypolicy.html',
-			explicitConsent: false,
-			position : 'bottom',
-			scriptWrapper: cookieScripts, 
-			cookieScripts: 'Google Analytics', 
-			backgroundColor: '#52B54A',
-			linkColor: '#ffffff'
-		});
-	});
-</script>
 
 	
   <!-- <header id="banner" class="body"> -->
