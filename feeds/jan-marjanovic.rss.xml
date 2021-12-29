@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>j-marjanovic.io - Jan Marjanovic</title><link>www.j-marjanovic.io/</link><description></description><lastBuildDate>Thu, 23 Dec 2021 16:00:00 +0100</lastBuildDate><item><title>Notes on "A Primer on Memory Consistency and Cache Coherence"</title><link>www.j-marjanovic.io/notes-on-a-primer-on-memory-consistency-and-cache-coherence.html</link><description>&lt;p&gt;&lt;a href="https://www.morganclaypool.com/doi/abs/10.2200/S00962ED2V01Y201910CAC049"&gt;A Primer on Memory Consistency and Cache Coherence, Second Edition&lt;/a&gt;&lt;/p&gt;
+<rss version="2.0"><channel><title>j-marjanovic.io - Jan Marjanovic</title><link>www.j-marjanovic.io/</link><description></description><lastBuildDate>Wed, 29 Dec 2021 18:00:00 +0100</lastBuildDate><item><title>Exploring the PS-PL AXI interfaces on Zynq UltraScale+ MPSoC</title><link>www.j-marjanovic.io/exploring-the-ps-pl-axi-interfaces-on-zynq-ultrascale-mpsoc.html</link><description>&lt;p&gt;I recently held &lt;a href="https://indico.desy.de/event/31387/contributions/112660/"&gt;a presentation at the 10th MicroTCA Workshop for Industry and
+Research&lt;/a&gt;, where I
+presented some hardware we have developed, discussed the advantages of using
+SoCs, and showed a couple of examples where we successfully leveraged the features
+of these devices.&lt;/p&gt;
+&lt;p&gt;At my day job the dataflow through …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Jan Marjanovic</dc:creator><pubDate>Wed, 29 Dec 2021 18:00:00 +0100</pubDate><guid isPermaLink="false">tag:None,2021-12-29:www.j-marjanovic.io/exploring-the-ps-pl-axi-interfaces-on-zynq-ultrascale-mpsoc.html</guid><category>FPGA, Zynq, Cache-Coherence</category></item><item><title>Notes on "A Primer on Memory Consistency and Cache Coherence"</title><link>www.j-marjanovic.io/notes-on-a-primer-on-memory-consistency-and-cache-coherence.html</link><description>&lt;p&gt;&lt;a href="https://www.morganclaypool.com/doi/abs/10.2200/S00962ED2V01Y201910CAC049"&gt;A Primer on Memory Consistency and Cache Coherence, Second Edition&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Authors:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Vijay Nagarajan, University of Edinburgh&lt;/li&gt;
