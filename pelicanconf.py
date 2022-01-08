@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 AUTHOR = u'Jan Marjanovic'
 SITENAME = u'j-marjanovic.io'
-SITEURL = 'www.j-marjanovic.io'
+SITEURL = 'j-marjanovic.io'
 
 PATH = 'content'
 

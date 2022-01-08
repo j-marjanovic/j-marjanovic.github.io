@@ -85,7 +85,10 @@ ol {
     font-size: 1.5em;
     position: fixed;
     left: 3.35%;
-    top: 150px;
+    top: 0px;
+		bottom: 0px;
+		padding-top: 50px;
+		background-color: #ccc;
     width: 265px;
 } 
 
