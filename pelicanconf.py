@@ -32,8 +32,8 @@ TRANSLATION_FEED_ATOM = None
 
 # Social widget
 SOCIAL = (('Twitter', 'https://twitter.com/janmarjanovic'),
-          ('LinkedIn', 'si.linkedin.com/in/janmarjanovic'),
-	  ('BitBucket', 'https://bitbucket.org/janco'),)
+          ('LinkedIn', 'https://www.linkedin.com/in/janmarjanovic/'),
+	       )
 
 TWITTER_USERNAME = 'janmarjanovic'
 
