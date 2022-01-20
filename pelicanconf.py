@@ -46,5 +46,5 @@ RELATIVE_URLS = True
 #THEME = 'Subtle'
 THEME = 'theme-jan'
 
-STATIC_PATHS = ['images', 'extra/CNAME']
+STATIC_PATHS = ['images', 'extra/CNAME', 'cv']
 EXTRA_PATH_METADATA = {'extra/CNAME': {'path': 'CNAME'},}
