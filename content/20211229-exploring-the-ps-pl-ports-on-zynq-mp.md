@@ -18,7 +18,7 @@ compression and decompression, HW-accelerated regex, HW-accelerated graph
 traversal, machine learning accelerators,...
 
 This is why I have decided to explore all ports available in Zynq US+ MPSoC in
-this blog post.
+my free time and to describe this adventure in this blog post.
 
 # Introduction
 
