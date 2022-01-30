@@ -3,7 +3,7 @@ Date: 2021-12-29 18:00
 Category: FPGA, Zynq, Cache-Coherence
 
 I recently held [a presentation at the 10th MicroTCA Workshop for Industry and
-Research](https://indico.desy.de/event/31387/contributions/112660/), where I
+Research](https://indico.desy.de/event/31387/contributions/112660/attachments/70411/89645/mtcaws2021_marjanovic_soc_amcs.pdf), where I
 presented some hardware we have developed, discussed the advantages of using
 SoCs, and showed a couple of examples where we successfully leveraged the features
 of these devices.
