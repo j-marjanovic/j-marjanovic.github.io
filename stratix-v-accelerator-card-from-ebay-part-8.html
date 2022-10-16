@@ -189,7 +189,7 @@ engine in the FPGA.</p>
 and perform DMA transfers with the DMA engine in the FPGA. The program uses
 the Avalon-ST Checker and Avalon-ST Generator IPs to verify the content of
 the transfer.</p>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>./pp_sp_test --help                                                               
+<div class="highlight"><pre><span></span><code><span class="gp">$</span> ./pp_sp_test --help                                                               
 <span class="go">Usage: ./pp_sp_test --dev DEV [--write] [--read]</span>
 
 <span class="go">Perform DMA transfers using the DMA engine in PP/SP FPGA</span>
@@ -204,11 +204,12 @@ the transfer.</p>
 <span class="go">  --msleep    sleep (in milliseconds) during each loop (default 0)</span>
 </code></pre></div>
 
+
 <p>Here is an example where 8 KiB of data was transferred in both directions. First
 the data was transferred from the card to the host (<code>c2h</code>), and then from the
 host to the card (<code>h2c</code>). In the end, the result of the check (in the FPGA) is
 printed.</p>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>./pp_sp_test --dev /dev/pp_sp_pcie_0000:42:00.0 --write --read --nr_bytes <span class="m">8192</span>
+<div class="highlight"><pre><span></span><code><span class="gp">$</span> ./pp_sp_test --dev /dev/pp_sp_pcie_0000:42:00.0 --write --read --nr_bytes <span class="m">8192</span>
 <span class="go">Arguments:</span>
 <span class="go">  dev = /dev/pp_sp_pcie_0000:42:00.0</span>
 <span class="go">  c2h = 1, h2c = 1</span>
@@ -227,6 +228,7 @@ printed.</p>
 <span class="go">[h2c] ioctl took 0.019000 ms</span>
 <span class="go">[check] samp = 8192 / 8192</span>
 </code></pre></div>
+
 
 <h2>TUI</h2>
 <p>A more elaborate program to control the DMA engine and the corresponding
@@ -283,7 +285,7 @@ the logic halfway between the PCIe core on the right side and the JTAG pins on
 the left side.</p>
 <h1>Measurements</h1>
 <h2>Fujitsu motherboard with right side PCIe link (lanes 0 to 7)</h2>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>sudo lspci -d <span class="m">1172</span>: -vv
+<div class="highlight"><pre><span></span><code><span class="gp">$</span> sudo lspci -d <span class="m">1172</span>: -vv
 <span class="go">01:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)</span>
 <span class="go">    Subsystem: Device 01a2:0001</span>
 <span class="go">[...]</span>
@@ -302,13 +304,14 @@ the left side.</p>
 <span class="go">[...]</span>
 </code></pre></div>
 
+
 <p><img alt="DMA write on Fujitsu MB, right interface" src="./images/2021_fpga_card_part_8/fujitsu_right_x8_write.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"></p>
 <p><img alt="DMA read on Fujitsu MB, right interface" src="./images/2021_fpga_card_part_8/fujitsu_right_x8_read.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"></p>
 <p>Here we see something interesting - the Avalon-ST Checker reports that some
 of the samples do not match the reference values. I investigate this issue
 in the following chapter.</p>
 <h2>Fujitsu motherboard with left side PCIe link (lanes 8 to 15)</h2>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>sudo lspci -d <span class="m">1172</span>: -vv
+<div class="highlight"><pre><span></span><code><span class="gp">$</span> sudo lspci -d <span class="m">1172</span>: -vv
 <span class="go">02:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)</span>
 <span class="go">    Subsystem: Device 01a2:0001</span>
 <span class="go">[...]</span>
@@ -327,28 +330,30 @@ in the following chapter.</p>
 <span class="go">[...]</span>
 </code></pre></div>
 
+
 <p><img alt="DMA write on Fujitsu MB, left interface" src="./images/2021_fpga_card_part_8/fujitsu_left_x8_write.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"></p>
 <p><img alt="DMA read on Fujitsu MB, left interface" src="./images/2021_fpga_card_part_8/fujitsu_left_x8_read.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"></p>
 <p>Similarly, also here the the Avalon-ST Checker reports corrupted samples.</p>
 <h2>Fujitsu motherboard with both PCIe links (lanes 0 to 7 and 8 to 15)</h2>
-<div class="highlight"><pre><span></span><code>pp_sp_example &gt; pcie status
-pcie 0:
-  id = 2c1e57a7
-  version = 10000
-  status.cur speed   = 3
-  status.LTTSM state = f
-  status.lane act    = 8
-  status.DL up       = 1
-pcie 1:
-  id = 2c1e57a7
-  version = 10000
-  status.cur speed   = 3
-  status.LTTSM state = f
-  status.lane act    = 8
-  status.DL up       = 1
+<div class="highlight"><pre><span></span><code><span class="err">pp_sp_example &gt; pcie status</span>
+<span class="err">pcie 0:</span>
+<span class="err">  id = 2c1e57a7</span>
+<span class="err">  version = 10000</span>
+<span class="err">  status.cur speed   = 3</span>
+<span class="err">  status.LTTSM state = f</span>
+<span class="err">  status.lane act    = 8</span>
+<span class="err">  status.DL up       = 1</span>
+<span class="err">pcie 1:</span>
+<span class="err">  id = 2c1e57a7</span>
+<span class="err">  version = 10000</span>
+<span class="err">  status.cur speed   = 3</span>
+<span class="err">  status.LTTSM state = f</span>
+<span class="err">  status.lane act    = 8</span>
+<span class="err">  status.DL up       = 1</span>
 </code></pre></div>
 
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>sudo lspci -d <span class="m">1172</span>: -vv <span class="p">|</span> egrep <span class="s1">&#39;Altera|LnkSta|Subsystem&#39;</span>
+
+<div class="highlight"><pre><span></span><code><span class="gp">$</span> sudo lspci -d <span class="m">1172</span>: -vv <span class="p">|</span> egrep <span class="s1">&#39;Altera|LnkSta|Subsystem&#39;</span>
 <span class="go">01:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)</span>
 <span class="go">    Subsystem: Device 01a2:0001</span>
 <span class="go">        LnkSta: Speed 8GT/s, Width x8, TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-</span>
@@ -359,17 +364,19 @@ pcie 1:
 <span class="go">        LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationComplete+, EqualizationPhase1+</span>
 </code></pre></div>
 
+
 <p><img alt="DMA write on Fujitsu MB, both interfaces" src="./images/2021_fpga_card_part_8/fujitsu_both_x8_write.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"></p>
 <p><img alt="DMA read on Fujitsu MB, both interfaces" src="./images/2021_fpga_card_part_8/fujitsu_both_x8_read.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"></p>
 <p>And not surprisingly, when using both interfaces to read the Avalon-ST Checker
 reports some corrupted samples as well.</p>
 <h2>Dell PowerEdge R720</h2>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>sudo lspci -d <span class="m">1172</span>: -vv <span class="p">|</span> egrep <span class="s1">&#39;Altera|LnkSta|Subsys&#39;</span>
+<div class="highlight"><pre><span></span><code><span class="gp">$</span> sudo lspci -d <span class="m">1172</span>: -vv <span class="p">|</span> egrep <span class="s1">&#39;Altera|LnkSta|Subsys&#39;</span>
 <span class="go">42:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)</span>
 <span class="go">    Subsystem: Device 01a2:0001</span>
 <span class="go">        LnkSta: Speed 8GT/s (ok), Width x8 (ok)</span>
 <span class="go">        LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete+, EqualizationPhase1+</span>
 </code></pre></div>
+
 
 <p><img alt="DMA write on R720" src="./images/2021_fpga_card_part_8/r720_x8_write.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"></p>
 <p><img alt="DMA read on R720" src="./images/2021_fpga_card_part_8/r720_x8_read.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"></p>
@@ -419,7 +426,7 @@ design</a>.</p>
 <hr>
 <h1>Appendix</h1>
 <h2>lspci on Fujitsu motherboard</h2>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>sudo lspci -d <span class="m">1172</span>: -vv
+<div class="highlight"><pre><span></span><code><span class="gp">$</span> sudo lspci -d <span class="m">1172</span>: -vv
 <span class="go">01:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)</span>
 <span class="go">    Subsystem: Device 01a2:0001</span>
 <span class="go">    Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+</span>
@@ -474,7 +481,8 @@ design</a>.</p>
 <span class="go">    Kernel modules: altera_cvp</span>
 </code></pre></div>
 
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>sudo lspci -d <span class="m">1172</span>: -vv
+
+<div class="highlight"><pre><span></span><code><span class="gp">$</span> sudo lspci -d <span class="m">1172</span>: -vv
 <span class="go">02:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)</span>
 <span class="go">    Subsystem: Device 01a2:0001</span>
 <span class="go">    Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+</span>
@@ -529,8 +537,9 @@ design</a>.</p>
 <span class="go">    Kernel modules: altera_cvp</span>
 </code></pre></div>
 
+
 <h2>lspci on Dell R720</h2>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>sudo lspci -d <span class="m">1172</span>: -vv
+<div class="highlight"><pre><span></span><code><span class="gp">$</span> sudo lspci -d <span class="m">1172</span>: -vv
 <span class="go">42:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)</span>
 <span class="go">    Subsystem: Device 01a2:0001</span>
 <span class="go">    Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+</span>
@@ -595,6 +604,7 @@ design</a>.</p>
 <span class="go">    Kernel driver in use: pp_sp_pcie</span>
 <span class="go">    Kernel modules: altera_cvp</span>
 </code></pre></div>
+
 
 <hr>
 <div style="font-size: 80%;" >

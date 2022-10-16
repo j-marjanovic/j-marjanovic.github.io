@@ -112,6 +112,7 @@ Info : JTAG tap: auto0.tap tap/device found: 0x029070dd <span class="o">(</span>
 Warn : gdb services need one or more targets defined
 </code></pre></div>
 
+
 <p>This gives hope that at least on the HW side, integrating the board with Quartus
 will be easy.</p>
 <h1>JTAG library</h1>
@@ -163,6 +164,7 @@ space:</p>
 <span class="o">%</span> <span class="nv">master_read_32</span> <span class="nv">$jtag_master</span> <span class="mh">0x1000</span> <span class="mi">12</span>
 <span class="nv">0xc10cc272</span> <span class="mh">0x00010000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span> <span class="mh">0x266ac4a3</span> <span class="mh">0x00000000</span> <span class="mh">0x00000000</span>
 </code></pre></div>
+
 
 <p>I will explain later what exactly are we seeing here, for now let's just accept
 that <em>JTAG to Avalon bridge</em> works, and it reads a magic number register
@@ -261,6 +263,7 @@ loop where it prints the measured frequency once per second.</p>
 <span class="n">Clock</span> <span class="n">frequency</span> <span class="p">[</span><span class="n">IDT</span> <span class="n">osc</span><span class="p">]</span><span class="o">:</span> <span class="mi">156250084</span> <span class="n">MHz</span>
 <span class="p">[...]</span>
 </code></pre></div>
+
 
 <p>We see that after the measurement has stabilized, we are receiving the clock
 which we have configured, and we see that both the reference clock (125 MHz to

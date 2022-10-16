@@ -97,14 +97,16 @@ when the licence manager was unable to find network adapter MAC address:</p>
 <span class="s s-Atom">available</span> <span class="s s-Atom">at</span> <span class="s2">&quot;www.macrovision.com&quot;</span><span class="p">.</span>
 </code></pre></div>
 
+
 <p>The problem is that the FLEXnet software searches for the MAC address of the eth*
 interface, while Centos uses completely different naming. Being familiar with the
 problem, I used a trick to create a new interface named eth0 (you should replace
 the x's with desired MAC address):</p>
-<div class="highlight"><pre><span></span><code>modprobe dummy
-ip link set name eth0 dev dummy0
-ifconfig eth0 hw ether xx:xx:xx:xx:xx:xx
+<div class="highlight"><pre><span></span><code><span class="err">modprobe dummy</span>
+<span class="err">ip link set name eth0 dev dummy0</span>
+<span class="err">ifconfig eth0 hw ether xx:xx:xx:xx:xx:xx</span>
 </code></pre></div>
+
 
 <p>After setting everything up, a view on the iCEcube2 showed before me.</p>
 <p><img alt="iCEcube2" src="./images/icestudio.png"></p>
@@ -120,6 +122,7 @@ very user friendly approach.</p>
 <div class="highlight"><pre><span></span><code><span class="n">Note</span> <span class="o">:</span> <span class="n">The</span> <span class="n">Integrated</span> <span class="n">Aldec</span> <span class="n">Active</span> <span class="n">HDL</span> <span class="n">simulation</span> <span class="n">software</span> <span class="n">and</span> <span class="n">iCEcube2</span> <span class="n">programming</span> 
 <span class="n">tools</span> <span class="n">are</span> <span class="n">only</span> <span class="n">available</span> <span class="k">in</span> <span class="n">windows</span> <span class="n">platform</span><span class="o">.</span>
 </code></pre></div>
+
 
 <p>Well this is it for now, i need to switch to Windows. Merry Christmas to everybody!</p>
 <hr>

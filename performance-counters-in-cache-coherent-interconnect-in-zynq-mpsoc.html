@@ -81,14 +81,15 @@ CCI is shown prominently in its central location.</p>
 and for Zynq MPSoC this option is by default already turned on.</p>
 <p>The driver prints a short message in the <code>dmesg</code> to indicate that it was
 successfully loaded:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~# </span>dmesg <span class="p">|</span> grep CCI
+<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~#</span> dmesg <span class="p">|</span> grep CCI
 <span class="go">[    3.218405] ARM CCI_400_r1 PMU driver probed</span>
 </code></pre></div>
+
 
 <p>We can then use <a href="https://perf.wiki.kernel.org/index.php/Main_Page">perf</a> command
 to list all performance counters available in the system, and among those there
 are also listed those from the CCI-400:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~# </span>perf list
+<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~#</span> perf list
 
 <span class="go">List of pre-defined events (to be used in -e):</span>
 
@@ -102,6 +103,7 @@ are also listed those from the CCI-400:</p>
 <span class="go">  CCI_400_r1/si_wrq_hs_write_unique,source=?/        [Kernel PMU event]</span>
 <span class="go">  CCI_400_r1/si_wrq_stall_tt_full,source=?/          [Kernel PMU event]</span>
 </code></pre></div>
+
 
 <p>Although at this stage the performance counters are already accessible from the
 system, except for the <code>cycles</code> counter no other counter is actually counting.</p>
@@ -128,11 +130,12 @@ module. This block diagram is based on my current understanding.</p>
 <h2>Accessing the configuration registers</h2>
 <p>With this in mind, one would be tempted to quickly change the value of NIDEN
 input directly from user space with <code>devmem</code> utility.</p>
-<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~# </span>devmem 0xFD5E0000
+<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~#</span> devmem 0xFD5E0000
 <span class="go">Bus error</span>
-<span class="gp">root@u96v2-sbc:~# </span>devmem 0xFD5E0040
+<span class="gp">root@u96v2-sbc:~#</span> devmem 0xFD5E0040
 <span class="go">Bus error</span>
 </code></pre></div>
+
 
 <p>Here we encounter another issue, namely the CCI_REG is protected by the Xilinx
 Memory Protection Unit (XMPU) and is only accessible from the secure
@@ -226,6 +229,7 @@ Subject: [PATCH] Enable CCI debug (NIDEN and SPINDEN on CCI-400)
 2.25.1
 </code></pre></div>
 
+
 <p>The following is then the output of the FSBL with the patch:</p>
 <div class="highlight"><pre><span></span><code>Xilinx Zynq MP First Stage Boot Loader
 Release 2020.2   Jun 10 2021  -  19:49:38
@@ -253,6 +257,7 @@ CCI_REG: register dump
   offset 40 = 3
 Exit from FSBL
 </code></pre></div>
+
 
 <p>We can note that the register at the offset <code>0x40</code> has changed from <code>0</code> to <code>3</code>,
 as we have requested.</p>
@@ -297,12 +302,12 @@ ports 0 and 3. From the
 <a href="https://www.xilinx.com/support/documentation/user_guides/ug1085-zynq-ultrascale-trm.pdf">UG1085</a>
 we can see that the APU is connected to port 3 on the CCI-400 and the HPC ports
 are connected to port 0 on the interconnect.</p>
-<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~# </span>perf stat -e <span class="se">\</span>
-<span class="gp">&gt; </span>CCI_400_r1/cycles/,<span class="se">\</span>
-<span class="gp">&gt; </span>CCI_400_r1/si_rrq_hs_any,source<span class="o">=</span><span class="m">0</span>/,<span class="se">\</span>
-<span class="gp">&gt; </span>CCI_400_r1/si_wrq_hs_any,source<span class="o">=</span><span class="m">0</span>/,<span class="se">\</span>
-<span class="gp">&gt; </span>CCI_400_r1/si_rrq_hs_any,source<span class="o">=</span><span class="m">3</span>/,<span class="se">\</span>
-<span class="gp">&gt; </span>CCI_400_r1/si_wrq_hs_any,source<span class="o">=</span><span class="m">3</span>/
+<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~#</span> perf stat -e <span class="se">\</span>
+&gt; CCI_400_r1/cycles/,<span class="se">\</span>
+&gt; CCI_400_r1/si_rrq_hs_any,source<span class="o">=</span><span class="m">0</span>/,<span class="se">\</span>
+&gt; CCI_400_r1/si_wrq_hs_any,source<span class="o">=</span><span class="m">0</span>/,<span class="se">\</span>
+&gt; CCI_400_r1/si_rrq_hs_any,source<span class="o">=</span><span class="m">3</span>/,<span class="se">\</span>
+&gt; CCI_400_r1/si_wrq_hs_any,source<span class="o">=</span><span class="m">3</span>/
 
 <span class="go">^C</span>
 <span class="go"> Performance counter stats for &#39;system wide&#39;:</span>
@@ -315,6 +320,7 @@ are connected to port 0 on the interconnect.</p>
 
 <span class="go">       4.138963536 seconds time elapsed</span>
 </code></pre></div>
+
 
 <p>We see that expected 1000000 writes from the HPC ports (= 2 (instances) * 5 (per
 loop) * 100000 (number of loops)) and we also see the number of reads on the HPS

@@ -78,6 +78,7 @@ like:</p>
 <div class="highlight"><pre><span></span><code>apt-get install linux-headers-<span class="k">$(</span>uname -r<span class="k">)</span>
 </code></pre></div>
 
+
 <p>The above command will install the headers the headers for the currently running 
 kernel. It copies the header files to /usr/src and creates link in /lib/modules/,
 this gives the user tools needed to compile kernel modules.</p>
@@ -89,7 +90,7 @@ get a kernel image, the <em>kbuild</em> system did not work. In Thomas Alva Edis
 <p>Initially I wanted to get the headers in the same way as I would on Ubuntu, by
 using apt (Advanced Packaging Tool). Searching for available packages did not
 show the package needed (the Raspbian was running the 3.18.7-v7+ kernel).</p>
-<div class="highlight"><pre><span></span><code><span class="gp">pi@raspberrypi ~ $ </span>sudo aptitude search linux-headers
+<div class="highlight"><pre><span></span><code><span class="gp">pi@raspberrypi ~ $</span> sudo aptitude search linux-headers
 <span class="go">v   linux-headers                                   -                                                           </span>
 <span class="go">p   linux-headers-3.10-3-all                        - All header files for Linux 3.10 (meta-package)            </span>
 <span class="go">p   linux-headers-3.10-3-all-armhf                  - All header files for Linux 3.10 (meta-package)            </span>
@@ -116,6 +117,7 @@ show the package needed (the Raspbian was running the 3.18.7-v7+ kernel).</p>
 <span class="go">p   linux-headers-rpi-rpfv                          - This metapackage will pull in the headers for the raspbian</span>
 <span class="go">p   linux-headers-rpi2-rpfv                         - This metapackage will pull in the headers for the raspbian</span>
 </code></pre></div>
+
 
 <p>I tried my luck with <em>linux-headers-rpi2-rpfv</em> which installed headers for
 kernel 3.18.0. That might sound close enough, but Linux refuses modules which
@@ -179,6 +181,7 @@ shows nothing promising:</p>
 <span class="o">[</span><span class="n"> 4246.573935</span><span class="o">]</span><span class="w"> </span><span class="nl">Code</span><span class="p">:</span><span class="w"> </span><span class="n">e51bc088</span><span class="w"> </span><span class="n">e15c0006</span><span class="w"> </span><span class="n">e2466008</span><span class="w"> </span><span class="mi">0</span><span class="n">a000009</span><span class="w"> </span><span class="p">(</span><span class="n">e5963014</span><span class="p">)</span><span class="w"> </span>
 <span class="o">[</span><span class="n"> 4246.604593</span><span class="o">]</span><span class="w"> </span><span class="c1">---[ end trace 8e4bd0982f9f1fd0 ]---</span>
 </code></pre></div>
+
 
 <p>It basically says that there was an error trying to access the wrong part of the
 memory from the <em>insmod</em> process.</p>

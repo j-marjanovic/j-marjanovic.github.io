@@ -83,6 +83,7 @@ output:</p>
 <span class="m">[11818.795128] </span><span class="k">usb 1-4.1:</span> SerialNumber: 0000001000
 </code></pre></div>
 
+
 <p>We see that the USB works, and we also got the product name (<code>Eicon DIVA USB</code>).
 A quick search on the internet revealed that this device is an ISDN modem, which
 matches the observation, an RJ45 socket and the date code of June 1999.</p>
@@ -121,7 +122,7 @@ Play") and also serves as an introduction of the protocol itself.</p>
 <p><a href="https://github.com/torvalds/linux/blob/v5.11/drivers/usb/misc/ezusb.c">https://github.com/torvalds/linux/blob/v5.11/drivers/usb/misc/ezusb.c</a></p>
 <p><a href="https://github.com/torvalds/linux/commit/8d733e26c076f47e7774c0e5baa74c9b1c01199a">https://github.com/torvalds/linux/commit/8d733e26c076f47e7774c0e5baa74c9b1c01199a</a></p>
 <h3>fxload</h3>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>apt info fxload
+<div class="highlight"><pre><span></span><code><span class="gp">$</span> apt info fxload
 <span class="go">Package: fxload</span>
 <span class="go">Version: 0.0.20081013-1ubuntu2</span>
 <span class="go">&lt;...&gt;</span>
@@ -130,6 +131,7 @@ Play") and also serves as an introduction of the protocol itself.</p>
 <span class="go"> ez-usb devices. It is intended to be invoked by hotplug scripts when</span>
 <span class="go"> the unprogrammed device appears on the bus.</span>
 </code></pre></div>
+
 
 <h1>Reverse-engineering the board</h1>
 <p>Since there are no BGA components on this board, and the main microcontroller
@@ -158,7 +160,7 @@ and uses <a href="http://sdcc.sourceforge.net/">sdcc</a> compiler.</p>
 <p>After modifying the code to match the pinout on the (modified) board, and
 compiling the code with <code>sdcc</code> a HEX file is produces. This gets then
 easily downloaded to the board with the aforementioned <code>fxload</code> utility:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>sudo fxload -D /dev/bus/usb/001/008 -s /usr/share/usb/a3load.hex -I firmware.hex -t an21 -v
+<div class="highlight"><pre><span></span><code><span class="gp">$</span> sudo fxload -D /dev/bus/usb/001/008 -s /usr/share/usb/a3load.hex -I firmware.hex -t an21 -v
 <span class="go">microcontroller type: an21</span>
 <span class="go">1st stage:  load 2nd stage loader</span>
 <span class="go">open RAM hexfile image /usr/share/usb/a3load.hex</span>
@@ -180,6 +182,7 @@ easily downloaded to the board with the aforementioned <code>fxload</code> utili
 <span class="go">... WROTE: 2378 bytes, 33 segments, avg 72</span>
 <span class="go">reset CPU</span>
 </code></pre></div>
+
 
 <p>With the proverbial LED blinking, I was able to confirm that this method of
 programming the microcontroller works and that the firmware project works

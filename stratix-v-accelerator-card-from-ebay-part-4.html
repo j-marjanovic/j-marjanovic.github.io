@@ -77,34 +77,36 @@ contains a relatively simple management interface, accessible over an I2C bus.</
 <p>First I <a href="https://github.com/j-marjanovic/otma-fpga-bringup/blob/master/software/otma_bringup/src/mini_i2cdetect.c">implemented a mini equivalent to <code>i2cdetect</code></a> to check if I am probing a
 correct I2C bus. As expected, an I2C device with address 0x50 replies to our
 request:</p>
-<div class="highlight"><pre><span></span><code><span class="c"> 0000 |          </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"></span>
-<span class="c"> 0010 | </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"></span>
-<span class="c"> 0020 | </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"></span>
-<span class="c"> 0030 | </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"></span>
-<span class="c"> 0040 | </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"></span>
-<span class="c"> 0050 | 50 </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"></span>
-<span class="c"> 0060 | </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"></span>
-<span class="c"> 0070 | </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"> </span><span class="nb">--</span><span class="c"></span>
+<div class="highlight"><pre><span></span><code><span class="err"> 0000 |          -- -- -- -- -- -- -- -- -- -- -- -- --</span>
+<span class="err"> 0010 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span>
+<span class="err"> 0020 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span>
+<span class="err"> 0030 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span>
+<span class="err"> 0040 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span>
+<span class="err"> 0050 | 50 -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span>
+<span class="err"> 0060 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span>
+<span class="err"> 0070 | -- -- -- -- -- -- --</span>
 </code></pre></div>
 
+
 <p>We can then continue by dumping the content of the module EEPROM:</p>
-<div class="highlight"><pre><span></span><code>rc = 0 | 0d 02 06 00 00 00 00 00 00 00 00 00 00 00 00 00
-rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-rc = 0 | 0d 00 23 08 00 00 00 00 00 00 00 05 8d 00 00 00
-rc = 0 | 00 00 02 a0 4d 65 6c 6c 61 6e 6f 78 20 20 20 20
-rc = 0 | 20 20 20 20 0f 00 02 c9 36 37 30 37 35 39 2d 42
-rc = 0 | 32 33 20 20 20 20 20 20 41 31 04 06 09 00 46 27
-rc = 0 | 00 00 00 00 36 43 32 32 31 32 30 37 36 58 20 20
-rc = 0 | 20 20 20 20 31 32 30 33 32 37 20 20 00 00 00 64
-rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-rc = 0 | 00 00 00 00 00 00 00 00 00 00 02 00 00 30 00 00
+<div class="highlight"><pre><span></span><code><span class="err">rc = 0 | 0d 02 06 00 00 00 00 00 00 00 00 00 00 00 00 00</span>
+<span class="err">rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</span>
+<span class="err">rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</span>
+<span class="err">rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</span>
+<span class="err">rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</span>
+<span class="err">rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</span>
+<span class="err">rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</span>
+<span class="err">rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</span>
+<span class="err">rc = 0 | 0d 00 23 08 00 00 00 00 00 00 00 05 8d 00 00 00</span>
+<span class="err">rc = 0 | 00 00 02 a0 4d 65 6c 6c 61 6e 6f 78 20 20 20 20</span>
+<span class="err">rc = 0 | 20 20 20 20 0f 00 02 c9 36 37 30 37 35 39 2d 42</span>
+<span class="err">rc = 0 | 32 33 20 20 20 20 20 20 41 31 04 06 09 00 46 27</span>
+<span class="err">rc = 0 | 00 00 00 00 36 43 32 32 31 32 30 37 36 58 20 20</span>
+<span class="err">rc = 0 | 20 20 20 20 31 32 30 33 32 37 20 20 00 00 00 64</span>
+<span class="err">rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</span>
+<span class="err">rc = 0 | 00 00 00 00 00 00 00 00 00 00 02 00 00 30 00 00</span>
 </code></pre></div>
+
 
 <p>The cable is correctly identified as Mellanox 670759-B23 cable.</p>
 <h1>40G Ethernet MAC</h1>
@@ -125,8 +127,9 @@ measurements and change other transceiver configurations.</p>
 <p>With everything in place, I have programmed the bitstream to the FPGA, and the
 <code>dmesg</code> output in Linux on the other side of the link reported some good news,
 the link is up:</p>
-<div class="highlight"><pre><span></span><code>[  615.469842] i40e 0000:01:00.0 enp1s0: NIC Link is Up, 40 Gbps Full Duplex, Flow Control: None
+<div class="highlight"><pre><span></span><code><span class="err">[  615.469842] i40e 0000:01:00.0 enp1s0: NIC Link is Up, 40 Gbps Full Duplex, Flow Control: None</span>
 </code></pre></div>
+
 
 <h1>Eye scan</h1>
 <p>Once the link is established, we can use <a href="https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/an/an605.pdf">Transceiver Toolkit

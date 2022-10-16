@@ -263,7 +263,7 @@ can be used as a reference on how to use those ports.&lt;/p&gt;
 &lt;h2&gt;System ILA waveforms&lt;/h2&gt;
 &lt;h3&gt;AXI Proxy&lt;/h3&gt;
 &lt;h4&gt;HP port&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;app-axi-proxy --interface hp --use-osync
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~#&lt;/span&gt; app-axi-proxy --interface hp --use-osync
 &lt;span class="go"&gt;Udmabuf&lt;/span&gt;
 &lt;span class="go"&gt;  name = axi:udmabuf@0x0&lt;/span&gt;
 &lt;span class="go"&gt;  virt addr = 0xffff9c0c7000&lt;/span&gt;
@@ -293,9 +293,10 @@ can be used as a reference on how to use those ports.&lt;/p&gt;
 &lt;span class="go"&gt;stats: dur_wr = 36, dur_rd = 70&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;&lt;img alt="AXI Proxy read and write - HP port" src="www.j-marjanovic.io/images/2021_zynqmp_ports/system_ila/proxy_hp.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;h4&gt;HPC port&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;app-axi-proxy --interface hpc --axi-cache &lt;span class="m"&gt;15&lt;/span&gt; --axi-prot &lt;span class="m"&gt;2&lt;/span&gt; --axi-user &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~#&lt;/span&gt; app-axi-proxy --interface hpc --axi-cache &lt;span class="m"&gt;15&lt;/span&gt; --axi-prot &lt;span class="m"&gt;2&lt;/span&gt; --axi-user &lt;span class="m"&gt;1&lt;/span&gt;
 &lt;span class="go"&gt;Udmabuf&lt;/span&gt;
 &lt;span class="go"&gt;  name = axi:udmabuf@0x0&lt;/span&gt;
 &lt;span class="go"&gt;  virt addr = 0xffff931d8000&lt;/span&gt;
@@ -325,9 +326,10 @@ can be used as a reference on how to use those ports.&lt;/p&gt;
 &lt;span class="go"&gt;stats: dur_wr = 46, dur_rd = 40&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;&lt;img alt="AXI Proxy read and write - HPC port" src="www.j-marjanovic.io/images/2021_zynqmp_ports/system_ila/proxy_hpc.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;h4&gt;ACP port&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;app-axi-proxy --interface acp --axi-cache &lt;span class="m"&gt;15&lt;/span&gt; --axi-prot &lt;span class="m"&gt;2&lt;/span&gt; --axi-user &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~#&lt;/span&gt; app-axi-proxy --interface acp --axi-cache &lt;span class="m"&gt;15&lt;/span&gt; --axi-prot &lt;span class="m"&gt;2&lt;/span&gt; --axi-user &lt;span class="m"&gt;1&lt;/span&gt;
 &lt;span class="go"&gt;Udmabuf&lt;/span&gt;
 &lt;span class="go"&gt;  name = axi:udmabuf@0x0&lt;/span&gt;
 &lt;span class="go"&gt;  virt addr = 0xffffa1356000&lt;/span&gt;
@@ -357,10 +359,11 @@ can be used as a reference on how to use those ports.&lt;/p&gt;
 &lt;span class="go"&gt;stats: dur_wr = 25, dur_rd = 14&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;&lt;img alt="AXI Proxy read and write - ACP port" src="www.j-marjanovic.io/images/2021_zynqmp_ports/system_ila/proxy_acp.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;h3&gt;&lt;/h3&gt;
 &lt;h4&gt;HP port&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;app-axi-traffic-gen --count &lt;span class="m"&gt;32&lt;/span&gt; --interface hp --use-osync
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~#&lt;/span&gt; app-axi-traffic-gen --count &lt;span class="m"&gt;32&lt;/span&gt; --interface hp --use-osync
 &lt;span class="go"&gt;UioDevice{number =  4, name =        AxiTrafficGen, addr = 0xa0040000, size = 65536, note = acp}&lt;/span&gt;
 &lt;span class="go"&gt;UioDevice{number =  5, name =        AxiTrafficGen, addr = 0xa0050000, size = 65536, note = hp}&lt;/span&gt;
 &lt;span class="go"&gt;UioDevice{number =  6, name =        AxiTrafficGen, addr = 0xa0060000, size = 65536, note = hpc}&lt;/span&gt;
@@ -383,9 +386,10 @@ can be used as a reference on how to use those ports.&lt;/p&gt;
 &lt;span class="go"&gt;stats: rd cyc = 670, wr cyc = 265, rd_ok = 128&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;&lt;img alt="AXI Traffic Generator write and read - HP port" src="www.j-marjanovic.io/images/2021_zynqmp_ports/system_ila/tg_hp.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;h4&gt;HPC port&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;app-axi-traffic-gen --count &lt;span class="m"&gt;32&lt;/span&gt; --interface hpc --axi-cache &lt;span class="m"&gt;15&lt;/span&gt; --axi-prot &lt;span class="m"&gt;2&lt;/span&gt; --axi-user &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~#&lt;/span&gt; app-axi-traffic-gen --count &lt;span class="m"&gt;32&lt;/span&gt; --interface hpc --axi-cache &lt;span class="m"&gt;15&lt;/span&gt; --axi-prot &lt;span class="m"&gt;2&lt;/span&gt; --axi-user &lt;span class="m"&gt;1&lt;/span&gt;
 &lt;span class="go"&gt;UioDevice{number =  4, name =        AxiTrafficGen, addr = 0xa0040000, size = 65536, note = acp}&lt;/span&gt;
 &lt;span class="go"&gt;UioDevice{number =  5, name =        AxiTrafficGen, addr = 0xa0050000, size = 65536, note = hp}&lt;/span&gt;
 &lt;span class="go"&gt;UioDevice{number =  6, name =        AxiTrafficGen, addr = 0xa0060000, size = 65536, note = hpc}&lt;/span&gt;
@@ -408,10 +412,11 @@ can be used as a reference on how to use those ports.&lt;/p&gt;
 &lt;span class="go"&gt;stats: rd cyc = 391, wr cyc = 756, rd_ok = 128&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;&lt;img alt="AXI Traffic Generator write - HPC port" src="www.j-marjanovic.io/images/2021_zynqmp_ports/system_ila/tg_hpc_write.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img alt="AXI Traffic Generator reads - HPC port" src="www.j-marjanovic.io/images/2021_zynqmp_ports/system_ila/tg_hpc_read.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;h4&gt;ACP port&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;app-axi-traffic-gen --count &lt;span class="m"&gt;32&lt;/span&gt; --interface acp --axi-cache &lt;span class="m"&gt;15&lt;/span&gt; --axi-prot &lt;span class="m"&gt;2&lt;/span&gt; --axi-user &lt;span class="m"&gt;1&lt;/span&gt;     
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~#&lt;/span&gt; app-axi-traffic-gen --count &lt;span class="m"&gt;32&lt;/span&gt; --interface acp --axi-cache &lt;span class="m"&gt;15&lt;/span&gt; --axi-prot &lt;span class="m"&gt;2&lt;/span&gt; --axi-user &lt;span class="m"&gt;1&lt;/span&gt;     
 &lt;span class="go"&gt;UioDevice{number =  4, name =        AxiTrafficGen, addr = 0xa0040000, size = 65536, note = acp}&lt;/span&gt;
 &lt;span class="go"&gt;UioDevice{number =  5, name =        AxiTrafficGen, addr = 0xa0050000, size = 65536, note = hp}&lt;/span&gt;
 &lt;span class="go"&gt;UioDevice{number =  6, name =        AxiTrafficGen, addr = 0xa0060000, size = 65536, note = hpc}&lt;/span&gt;
@@ -433,6 +438,7 @@ can be used as a reference on how to use those ports.&lt;/p&gt;
 &lt;span class="go"&gt;Memory check (size = 32 bursts) successfully completed&lt;/span&gt;
 &lt;span class="go"&gt;stats: rd cyc = 140, wr cyc = 248, rd_ok = 128&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;&lt;img alt="AXI Traffic Generator reads - ACP port" src="www.j-marjanovic.io/images/2021_zynqmp_ports/system_ila/tg_acp.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;h2&gt;FSBL output&lt;/h2&gt;
@@ -467,6 +473,7 @@ can be used as a reference on how to use those ports.&lt;/p&gt;
 &lt;span class="go"&gt;CCI: shareable override reg - after = 3&lt;/span&gt;
 &lt;span class="go"&gt;Exit from FSBL &lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;hr&gt;
 &lt;div style="font-size: 90%;" &gt;
@@ -511,14 +518,15 @@ CCI is shown prominently in its central location.&lt;/p&gt;
 and for Zynq MPSoC this option is by default already turned on.&lt;/p&gt;
 &lt;p&gt;The driver prints a short message in the &lt;code&gt;dmesg&lt;/code&gt; to indicate that it was
 successfully loaded:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;dmesg &lt;span class="p"&gt;|&lt;/span&gt; grep CCI
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~#&lt;/span&gt; dmesg &lt;span class="p"&gt;|&lt;/span&gt; grep CCI
 &lt;span class="go"&gt;[    3.218405] ARM CCI_400_r1 PMU driver probed&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;We can then use &lt;a href="https://perf.wiki.kernel.org/index.php/Main_Page"&gt;perf&lt;/a&gt; command
 to list all performance counters available in the system, and among those there
 are also listed those from the CCI-400:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;perf list
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~#&lt;/span&gt; perf list
 
 &lt;span class="go"&gt;List of pre-defined events (to be used in -e):&lt;/span&gt;
 
@@ -532,6 +540,7 @@ are also listed those from the CCI-400:&lt;/p&gt;
 &lt;span class="go"&gt;  CCI_400_r1/si_wrq_hs_write_unique,source=?/        [Kernel PMU event]&lt;/span&gt;
 &lt;span class="go"&gt;  CCI_400_r1/si_wrq_stall_tt_full,source=?/          [Kernel PMU event]&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;Although at this stage the performance counters are already accessible from the
 system, except for the &lt;code&gt;cycles&lt;/code&gt; counter no other counter is actually counting.&lt;/p&gt;
@@ -558,11 +567,12 @@ module. This block diagram is based on my current understanding.&lt;/p&gt;
 &lt;h2&gt;Accessing the configuration registers&lt;/h2&gt;
 &lt;p&gt;With this in mind, one would be tempted to quickly change the value of NIDEN
 input directly from user space with &lt;code&gt;devmem&lt;/code&gt; utility.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;devmem 0xFD5E0000
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~#&lt;/span&gt; devmem 0xFD5E0000
 &lt;span class="go"&gt;Bus error&lt;/span&gt;
-&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;devmem 0xFD5E0040
+&lt;span class="gp"&gt;root@u96v2-sbc:~#&lt;/span&gt; devmem 0xFD5E0040
 &lt;span class="go"&gt;Bus error&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;Here we encounter another issue, namely the CCI_REG is protected by the Xilinx
 Memory Protection Unit (XMPU) and is only accessible from the secure
@@ -656,6 +666,7 @@ Subject: [PATCH] Enable CCI debug (NIDEN and SPINDEN on CCI-400)
 2.25.1
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;The following is then the output of the FSBL with the patch:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Xilinx Zynq MP First Stage Boot Loader
 Release 2020.2   Jun 10 2021  -  19:49:38
@@ -683,6 +694,7 @@ CCI_REG: register dump
   offset 40 = 3
 Exit from FSBL
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;We can note that the register at the offset &lt;code&gt;0x40&lt;/code&gt; has changed from &lt;code&gt;0&lt;/code&gt; to &lt;code&gt;3&lt;/code&gt;,
 as we have requested.&lt;/p&gt;
@@ -727,12 +739,12 @@ ports 0 and 3. From the
 &lt;a href="https://www.xilinx.com/support/documentation/user_guides/ug1085-zynq-ultrascale-trm.pdf"&gt;UG1085&lt;/a&gt;
 we can see that the APU is connected to port 3 on the CCI-400 and the HPC ports
 are connected to port 0 on the interconnect.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;perf stat -e &lt;span class="se"&gt;\&lt;/span&gt;
-&lt;span class="gp"&gt;&amp;gt; &lt;/span&gt;CCI_400_r1/cycles/,&lt;span class="se"&gt;\&lt;/span&gt;
-&lt;span class="gp"&gt;&amp;gt; &lt;/span&gt;CCI_400_r1/si_rrq_hs_any,source&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;/,&lt;span class="se"&gt;\&lt;/span&gt;
-&lt;span class="gp"&gt;&amp;gt; &lt;/span&gt;CCI_400_r1/si_wrq_hs_any,source&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;/,&lt;span class="se"&gt;\&lt;/span&gt;
-&lt;span class="gp"&gt;&amp;gt; &lt;/span&gt;CCI_400_r1/si_rrq_hs_any,source&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;/,&lt;span class="se"&gt;\&lt;/span&gt;
-&lt;span class="gp"&gt;&amp;gt; &lt;/span&gt;CCI_400_r1/si_wrq_hs_any,source&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;/
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~#&lt;/span&gt; perf stat -e &lt;span class="se"&gt;\&lt;/span&gt;
+&amp;gt; CCI_400_r1/cycles/,&lt;span class="se"&gt;\&lt;/span&gt;
+&amp;gt; CCI_400_r1/si_rrq_hs_any,source&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;/,&lt;span class="se"&gt;\&lt;/span&gt;
+&amp;gt; CCI_400_r1/si_wrq_hs_any,source&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;/,&lt;span class="se"&gt;\&lt;/span&gt;
+&amp;gt; CCI_400_r1/si_rrq_hs_any,source&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;/,&lt;span class="se"&gt;\&lt;/span&gt;
+&amp;gt; CCI_400_r1/si_wrq_hs_any,source&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;/
 
 &lt;span class="go"&gt;^C&lt;/span&gt;
 &lt;span class="go"&gt; Performance counter stats for &amp;#39;system wide&amp;#39;:&lt;/span&gt;
@@ -745,6 +757,7 @@ are connected to port 0 on the interconnect.&lt;/p&gt;
 
 &lt;span class="go"&gt;       4.138963536 seconds time elapsed&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;We see that expected 1000000 writes from the HPC ports (= 2 (instances) * 5 (per
 loop) * 100000 (number of loops)) and we also see the number of reads on the HPS

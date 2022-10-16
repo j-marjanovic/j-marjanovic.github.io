@@ -95,10 +95,11 @@ and Vivado Synthesis
 now support initialization of the register from <code>initial</code> block.</p>
 <p>Vivado Synthesis Guidelines go even further and suggest using <code>inital</code> instead
 of reset:</p>
-<div class="highlight"><pre><span></span><code>Avoid operational set/reset logic whenever possible. There may be other,
-less expensive, ways to achieve the desired effect, such as taking
-advantage of the circuit global reset by defining an initial content.
+<div class="highlight"><pre><span></span><code><span class="err">Avoid operational set/reset logic whenever possible. There may be other,</span>
+<span class="err">less expensive, ways to achieve the desired effect, such as taking</span>
+<span class="err">advantage of the circuit global reset by defining an initial content.</span>
 </code></pre></div>
+
 
 <h2>Tip #18</h2>
 <p>A small typo on page 81, in SystemVerilog <code>logic</code> is a 4-state type which
@@ -123,6 +124,7 @@ to different delays from IO pins to registers.</p>
 should be:</p>
 <div class="highlight"><pre><span></span><code><span class="k">initial</span> <span class="n">shift4</span> <span class="o">=</span> <span class="n">init2</span> <span class="o">&gt;&gt;&gt;</span> <span class="mh">2</span><span class="p">;</span>   <span class="c1">// result is 8&#39;hE0</span>
 </code></pre></div>
+
 
 <p>Note that result after shift operation should be 8'hE0 (-32) instead of 8'h0E.</p>
 <h2>Tip #27</h2>
@@ -229,8 +231,9 @@ since it often provides a way to find the post-synthesis nets. The <code>keep</c
 attribute could also be combined with <code>debug</code> attribute for easier identification
 of signals.</p>
 <p>Verilog example:</p>
-<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="o">*</span> <span class="n">keep</span> <span class="o">=</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span> <span class="n">mark_debug</span> <span class="o">=</span> <span class="s2">&quot;true&quot;</span> <span class="o">*</span><span class="p">)</span> <span class="n">wire</span> <span class="p">[</span><span class="mi">19</span><span class="p">:</span><span class="mi">0</span><span class="p">]</span> <span class="n">signal_to_be_dbged</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="c">(* keep = &quot;true&quot;, mark_debug = &quot;true&quot; *)</span> <span class="n">wire</span> <span class="o">[</span><span class="mi">19</span><span class="o">:</span><span class="mi">0</span><span class="o">]</span> <span class="n">signal_to_be_dbged</span><span class="o">;</span>
 </code></pre></div>
+
 
 <h2>Tip #90</h2>
 <p>UCF constants are completely out of date, and were replaced by an equivalent of

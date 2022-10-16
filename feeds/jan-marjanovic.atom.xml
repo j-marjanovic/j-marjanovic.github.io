@@ -263,7 +263,7 @@ can be used as a reference on how to use those ports.&lt;/p&gt;
 &lt;h2&gt;System ILA waveforms&lt;/h2&gt;
 &lt;h3&gt;AXI Proxy&lt;/h3&gt;
 &lt;h4&gt;HP port&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;app-axi-proxy --interface hp --use-osync
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~#&lt;/span&gt; app-axi-proxy --interface hp --use-osync
 &lt;span class="go"&gt;Udmabuf&lt;/span&gt;
 &lt;span class="go"&gt;  name = axi:udmabuf@0x0&lt;/span&gt;
 &lt;span class="go"&gt;  virt addr = 0xffff9c0c7000&lt;/span&gt;
@@ -293,9 +293,10 @@ can be used as a reference on how to use those ports.&lt;/p&gt;
 &lt;span class="go"&gt;stats: dur_wr = 36, dur_rd = 70&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;&lt;img alt="AXI Proxy read and write - HP port" src="www.j-marjanovic.io/images/2021_zynqmp_ports/system_ila/proxy_hp.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;h4&gt;HPC port&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;app-axi-proxy --interface hpc --axi-cache &lt;span class="m"&gt;15&lt;/span&gt; --axi-prot &lt;span class="m"&gt;2&lt;/span&gt; --axi-user &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~#&lt;/span&gt; app-axi-proxy --interface hpc --axi-cache &lt;span class="m"&gt;15&lt;/span&gt; --axi-prot &lt;span class="m"&gt;2&lt;/span&gt; --axi-user &lt;span class="m"&gt;1&lt;/span&gt;
 &lt;span class="go"&gt;Udmabuf&lt;/span&gt;
 &lt;span class="go"&gt;  name = axi:udmabuf@0x0&lt;/span&gt;
 &lt;span class="go"&gt;  virt addr = 0xffff931d8000&lt;/span&gt;
@@ -325,9 +326,10 @@ can be used as a reference on how to use those ports.&lt;/p&gt;
 &lt;span class="go"&gt;stats: dur_wr = 46, dur_rd = 40&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;&lt;img alt="AXI Proxy read and write - HPC port" src="www.j-marjanovic.io/images/2021_zynqmp_ports/system_ila/proxy_hpc.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;h4&gt;ACP port&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;app-axi-proxy --interface acp --axi-cache &lt;span class="m"&gt;15&lt;/span&gt; --axi-prot &lt;span class="m"&gt;2&lt;/span&gt; --axi-user &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~#&lt;/span&gt; app-axi-proxy --interface acp --axi-cache &lt;span class="m"&gt;15&lt;/span&gt; --axi-prot &lt;span class="m"&gt;2&lt;/span&gt; --axi-user &lt;span class="m"&gt;1&lt;/span&gt;
 &lt;span class="go"&gt;Udmabuf&lt;/span&gt;
 &lt;span class="go"&gt;  name = axi:udmabuf@0x0&lt;/span&gt;
 &lt;span class="go"&gt;  virt addr = 0xffffa1356000&lt;/span&gt;
@@ -357,10 +359,11 @@ can be used as a reference on how to use those ports.&lt;/p&gt;
 &lt;span class="go"&gt;stats: dur_wr = 25, dur_rd = 14&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;&lt;img alt="AXI Proxy read and write - ACP port" src="www.j-marjanovic.io/images/2021_zynqmp_ports/system_ila/proxy_acp.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;h3&gt;&lt;/h3&gt;
 &lt;h4&gt;HP port&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;app-axi-traffic-gen --count &lt;span class="m"&gt;32&lt;/span&gt; --interface hp --use-osync
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~#&lt;/span&gt; app-axi-traffic-gen --count &lt;span class="m"&gt;32&lt;/span&gt; --interface hp --use-osync
 &lt;span class="go"&gt;UioDevice{number =  4, name =        AxiTrafficGen, addr = 0xa0040000, size = 65536, note = acp}&lt;/span&gt;
 &lt;span class="go"&gt;UioDevice{number =  5, name =        AxiTrafficGen, addr = 0xa0050000, size = 65536, note = hp}&lt;/span&gt;
 &lt;span class="go"&gt;UioDevice{number =  6, name =        AxiTrafficGen, addr = 0xa0060000, size = 65536, note = hpc}&lt;/span&gt;
@@ -383,9 +386,10 @@ can be used as a reference on how to use those ports.&lt;/p&gt;
 &lt;span class="go"&gt;stats: rd cyc = 670, wr cyc = 265, rd_ok = 128&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;&lt;img alt="AXI Traffic Generator write and read - HP port" src="www.j-marjanovic.io/images/2021_zynqmp_ports/system_ila/tg_hp.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;h4&gt;HPC port&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;app-axi-traffic-gen --count &lt;span class="m"&gt;32&lt;/span&gt; --interface hpc --axi-cache &lt;span class="m"&gt;15&lt;/span&gt; --axi-prot &lt;span class="m"&gt;2&lt;/span&gt; --axi-user &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~#&lt;/span&gt; app-axi-traffic-gen --count &lt;span class="m"&gt;32&lt;/span&gt; --interface hpc --axi-cache &lt;span class="m"&gt;15&lt;/span&gt; --axi-prot &lt;span class="m"&gt;2&lt;/span&gt; --axi-user &lt;span class="m"&gt;1&lt;/span&gt;
 &lt;span class="go"&gt;UioDevice{number =  4, name =        AxiTrafficGen, addr = 0xa0040000, size = 65536, note = acp}&lt;/span&gt;
 &lt;span class="go"&gt;UioDevice{number =  5, name =        AxiTrafficGen, addr = 0xa0050000, size = 65536, note = hp}&lt;/span&gt;
 &lt;span class="go"&gt;UioDevice{number =  6, name =        AxiTrafficGen, addr = 0xa0060000, size = 65536, note = hpc}&lt;/span&gt;
@@ -408,10 +412,11 @@ can be used as a reference on how to use those ports.&lt;/p&gt;
 &lt;span class="go"&gt;stats: rd cyc = 391, wr cyc = 756, rd_ok = 128&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;&lt;img alt="AXI Traffic Generator write - HPC port" src="www.j-marjanovic.io/images/2021_zynqmp_ports/system_ila/tg_hpc_write.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img alt="AXI Traffic Generator reads - HPC port" src="www.j-marjanovic.io/images/2021_zynqmp_ports/system_ila/tg_hpc_read.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;h4&gt;ACP port&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;app-axi-traffic-gen --count &lt;span class="m"&gt;32&lt;/span&gt; --interface acp --axi-cache &lt;span class="m"&gt;15&lt;/span&gt; --axi-prot &lt;span class="m"&gt;2&lt;/span&gt; --axi-user &lt;span class="m"&gt;1&lt;/span&gt;     
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~#&lt;/span&gt; app-axi-traffic-gen --count &lt;span class="m"&gt;32&lt;/span&gt; --interface acp --axi-cache &lt;span class="m"&gt;15&lt;/span&gt; --axi-prot &lt;span class="m"&gt;2&lt;/span&gt; --axi-user &lt;span class="m"&gt;1&lt;/span&gt;     
 &lt;span class="go"&gt;UioDevice{number =  4, name =        AxiTrafficGen, addr = 0xa0040000, size = 65536, note = acp}&lt;/span&gt;
 &lt;span class="go"&gt;UioDevice{number =  5, name =        AxiTrafficGen, addr = 0xa0050000, size = 65536, note = hp}&lt;/span&gt;
 &lt;span class="go"&gt;UioDevice{number =  6, name =        AxiTrafficGen, addr = 0xa0060000, size = 65536, note = hpc}&lt;/span&gt;
@@ -433,6 +438,7 @@ can be used as a reference on how to use those ports.&lt;/p&gt;
 &lt;span class="go"&gt;Memory check (size = 32 bursts) successfully completed&lt;/span&gt;
 &lt;span class="go"&gt;stats: rd cyc = 140, wr cyc = 248, rd_ok = 128&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;&lt;img alt="AXI Traffic Generator reads - ACP port" src="www.j-marjanovic.io/images/2021_zynqmp_ports/system_ila/tg_acp.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;h2&gt;FSBL output&lt;/h2&gt;
@@ -467,6 +473,7 @@ can be used as a reference on how to use those ports.&lt;/p&gt;
 &lt;span class="go"&gt;CCI: shareable override reg - after = 3&lt;/span&gt;
 &lt;span class="go"&gt;Exit from FSBL &lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;hr&gt;
 &lt;div style="font-size: 90%;" &gt;
@@ -1071,7 +1078,7 @@ engine in the FPGA.&lt;/p&gt;
 and perform DMA transfers with the DMA engine in the FPGA. The program uses
 the Avalon-ST Checker and Avalon-ST Generator IPs to verify the content of
 the transfer.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;./pp_sp_test --help                                                               
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$&lt;/span&gt; ./pp_sp_test --help                                                               
 &lt;span class="go"&gt;Usage: ./pp_sp_test --dev DEV [--write] [--read]&lt;/span&gt;
 
 &lt;span class="go"&gt;Perform DMA transfers using the DMA engine in PP/SP FPGA&lt;/span&gt;
@@ -1086,11 +1093,12 @@ the transfer.&lt;/p&gt;
 &lt;span class="go"&gt;  --msleep    sleep (in milliseconds) during each loop (default 0)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;Here is an example where 8 KiB of data was transferred in both directions. First
 the data was transferred from the card to the host (&lt;code&gt;c2h&lt;/code&gt;), and then from the
 host to the card (&lt;code&gt;h2c&lt;/code&gt;). In the end, the result of the check (in the FPGA) is
 printed.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;./pp_sp_test --dev /dev/pp_sp_pcie_0000:42:00.0 --write --read --nr_bytes &lt;span class="m"&gt;8192&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$&lt;/span&gt; ./pp_sp_test --dev /dev/pp_sp_pcie_0000:42:00.0 --write --read --nr_bytes &lt;span class="m"&gt;8192&lt;/span&gt;
 &lt;span class="go"&gt;Arguments:&lt;/span&gt;
 &lt;span class="go"&gt;  dev = /dev/pp_sp_pcie_0000:42:00.0&lt;/span&gt;
 &lt;span class="go"&gt;  c2h = 1, h2c = 1&lt;/span&gt;
@@ -1109,6 +1117,7 @@ printed.&lt;/p&gt;
 &lt;span class="go"&gt;[h2c] ioctl took 0.019000 ms&lt;/span&gt;
 &lt;span class="go"&gt;[check] samp = 8192 / 8192&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;h2&gt;TUI&lt;/h2&gt;
 &lt;p&gt;A more elaborate program to control the DMA engine and the corresponding
@@ -1165,7 +1174,7 @@ the logic halfway between the PCIe core on the right side and the JTAG pins on
 the left side.&lt;/p&gt;
 &lt;h1&gt;Measurements&lt;/h1&gt;
 &lt;h2&gt;Fujitsu motherboard with right side PCIe link (lanes 0 to 7)&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;sudo lspci -d &lt;span class="m"&gt;1172&lt;/span&gt;: -vv
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$&lt;/span&gt; sudo lspci -d &lt;span class="m"&gt;1172&lt;/span&gt;: -vv
 &lt;span class="go"&gt;01:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)&lt;/span&gt;
 &lt;span class="go"&gt;    Subsystem: Device 01a2:0001&lt;/span&gt;
 &lt;span class="go"&gt;[...]&lt;/span&gt;
@@ -1184,13 +1193,14 @@ the left side.&lt;/p&gt;
 &lt;span class="go"&gt;[...]&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;&lt;img alt="DMA write on Fujitsu MB, right interface" src="www.j-marjanovic.io/images/2021_fpga_card_part_8/fujitsu_right_x8_write.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img alt="DMA read on Fujitsu MB, right interface" src="www.j-marjanovic.io/images/2021_fpga_card_part_8/fujitsu_right_x8_read.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;p&gt;Here we see something interesting - the Avalon-ST Checker reports that some
 of the samples do not match the reference values. I investigate this issue
 in the following chapter.&lt;/p&gt;
 &lt;h2&gt;Fujitsu motherboard with left side PCIe link (lanes 8 to 15)&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;sudo lspci -d &lt;span class="m"&gt;1172&lt;/span&gt;: -vv
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$&lt;/span&gt; sudo lspci -d &lt;span class="m"&gt;1172&lt;/span&gt;: -vv
 &lt;span class="go"&gt;02:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)&lt;/span&gt;
 &lt;span class="go"&gt;    Subsystem: Device 01a2:0001&lt;/span&gt;
 &lt;span class="go"&gt;[...]&lt;/span&gt;
@@ -1209,28 +1219,30 @@ in the following chapter.&lt;/p&gt;
 &lt;span class="go"&gt;[...]&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;&lt;img alt="DMA write on Fujitsu MB, left interface" src="www.j-marjanovic.io/images/2021_fpga_card_part_8/fujitsu_left_x8_write.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img alt="DMA read on Fujitsu MB, left interface" src="www.j-marjanovic.io/images/2021_fpga_card_part_8/fujitsu_left_x8_read.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;p&gt;Similarly, also here the the Avalon-ST Checker reports corrupted samples.&lt;/p&gt;
 &lt;h2&gt;Fujitsu motherboard with both PCIe links (lanes 0 to 7 and 8 to 15)&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;pp_sp_example &amp;gt; pcie status
-pcie 0:
-  id = 2c1e57a7
-  version = 10000
-  status.cur speed   = 3
-  status.LTTSM state = f
-  status.lane act    = 8
-  status.DL up       = 1
-pcie 1:
-  id = 2c1e57a7
-  version = 10000
-  status.cur speed   = 3
-  status.LTTSM state = f
-  status.lane act    = 8
-  status.DL up       = 1
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;pp_sp_example &amp;gt; pcie status&lt;/span&gt;
+&lt;span class="err"&gt;pcie 0:&lt;/span&gt;
+&lt;span class="err"&gt;  id = 2c1e57a7&lt;/span&gt;
+&lt;span class="err"&gt;  version = 10000&lt;/span&gt;
+&lt;span class="err"&gt;  status.cur speed   = 3&lt;/span&gt;
+&lt;span class="err"&gt;  status.LTTSM state = f&lt;/span&gt;
+&lt;span class="err"&gt;  status.lane act    = 8&lt;/span&gt;
+&lt;span class="err"&gt;  status.DL up       = 1&lt;/span&gt;
+&lt;span class="err"&gt;pcie 1:&lt;/span&gt;
+&lt;span class="err"&gt;  id = 2c1e57a7&lt;/span&gt;
+&lt;span class="err"&gt;  version = 10000&lt;/span&gt;
+&lt;span class="err"&gt;  status.cur speed   = 3&lt;/span&gt;
+&lt;span class="err"&gt;  status.LTTSM state = f&lt;/span&gt;
+&lt;span class="err"&gt;  status.lane act    = 8&lt;/span&gt;
+&lt;span class="err"&gt;  status.DL up       = 1&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;sudo lspci -d &lt;span class="m"&gt;1172&lt;/span&gt;: -vv &lt;span class="p"&gt;|&lt;/span&gt; egrep &lt;span class="s1"&gt;&amp;#39;Altera|LnkSta|Subsystem&amp;#39;&lt;/span&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$&lt;/span&gt; sudo lspci -d &lt;span class="m"&gt;1172&lt;/span&gt;: -vv &lt;span class="p"&gt;|&lt;/span&gt; egrep &lt;span class="s1"&gt;&amp;#39;Altera|LnkSta|Subsystem&amp;#39;&lt;/span&gt;
 &lt;span class="go"&gt;01:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)&lt;/span&gt;
 &lt;span class="go"&gt;    Subsystem: Device 01a2:0001&lt;/span&gt;
 &lt;span class="go"&gt;        LnkSta: Speed 8GT/s, Width x8, TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-&lt;/span&gt;
@@ -1241,17 +1253,19 @@ pcie 1:
 &lt;span class="go"&gt;        LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationComplete+, EqualizationPhase1+&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;&lt;img alt="DMA write on Fujitsu MB, both interfaces" src="www.j-marjanovic.io/images/2021_fpga_card_part_8/fujitsu_both_x8_write.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img alt="DMA read on Fujitsu MB, both interfaces" src="www.j-marjanovic.io/images/2021_fpga_card_part_8/fujitsu_both_x8_read.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;p&gt;And not surprisingly, when using both interfaces to read the Avalon-ST Checker
 reports some corrupted samples as well.&lt;/p&gt;
 &lt;h2&gt;Dell PowerEdge R720&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;sudo lspci -d &lt;span class="m"&gt;1172&lt;/span&gt;: -vv &lt;span class="p"&gt;|&lt;/span&gt; egrep &lt;span class="s1"&gt;&amp;#39;Altera|LnkSta|Subsys&amp;#39;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$&lt;/span&gt; sudo lspci -d &lt;span class="m"&gt;1172&lt;/span&gt;: -vv &lt;span class="p"&gt;|&lt;/span&gt; egrep &lt;span class="s1"&gt;&amp;#39;Altera|LnkSta|Subsys&amp;#39;&lt;/span&gt;
 &lt;span class="go"&gt;42:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)&lt;/span&gt;
 &lt;span class="go"&gt;    Subsystem: Device 01a2:0001&lt;/span&gt;
 &lt;span class="go"&gt;        LnkSta: Speed 8GT/s (ok), Width x8 (ok)&lt;/span&gt;
 &lt;span class="go"&gt;        LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete+, EqualizationPhase1+&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;&lt;img alt="DMA write on R720" src="www.j-marjanovic.io/images/2021_fpga_card_part_8/r720_x8_write.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img alt="DMA read on R720" src="www.j-marjanovic.io/images/2021_fpga_card_part_8/r720_x8_read.png" style="width:70%; display: block; margin-left: auto; margin-right: auto;"&gt;&lt;/p&gt;
@@ -1301,7 +1315,7 @@ design&lt;/a&gt;.&lt;/p&gt;
 &lt;hr&gt;
 &lt;h1&gt;Appendix&lt;/h1&gt;
 &lt;h2&gt;lspci on Fujitsu motherboard&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;sudo lspci -d &lt;span class="m"&gt;1172&lt;/span&gt;: -vv
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$&lt;/span&gt; sudo lspci -d &lt;span class="m"&gt;1172&lt;/span&gt;: -vv
 &lt;span class="go"&gt;01:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)&lt;/span&gt;
 &lt;span class="go"&gt;    Subsystem: Device 01a2:0001&lt;/span&gt;
 &lt;span class="go"&gt;    Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+&lt;/span&gt;
@@ -1356,7 +1370,8 @@ design&lt;/a&gt;.&lt;/p&gt;
 &lt;span class="go"&gt;    Kernel modules: altera_cvp&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;sudo lspci -d &lt;span class="m"&gt;1172&lt;/span&gt;: -vv
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$&lt;/span&gt; sudo lspci -d &lt;span class="m"&gt;1172&lt;/span&gt;: -vv
 &lt;span class="go"&gt;02:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)&lt;/span&gt;
 &lt;span class="go"&gt;    Subsystem: Device 01a2:0001&lt;/span&gt;
 &lt;span class="go"&gt;    Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+&lt;/span&gt;
@@ -1411,8 +1426,9 @@ design&lt;/a&gt;.&lt;/p&gt;
 &lt;span class="go"&gt;    Kernel modules: altera_cvp&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;h2&gt;lspci on Dell R720&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;sudo lspci -d &lt;span class="m"&gt;1172&lt;/span&gt;: -vv
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$&lt;/span&gt; sudo lspci -d &lt;span class="m"&gt;1172&lt;/span&gt;: -vv
 &lt;span class="go"&gt;42:00.0 Non-VGA unclassified device: Altera Corporation Stratix V (rev 01)&lt;/span&gt;
 &lt;span class="go"&gt;    Subsystem: Device 01a2:0001&lt;/span&gt;
 &lt;span class="go"&gt;    Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+&lt;/span&gt;
@@ -1477,6 +1493,7 @@ design&lt;/a&gt;.&lt;/p&gt;
 &lt;span class="go"&gt;    Kernel driver in use: pp_sp_pcie&lt;/span&gt;
 &lt;span class="go"&gt;    Kernel modules: altera_cvp&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;hr&gt;
 &lt;div style="font-size: 80%;" &gt;
@@ -1637,7 +1654,7 @@ All trademarks and registered trademarks are the property of their respective ow
 &lt;/ul&gt;
 &lt;h2&gt;Workshop: Vitis AI 101: End-to-End Model Deployment with Vitis AI [Fan Zhang (Xilinx)]&lt;/h2&gt;
 &lt;p&gt;https://github.com/fanz-xlnx/Adapt_Workshop_VAI101&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;ubuntu&lt;/span&gt;&lt;span class="p"&gt;@&lt;/span&gt;&lt;span class="n"&gt;ip&lt;/span&gt;&lt;span class="o"&gt;-***:~&lt;/span&gt;&lt;span class="n"&gt;$&lt;/span&gt; &lt;span class="n"&gt;lspci&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;ubuntu&lt;/span&gt;&lt;span class="p"&gt;@&lt;/span&gt;&lt;span class="n"&gt;ip&lt;/span&gt;&lt;span class="o"&gt;-***:~&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;lspci&lt;/span&gt;
 &lt;span class="mo"&gt;00&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mf"&gt;00.0&lt;/span&gt; &lt;span class="n"&gt;Host&lt;/span&gt; &lt;span class="nl"&gt;bridge&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Intel&lt;/span&gt; &lt;span class="n"&gt;Corporation&lt;/span&gt; &lt;span class="mf"&gt;440F&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mf"&gt;82441F&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt; &lt;span class="n"&gt;PMC&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;Natoma&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rev&lt;/span&gt; &lt;span class="mo"&gt;02&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="mo"&gt;00&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mf"&gt;01.0&lt;/span&gt; &lt;span class="n"&gt;ISA&lt;/span&gt; &lt;span class="nl"&gt;bridge&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Intel&lt;/span&gt; &lt;span class="n"&gt;Corporation&lt;/span&gt; &lt;span class="mi"&gt;82371&lt;/span&gt;&lt;span class="n"&gt;SB&lt;/span&gt; &lt;span class="n"&gt;PIIX3&lt;/span&gt; &lt;span class="n"&gt;ISA&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;Natoma&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Triton&lt;/span&gt; &lt;span class="n"&gt;II&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;span class="mo"&gt;00&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mf"&gt;01.1&lt;/span&gt; &lt;span class="n"&gt;IDE&lt;/span&gt; &lt;span class="nl"&gt;interface&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Intel&lt;/span&gt; &lt;span class="n"&gt;Corporation&lt;/span&gt; &lt;span class="mi"&gt;82371&lt;/span&gt;&lt;span class="n"&gt;SB&lt;/span&gt; &lt;span class="n"&gt;PIIX3&lt;/span&gt; &lt;span class="n"&gt;IDE&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;Natoma&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Triton&lt;/span&gt; &lt;span class="n"&gt;II&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
@@ -1648,39 +1665,43 @@ All trademarks and registered trademarks are the property of their respective ow
 &lt;span class="mo"&gt;00&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mf"&gt;1f.0&lt;/span&gt; &lt;span class="n"&gt;Unassigned&lt;/span&gt; &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;ff80&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;XenSource&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Inc&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="n"&gt;Xen&lt;/span&gt; &lt;span class="n"&gt;Platform&lt;/span&gt; &lt;span class="n"&gt;Device&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rev&lt;/span&gt; &lt;span class="mo"&gt;01&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c"&gt;ubuntu@ip&lt;/span&gt;&lt;span class="nb"&gt;-&lt;/span&gt;&lt;span class="c"&gt;***:~$ nvidia&lt;/span&gt;&lt;span class="nb"&gt;-&lt;/span&gt;&lt;span class="c"&gt;smi&lt;/span&gt;
-&lt;span class="c"&gt;Wed Sep  8 17:20:50 2021&lt;/span&gt;
-&lt;span class="nb"&gt;+-----------------------------------------------------------------------------+&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
-&lt;span class="c"&gt;| NVIDIA&lt;/span&gt;&lt;span class="nb"&gt;-&lt;/span&gt;&lt;span class="c"&gt;SMI 470&lt;/span&gt;&lt;span class="nt"&gt;.&lt;/span&gt;&lt;span class="c"&gt;57&lt;/span&gt;&lt;span class="nt"&gt;.&lt;/span&gt;&lt;span class="c"&gt;02    Driver Version: 470&lt;/span&gt;&lt;span class="nt"&gt;.&lt;/span&gt;&lt;span class="c"&gt;57&lt;/span&gt;&lt;span class="nt"&gt;.&lt;/span&gt;&lt;span class="c"&gt;02    CUDA Version: 11&lt;/span&gt;&lt;span class="nt"&gt;.&lt;/span&gt;&lt;span class="c"&gt;4     |&lt;/span&gt;
-&lt;span class="c"&gt;|&lt;/span&gt;&lt;span class="nb"&gt;-------------------------------+----------------------+----------------------+&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
-&lt;span class="c"&gt;| GPU  Name        Persistence&lt;/span&gt;&lt;span class="nb"&gt;-&lt;/span&gt;&lt;span class="c"&gt;M| Bus&lt;/span&gt;&lt;span class="nb"&gt;-&lt;/span&gt;&lt;span class="c"&gt;Id        Disp&lt;/span&gt;&lt;span class="nt"&gt;.&lt;/span&gt;&lt;span class="c"&gt;A | Volatile Uncorr&lt;/span&gt;&lt;span class="nt"&gt;.&lt;/span&gt;&lt;span class="c"&gt; ECC |&lt;/span&gt;
-&lt;span class="c"&gt;| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory&lt;/span&gt;&lt;span class="nb"&gt;-&lt;/span&gt;&lt;span class="c"&gt;Usage | GPU&lt;/span&gt;&lt;span class="nb"&gt;-&lt;/span&gt;&lt;span class="c"&gt;Util  Compute M&lt;/span&gt;&lt;span class="nt"&gt;.&lt;/span&gt;&lt;span class="c"&gt; |&lt;/span&gt;
-&lt;span class="c"&gt;|                               |                      |               MIG M&lt;/span&gt;&lt;span class="nt"&gt;.&lt;/span&gt;&lt;span class="c"&gt; |&lt;/span&gt;
-&lt;span class="c"&gt;|===============================&lt;/span&gt;&lt;span class="nb"&gt;+&lt;/span&gt;&lt;span class="c"&gt;======================&lt;/span&gt;&lt;span class="nb"&gt;+&lt;/span&gt;&lt;span class="c"&gt;======================|&lt;/span&gt;
-&lt;span class="c"&gt;|   0  Tesla K80           On   | 00000000:00:1E&lt;/span&gt;&lt;span class="nt"&gt;.&lt;/span&gt;&lt;span class="c"&gt;0 Off |                    0 |&lt;/span&gt;
-&lt;span class="c"&gt;| N/A   55C    P0   121W / 149W |   4188MiB / 11441MiB |     94%      Default |&lt;/span&gt;
-&lt;span class="c"&gt;|                               |                      |                  N/A |&lt;/span&gt;
-&lt;span class="nb"&gt;+-------------------------------+----------------------+----------------------+&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
 
-&lt;span class="nb"&gt;+-----------------------------------------------------------------------------+&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
-&lt;span class="c"&gt;| Processes:                                                                  |&lt;/span&gt;
-&lt;span class="c"&gt;|  GPU   GI   CI        PID   Type   Process name                  GPU Memory |&lt;/span&gt;
-&lt;span class="c"&gt;|        ID   ID                                                   Usage      |&lt;/span&gt;
-&lt;span class="c"&gt;|=============================================================================|&lt;/span&gt;
-&lt;span class="c"&gt;|    0   N/A  N/A     19274      C   python                           4185MiB |&lt;/span&gt;
-&lt;span class="nb"&gt;+-----------------------------------------------------------------------------+&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;ubuntu&lt;/span&gt;&lt;span class="nv"&gt;@ip&lt;/span&gt;&lt;span class="o"&gt;-***&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt;&lt;span class="o"&gt;~&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;nvidia&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;smi&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="n"&gt;Wed&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Sep&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;17&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;50&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;2021&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="c1"&gt;-----------------------------------------------------------------------------+&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;NVIDIA&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;SMI&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;470.57.02&lt;/span&gt;&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;Driver&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nl"&gt;Version&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;470.57.02&lt;/span&gt;&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;CUDA&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nl"&gt;Version&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;11.4&lt;/span&gt;&lt;span class="w"&gt;     &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="c1"&gt;-------------------------------+----------------------+----------------------+&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;GPU&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;Name&lt;/span&gt;&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="n"&gt;Persistence&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;M&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Bus&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Id&lt;/span&gt;&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="n"&gt;Disp&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Volatile&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Uncorr&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;ECC&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Fan&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;Temp&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;Perf&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nl"&gt;Pwr&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="k"&gt;Usage&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Cap&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;         &lt;/span&gt;&lt;span class="n"&gt;Memory&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="k"&gt;Usage&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;GPU&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Util&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;Compute&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;M&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;                               &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;                      &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;               &lt;/span&gt;&lt;span class="n"&gt;MIG&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;M&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="o"&gt;|===============================+======================+======================|&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;Tesla&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;K80&lt;/span&gt;&lt;span class="w"&gt;           &lt;/span&gt;&lt;span class="k"&gt;On&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;00000000&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;00&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="n"&gt;E&lt;/span&gt;&lt;span class="mf"&gt;.0&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;Off&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="mi"&gt;55&lt;/span&gt;&lt;span class="n"&gt;C&lt;/span&gt;&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;P0&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="mi"&gt;121&lt;/span&gt;&lt;span class="n"&gt;W&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;149&lt;/span&gt;&lt;span class="n"&gt;W&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="mi"&gt;4188&lt;/span&gt;&lt;span class="n"&gt;MiB&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;11441&lt;/span&gt;&lt;span class="n"&gt;MiB&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;     &lt;/span&gt;&lt;span class="mi"&gt;94&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="k"&gt;Default&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;                               &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;                      &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;                  &lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="c1"&gt;-------------------------------+----------------------+----------------------+&lt;/span&gt;
+
+&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="c1"&gt;-----------------------------------------------------------------------------+&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nl"&gt;Processes&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;                                                                  &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;GPU&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="n"&gt;GI&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="n"&gt;CI&lt;/span&gt;&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="n"&gt;PID&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="n"&gt;Type&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="n"&gt;Process&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="w"&gt;                  &lt;/span&gt;&lt;span class="n"&gt;GPU&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Memory&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="n"&gt;ID&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="n"&gt;ID&lt;/span&gt;&lt;span class="w"&gt;                                                   &lt;/span&gt;&lt;span class="k"&gt;Usage&lt;/span&gt;&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="o"&gt;|=============================================================================|&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="w"&gt;     &lt;/span&gt;&lt;span class="mi"&gt;19274&lt;/span&gt;&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="n"&gt;C&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="n"&gt;python&lt;/span&gt;&lt;span class="w"&gt;                           &lt;/span&gt;&lt;span class="mi"&gt;4185&lt;/span&gt;&lt;span class="n"&gt;MiB&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="c1"&gt;-----------------------------------------------------------------------------+&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;ul&gt;
 &lt;li&gt;&lt;em&gt;IoU&lt;/em&gt; = Intersection over Union = Area of Overlap / Area of Union&lt;/li&gt;
 &lt;li&gt;XIR format&lt;/li&gt;
 &lt;li&gt;KV260 (KRIA)&lt;/li&gt;
 &lt;/ul&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;xcompiler -t DPUCZDX8G_ISA0_B4096_MAX_BG2 -i quantize_result/ENet_int.xmodel -o compilation_results/KV260/ENet_cityscapes_pt/ENet_cityscapes_pt.xmodel
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;xcompiler -t DPUCZDX8G_ISA0_B4096_MAX_BG2 -i quantize_result/ENet_int.xmodel -o compilation_results/KV260/ENet_cityscapes_pt/ENet_cityscapes_pt.xmodel&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;The compiled xmodel&amp;#39;s md5sum is 4bf46f368e9ff2d51fea136a19270c75
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;The compiled xmodel&amp;#39;s md5sum is 4bf46f368e9ff2d51fea136a19270c75&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;h1&gt;Day 3&lt;/h1&gt;
 &lt;h2&gt;Expert Panel: Tips and Tricks&lt;/h2&gt;
@@ -1753,8 +1774,10 @@ All trademarks and registered trademarks are the property of their respective ow
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="cp"&gt;#pragma HLS UNROLL factor=N&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;__attribute__&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;vector_size&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;64&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;ul&gt;
 &lt;li&gt;Cppcon 2019: Faster Code Through Parallelism on CPU and GPU&lt;/li&gt;
@@ -1919,6 +1942,7 @@ output:&lt;/p&gt;
 &lt;span class="m"&gt;[11818.795128] &lt;/span&gt;&lt;span class="k"&gt;usb 1-4.1:&lt;/span&gt; SerialNumber: 0000001000
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;We see that the USB works, and we also got the product name (&lt;code&gt;Eicon DIVA USB&lt;/code&gt;).
 A quick search on the internet revealed that this device is an ISDN modem, which
 matches the observation, an RJ45 socket and the date code of June 1999.&lt;/p&gt;
@@ -1957,7 +1981,7 @@ Play") and also serves as an introduction of the protocol itself.&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/torvalds/linux/blob/v5.11/drivers/usb/misc/ezusb.c"&gt;https://github.com/torvalds/linux/blob/v5.11/drivers/usb/misc/ezusb.c&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/torvalds/linux/commit/8d733e26c076f47e7774c0e5baa74c9b1c01199a"&gt;https://github.com/torvalds/linux/commit/8d733e26c076f47e7774c0e5baa74c9b1c01199a&lt;/a&gt;&lt;/p&gt;
 &lt;h3&gt;fxload&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;apt info fxload
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$&lt;/span&gt; apt info fxload
 &lt;span class="go"&gt;Package: fxload&lt;/span&gt;
 &lt;span class="go"&gt;Version: 0.0.20081013-1ubuntu2&lt;/span&gt;
 &lt;span class="go"&gt;&amp;lt;...&amp;gt;&lt;/span&gt;
@@ -1966,6 +1990,7 @@ Play") and also serves as an introduction of the protocol itself.&lt;/p&gt;
 &lt;span class="go"&gt; ez-usb devices. It is intended to be invoked by hotplug scripts when&lt;/span&gt;
 &lt;span class="go"&gt; the unprogrammed device appears on the bus.&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;h1&gt;Reverse-engineering the board&lt;/h1&gt;
 &lt;p&gt;Since there are no BGA components on this board, and the main microcontroller
@@ -1994,7 +2019,7 @@ and uses &lt;a href="http://sdcc.sourceforge.net/"&gt;sdcc&lt;/a&gt; compiler.&l
 &lt;p&gt;After modifying the code to match the pinout on the (modified) board, and
 compiling the code with &lt;code&gt;sdcc&lt;/code&gt; a HEX file is produces. This gets then
 easily downloaded to the board with the aforementioned &lt;code&gt;fxload&lt;/code&gt; utility:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;sudo fxload -D /dev/bus/usb/001/008 -s /usr/share/usb/a3load.hex -I firmware.hex -t an21 -v
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$&lt;/span&gt; sudo fxload -D /dev/bus/usb/001/008 -s /usr/share/usb/a3load.hex -I firmware.hex -t an21 -v
 &lt;span class="go"&gt;microcontroller type: an21&lt;/span&gt;
 &lt;span class="go"&gt;1st stage:  load 2nd stage loader&lt;/span&gt;
 &lt;span class="go"&gt;open RAM hexfile image /usr/share/usb/a3load.hex&lt;/span&gt;
@@ -2016,6 +2041,7 @@ easily downloaded to the board with the aforementioned &lt;code&gt;fxload&lt;/co
 &lt;span class="go"&gt;... WROTE: 2378 bytes, 33 segments, avg 72&lt;/span&gt;
 &lt;span class="go"&gt;reset CPU&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;With the proverbial LED blinking, I was able to confirm that this method of
 programming the microcontroller works and that the firmware project works
@@ -2749,14 +2775,15 @@ gamma = reward discount&lt;/p&gt;
 &lt;li&gt;coverage database&lt;/li&gt;
 &lt;li&gt;coverage reporter&lt;/li&gt;
 &lt;/ul&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kd"&gt;val&lt;/span&gt; &lt;span class="n"&gt;cr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nc"&gt;CoverageReporter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dut&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-  &lt;span class="n"&gt;cr&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;register&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
-      &lt;span class="nc"&gt;CoverPoints&lt;/span&gt;&lt;span class="p"&gt;(...),&lt;/span&gt;
-      &lt;span class="p"&gt;...&lt;/span&gt;
-  &lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="p"&gt;...&lt;/span&gt;
-&lt;span class="n"&gt;cr&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;printReport&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;cr&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nc"&gt;CoverageReporter&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dut&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="n"&gt;cr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;register&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;
+      &lt;span class="nc"&gt;CoverPoints&lt;/span&gt;&lt;span class="o"&gt;(...),&lt;/span&gt;
+      &lt;span class="o"&gt;...&lt;/span&gt;
+  &lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="n"&gt;cr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;printReport&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;h3&gt;constraint random verification&lt;/h3&gt;
 &lt;ul&gt;
@@ -2855,14 +2882,15 @@ CCI is shown prominently in its central location.&lt;/p&gt;
 and for Zynq MPSoC this option is by default already turned on.&lt;/p&gt;
 &lt;p&gt;The driver prints a short message in the &lt;code&gt;dmesg&lt;/code&gt; to indicate that it was
 successfully loaded:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;dmesg &lt;span class="p"&gt;|&lt;/span&gt; grep CCI
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~#&lt;/span&gt; dmesg &lt;span class="p"&gt;|&lt;/span&gt; grep CCI
 &lt;span class="go"&gt;[    3.218405] ARM CCI_400_r1 PMU driver probed&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;We can then use &lt;a href="https://perf.wiki.kernel.org/index.php/Main_Page"&gt;perf&lt;/a&gt; command
 to list all performance counters available in the system, and among those there
 are also listed those from the CCI-400:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;perf list
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~#&lt;/span&gt; perf list
 
 &lt;span class="go"&gt;List of pre-defined events (to be used in -e):&lt;/span&gt;
 
@@ -2876,6 +2904,7 @@ are also listed those from the CCI-400:&lt;/p&gt;
 &lt;span class="go"&gt;  CCI_400_r1/si_wrq_hs_write_unique,source=?/        [Kernel PMU event]&lt;/span&gt;
 &lt;span class="go"&gt;  CCI_400_r1/si_wrq_stall_tt_full,source=?/          [Kernel PMU event]&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;Although at this stage the performance counters are already accessible from the
 system, except for the &lt;code&gt;cycles&lt;/code&gt; counter no other counter is actually counting.&lt;/p&gt;
@@ -2902,11 +2931,12 @@ module. This block diagram is based on my current understanding.&lt;/p&gt;
 &lt;h2&gt;Accessing the configuration registers&lt;/h2&gt;
 &lt;p&gt;With this in mind, one would be tempted to quickly change the value of NIDEN
 input directly from user space with &lt;code&gt;devmem&lt;/code&gt; utility.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;devmem 0xFD5E0000
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~#&lt;/span&gt; devmem 0xFD5E0000
 &lt;span class="go"&gt;Bus error&lt;/span&gt;
-&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;devmem 0xFD5E0040
+&lt;span class="gp"&gt;root@u96v2-sbc:~#&lt;/span&gt; devmem 0xFD5E0040
 &lt;span class="go"&gt;Bus error&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;Here we encounter another issue, namely the CCI_REG is protected by the Xilinx
 Memory Protection Unit (XMPU) and is only accessible from the secure
@@ -3000,6 +3030,7 @@ Subject: [PATCH] Enable CCI debug (NIDEN and SPINDEN on CCI-400)
 2.25.1
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;The following is then the output of the FSBL with the patch:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Xilinx Zynq MP First Stage Boot Loader
 Release 2020.2   Jun 10 2021  -  19:49:38
@@ -3027,6 +3058,7 @@ CCI_REG: register dump
   offset 40 = 3
 Exit from FSBL
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;We can note that the register at the offset &lt;code&gt;0x40&lt;/code&gt; has changed from &lt;code&gt;0&lt;/code&gt; to &lt;code&gt;3&lt;/code&gt;,
 as we have requested.&lt;/p&gt;
@@ -3071,12 +3103,12 @@ ports 0 and 3. From the
 &lt;a href="https://www.xilinx.com/support/documentation/user_guides/ug1085-zynq-ultrascale-trm.pdf"&gt;UG1085&lt;/a&gt;
 we can see that the APU is connected to port 3 on the CCI-400 and the HPC ports
 are connected to port 0 on the interconnect.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~# &lt;/span&gt;perf stat -e &lt;span class="se"&gt;\&lt;/span&gt;
-&lt;span class="gp"&gt;&amp;gt; &lt;/span&gt;CCI_400_r1/cycles/,&lt;span class="se"&gt;\&lt;/span&gt;
-&lt;span class="gp"&gt;&amp;gt; &lt;/span&gt;CCI_400_r1/si_rrq_hs_any,source&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;/,&lt;span class="se"&gt;\&lt;/span&gt;
-&lt;span class="gp"&gt;&amp;gt; &lt;/span&gt;CCI_400_r1/si_wrq_hs_any,source&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;/,&lt;span class="se"&gt;\&lt;/span&gt;
-&lt;span class="gp"&gt;&amp;gt; &lt;/span&gt;CCI_400_r1/si_rrq_hs_any,source&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;/,&lt;span class="se"&gt;\&lt;/span&gt;
-&lt;span class="gp"&gt;&amp;gt; &lt;/span&gt;CCI_400_r1/si_wrq_hs_any,source&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;/
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@u96v2-sbc:~#&lt;/span&gt; perf stat -e &lt;span class="se"&gt;\&lt;/span&gt;
+&amp;gt; CCI_400_r1/cycles/,&lt;span class="se"&gt;\&lt;/span&gt;
+&amp;gt; CCI_400_r1/si_rrq_hs_any,source&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;/,&lt;span class="se"&gt;\&lt;/span&gt;
+&amp;gt; CCI_400_r1/si_wrq_hs_any,source&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;/,&lt;span class="se"&gt;\&lt;/span&gt;
+&amp;gt; CCI_400_r1/si_rrq_hs_any,source&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;/,&lt;span class="se"&gt;\&lt;/span&gt;
+&amp;gt; CCI_400_r1/si_wrq_hs_any,source&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;/
 
 &lt;span class="go"&gt;^C&lt;/span&gt;
 &lt;span class="go"&gt; Performance counter stats for &amp;#39;system wide&amp;#39;:&lt;/span&gt;
@@ -3089,6 +3121,7 @@ are connected to port 0 on the interconnect.&lt;/p&gt;
 
 &lt;span class="go"&gt;       4.138963536 seconds time elapsed&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;We see that expected 1000000 writes from the HPC ports (= 2 (instances) * 5 (per
 loop) * 100000 (number of loops)) and we also see the number of reads on the HPS
@@ -3221,6 +3254,7 @@ pcie:
   status.DL up       = 0
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;We see that clocks 2 and 3 are both 100 MHz, which indicates that the PCIe clock
 distribution works correctly, and after the reset the link reports:&lt;/p&gt;
 &lt;ul&gt;
@@ -3256,6 +3290,7 @@ same information from the &lt;code&gt;lspci&lt;/code&gt; utility:&lt;/p&gt;
 &amp;lt;...&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;And finally, I can use &lt;code&gt;pcimem&lt;/code&gt; to read and write to the registers in the FPGA,
 e.g. read system ID and timestamp and write to a GPIO pin:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ sudo ./pcimem /sys/bus/pci/devices/0000:03:00.0/resource0 0x100000 w
@@ -3281,6 +3316,7 @@ PCI Memory mapped to address 0x7fec6c0cc000.
 Written 0x0001; readback 0x   1
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;The proverbial "blinky" is actually blinking and so far everything seems to be
 working correctly.&lt;/p&gt;
 &lt;h2&gt;First test with Storey Peak&lt;/h2&gt;
@@ -3301,6 +3337,7 @@ pcie:
   status.lane act    = 8
   status.DL up       = 0
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;Intel® provides good &lt;a href="https://community.intel.com/t5/FPGA-Wiki/FTA-PCI-express/ta-p/735993"&gt;troubleshooting resources for the PCIe
 link&lt;/a&gt;, and
@@ -3370,6 +3407,7 @@ supports 2 x8 bifurcation on a x16 slot.&lt;/p&gt;
 &amp;lt;...&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;And each of them supports a x8 link. It is theoretically possible that one of
 the endpoints is implemented in FPGA logic, but we will later see that this
 is not the case.&lt;/p&gt;
@@ -3389,6 +3427,7 @@ $ sudo lspci -s 87:00 -vv
         LnkSta:    Speed 8GT/s, Width x8, TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
 &amp;lt;...&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;Unfortunately the DELL R720 which I use in my homelab does not support PCIe
 bifurcation.&lt;/p&gt;
@@ -3484,6 +3523,7 @@ contains a couple of interesting strings:&lt;/p&gt;
 &amp;lt;...&amp;gt;
 5SGSMD5_MS
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;So far hard work and determination have paid off. It seems that continuing
 to poke around Quartus libraries would be the right way ahead.&lt;/p&gt;
@@ -3627,6 +3667,7 @@ a part of Nios example design.&lt;/p&gt;
 &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;mem&lt;/span&gt; &lt;span class="n"&gt;check&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;   &lt;span class="n"&gt;read&lt;/span&gt; &lt;span class="n"&gt;throughput&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;9662&lt;/span&gt; &lt;span class="n"&gt;MB&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;h1&gt;Performance&lt;/h1&gt;
 &lt;p&gt;Although the performance of the HW-accelerated memory test is several times
 better than the SW-based memory test, I still wanted to see the throughput which
@@ -3769,25 +3810,27 @@ section.&lt;/p&gt;
 6525678&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;To give an example, here are two excerpts, the first one from the uncompressed bitstream and the
 second one from the compressed.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="mf"&gt;227550&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="n"&gt;b6&lt;/span&gt; &lt;span class="n"&gt;f9&lt;/span&gt; &lt;span class="mf"&gt;81&lt;/span&gt; &lt;span class="mf"&gt;8&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;2&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;e8&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
-&lt;span class="mf"&gt;227560&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
-&lt;span class="o"&gt;*&lt;/span&gt;
-&lt;span class="mf"&gt;2279&lt;/span&gt;&lt;span class="n"&gt;f0&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="n"&gt;b6&lt;/span&gt; &lt;span class="n"&gt;f9&lt;/span&gt; &lt;span class="mf"&gt;81&lt;/span&gt; &lt;span class="mf"&gt;8&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;2&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;e8&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
-&lt;span class="mf"&gt;227&lt;/span&gt;&lt;span class="n"&gt;a00&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
-&lt;span class="o"&gt;*&lt;/span&gt;
-&lt;span class="mf"&gt;227&lt;/span&gt;&lt;span class="n"&gt;e90&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="n"&gt;b6&lt;/span&gt; &lt;span class="n"&gt;f9&lt;/span&gt; &lt;span class="mf"&gt;81&lt;/span&gt; &lt;span class="mf"&gt;8&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
-&lt;span class="mf"&gt;227&lt;/span&gt;&lt;span class="n"&gt;ea0&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;2&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;e8&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;227550 | 00 00 b6 f9 81 8b 00 00 2f e8 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;227560 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;*&lt;/span&gt;
+&lt;span class="err"&gt;2279f0 | 00 00 00 00 00 00 b6 f9 81 8b 00 00 2f e8 00 00&lt;/span&gt;
+&lt;span class="err"&gt;227a00 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;*&lt;/span&gt;
+&lt;span class="err"&gt;227e90 | 00 00 00 00 00 00 00 00 00 00 b6 f9 81 8b 00 00&lt;/span&gt;
+&lt;span class="err"&gt;227ea0 | 2f e8 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="mf"&gt;225900&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;6&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="mf"&gt;9&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="n"&gt;ff&lt;/span&gt; &lt;span class="mf"&gt;81&lt;/span&gt; &lt;span class="mf"&gt;8&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="n"&gt;f0&lt;/span&gt; &lt;span class="mf"&gt;2&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;e8&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
-&lt;span class="mf"&gt;225910&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
-&lt;span class="o"&gt;*&lt;/span&gt;
-&lt;span class="mf"&gt;225&lt;/span&gt;&lt;span class="n"&gt;a30&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;6&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="mf"&gt;9&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="n"&gt;ff&lt;/span&gt; &lt;span class="mf"&gt;81&lt;/span&gt; &lt;span class="mf"&gt;8&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="n"&gt;f0&lt;/span&gt; &lt;span class="mf"&gt;2&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;e8&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
-&lt;span class="mf"&gt;225&lt;/span&gt;&lt;span class="n"&gt;a40&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
-&lt;span class="o"&gt;*&lt;/span&gt;
-&lt;span class="mf"&gt;225&lt;/span&gt;&lt;span class="n"&gt;b60&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;6&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="mf"&gt;9&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="n"&gt;ff&lt;/span&gt; &lt;span class="mf"&gt;81&lt;/span&gt; &lt;span class="mf"&gt;8&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="n"&gt;f0&lt;/span&gt; &lt;span class="mf"&gt;2&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;e8&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
-&lt;span class="mf"&gt;225&lt;/span&gt;&lt;span class="n"&gt;b70&lt;/span&gt; &lt;span class="err"&gt;|&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt; &lt;span class="mf"&gt;00&lt;/span&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;225900 | 00 00 6f 9b ff 81 8b f0 2f e8 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;225910 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;*&lt;/span&gt;
+&lt;span class="err"&gt;225a30 | 00 6f 9b ff 81 8b f0 2f e8 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;225a40 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;*&lt;/span&gt;
+&lt;span class="err"&gt;225b60 | 6f 9b ff 81 8b f0 2f e8 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;225b70 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;We see that the non-compressed bitstream contains a sequence &lt;code&gt;b6&lt;/code&gt;, &lt;code&gt;f9&lt;/code&gt;, ... after a long string of
 zeros. In the compressed bitstream the long string of zeros is interrupted by an &lt;code&gt;f&lt;/code&gt; (which
@@ -4326,34 +4369,36 @@ contains a relatively simple management interface, accessible over an I2C bus.&l
 &lt;p&gt;First I &lt;a href="https://github.com/j-marjanovic/otma-fpga-bringup/blob/master/software/otma_bringup/src/mini_i2cdetect.c"&gt;implemented a mini equivalent to &lt;code&gt;i2cdetect&lt;/code&gt;&lt;/a&gt; to check if I am probing a
 correct I2C bus. As expected, an I2C device with address 0x50 replies to our
 request:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c"&gt; 0000 |          &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
-&lt;span class="c"&gt; 0010 | &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
-&lt;span class="c"&gt; 0020 | &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
-&lt;span class="c"&gt; 0030 | &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
-&lt;span class="c"&gt; 0040 | &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
-&lt;span class="c"&gt; 0050 | 50 &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
-&lt;span class="c"&gt; 0060 | &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
-&lt;span class="c"&gt; 0070 | &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt; &lt;/span&gt;&lt;span class="nb"&gt;--&lt;/span&gt;&lt;span class="c"&gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt; 0000 |          -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
+&lt;span class="err"&gt; 0010 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
+&lt;span class="err"&gt; 0020 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
+&lt;span class="err"&gt; 0030 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
+&lt;span class="err"&gt; 0040 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
+&lt;span class="err"&gt; 0050 | 50 -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
+&lt;span class="err"&gt; 0060 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
+&lt;span class="err"&gt; 0070 | -- -- -- -- -- -- --&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;We can then continue by dumping the content of the module EEPROM:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;rc = 0 | 0d 02 06 00 00 00 00 00 00 00 00 00 00 00 00 00
-rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-rc = 0 | 0d 00 23 08 00 00 00 00 00 00 00 05 8d 00 00 00
-rc = 0 | 00 00 02 a0 4d 65 6c 6c 61 6e 6f 78 20 20 20 20
-rc = 0 | 20 20 20 20 0f 00 02 c9 36 37 30 37 35 39 2d 42
-rc = 0 | 32 33 20 20 20 20 20 20 41 31 04 06 09 00 46 27
-rc = 0 | 00 00 00 00 36 43 32 32 31 32 30 37 36 58 20 20
-rc = 0 | 20 20 20 20 31 32 30 33 32 37 20 20 00 00 00 64
-rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-rc = 0 | 00 00 00 00 00 00 00 00 00 00 02 00 00 30 00 00
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;rc = 0 | 0d 02 06 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 0d 00 23 08 00 00 00 00 00 00 00 05 8d 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 00 00 02 a0 4d 65 6c 6c 61 6e 6f 78 20 20 20 20&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 20 20 20 20 0f 00 02 c9 36 37 30 37 35 39 2d 42&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 32 33 20 20 20 20 20 20 41 31 04 06 09 00 46 27&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 00 00 00 00 36 43 32 32 31 32 30 37 36 58 20 20&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 20 20 20 20 31 32 30 33 32 37 20 20 00 00 00 64&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00&lt;/span&gt;
+&lt;span class="err"&gt;rc = 0 | 00 00 00 00 00 00 00 00 00 00 02 00 00 30 00 00&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;The cable is correctly identified as Mellanox 670759-B23 cable.&lt;/p&gt;
 &lt;h1&gt;40G Ethernet MAC&lt;/h1&gt;
@@ -4374,8 +4419,9 @@ measurements and change other transceiver configurations.&lt;/p&gt;
 &lt;p&gt;With everything in place, I have programmed the bitstream to the FPGA, and the
 &lt;code&gt;dmesg&lt;/code&gt; output in Linux on the other side of the link reported some good news,
 the link is up:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;[  615.469842] i40e 0000:01:00.0 enp1s0: NIC Link is Up, 40 Gbps Full Duplex, Flow Control: None
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;[  615.469842] i40e 0000:01:00.0 enp1s0: NIC Link is Up, 40 Gbps Full Duplex, Flow Control: None&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;h1&gt;Eye scan&lt;/h1&gt;
 &lt;p&gt;Once the link is established, we can use &lt;a href="https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/an/an605.pdf"&gt;Transceiver Toolkit
@@ -4469,6 +4515,7 @@ Info : JTAG tap: auto0.tap tap/device found: 0x029070dd &lt;span class="o"&gt;(&
 Warn : gdb services need one or more targets defined
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;This gives hope that at least on the HW side, integrating the board with Quartus
 will be easy.&lt;/p&gt;
 &lt;h1&gt;JTAG library&lt;/h1&gt;
@@ -4520,6 +4567,7 @@ space:&lt;/p&gt;
 &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="nv"&gt;master_read_32&lt;/span&gt; &lt;span class="nv"&gt;$jtag_master&lt;/span&gt; &lt;span class="mh"&gt;0x1000&lt;/span&gt; &lt;span class="mi"&gt;12&lt;/span&gt;
 &lt;span class="nv"&gt;0xc10cc272&lt;/span&gt; &lt;span class="mh"&gt;0x00010000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x266ac4a3&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt; &lt;span class="mh"&gt;0x00000000&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;I will explain later what exactly are we seeing here, for now let's just accept
 that &lt;em&gt;JTAG to Avalon bridge&lt;/em&gt; works, and it reads a magic number register
@@ -4619,6 +4667,7 @@ loop where it prints the measured frequency once per second.&lt;/p&gt;
 &lt;span class="p"&gt;[...]&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;We see that after the measurement has stabilized, we are receiving the clock
 which we have configured, and we see that both the reference clock (125 MHz to
 generate the strobe signal) and the measured clock have a low wander and a low
@@ -4681,6 +4730,7 @@ address:&lt;/p&gt;
 70: -- -- -- -- -- -- -- 77         
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;We see the EEPROM at the address 0x51, and another two devices at addresses 0x4C
 and 0x77 - I would assume that these are some kind of sensors and/or regulators.&lt;/p&gt;
 &lt;h2&gt;IPMI FRU&lt;/h2&gt;
@@ -4721,6 +4771,7 @@ ProductArea:
   checksum: 241 (OK) 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;From my understanding of the IPMI standard, the Chassis information should
 not be present on this card:&lt;/p&gt;
 &lt;blockquote&gt;
@@ -4757,6 +4808,7 @@ one can also note the Microsoft card:&lt;/p&gt;
 04:00.0 USB controller: NEC Corporation uPD720200 USB 3.0 Host Controller (rev 04)
 05:03.0 FireWire (IEEE 1394): LSI Corporation FW322/323 [TrueFire] 1394a Controller (rev 70)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;Using &lt;code&gt;lspci -vv&lt;/code&gt; to get more information, we see that the link is established
 at 2.5 GT/s (probably too many connectors in series to go faster) and at
@@ -4822,6 +4874,7 @@ x1 width (as expected, since we only pass one lane through the USB cable):&lt;/p
             MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
         HeaderLog: 00000000 00000000 00000000 00000000
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;h1&gt;Summary and outlook&lt;/h1&gt;
 &lt;p&gt;The adapter card did its job and provided access to the I2C bus and a connection
@@ -5249,6 +5302,7 @@ Error: cannot find &lt;span class="s2"&gt;&amp;quot;./../linux_rh60/vsim&amp;quo
 $
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;From the path it is clear that ModelSim thinks it is running on RHEL 6. As
 described in an extensive &lt;a href="https://wiki.archlinux.org/index.php/Altera_Design_Software#ModelSim-Altera_Edition"&gt;Wiki entry on Altera
 software on Arch Linux Wiki&lt;/a&gt;,
@@ -5258,8 +5312,9 @@ Ubuntu 18.10) we get the following error:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ ./vsim
 Reading pref.tcl
 ./../linuxaloem/vish: symbol lookup error: /usr/lib/i386-linux-gnu/libfontconfig.so.1: undefined symbol: FT_Done_MM_Var
-** Fatal: Read failure &lt;span class="k"&gt;in&lt;/span&gt; vlm process &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;,0&lt;span class="o"&gt;)&lt;/span&gt;
+** Fatal: Read failure in vlm process &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;,0&lt;span class="o"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;This message is new and it required me to do some investigation to get it fixed.&lt;/p&gt;
 &lt;h1&gt;Downgrading fontconfig&lt;/h1&gt;
@@ -5274,6 +5329,7 @@ https://gitlab.freedesktop.org/fontconfig/fontconfig.git&lt;/p&gt;
 ./configure.ac:321:AC_CHECK_FUNCS&lt;span class="o"&gt;(&lt;/span&gt;FT_Get_BDF_Property FT_Get_PS_Font_Info FT_Has_PS_Glyph_Names FT_Get_X11_Font_Format FT_Done_MM_Var&lt;span class="o"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;One &lt;code&gt;git blame&lt;/code&gt; after we find the following commit which introduced this function:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;commit&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;94683&lt;/span&gt;&lt;span class="n"&gt;a1255c065a7f8e7fadee9de605f3eaf9ac7&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 &lt;span class="nl"&gt;Author&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Behdad&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Esfahbod&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;behdad&lt;/span&gt;&lt;span class="nv"&gt;@behdad&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;org&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
@@ -5282,26 +5338,30 @@ https://gitlab.freedesktop.org/fontconfig/fontconfig.git&lt;/p&gt;
 &lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;Use&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;FT_Done_MM_Var&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;available&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;And then we can find out that release &lt;strong&gt;2.12.92&lt;/strong&gt; is the last one which does
 not contain this change.&lt;/p&gt;
 &lt;p&gt;I checked out the code from release &lt;strong&gt;2.12.92&lt;/strong&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;git checkout -b 2.12.92 2.12.92
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;git checkout -b 2.12.92 2.12.92&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;Installed the libraries needed:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sudo apt install libxml2-dev:i386 uuid-dev:i386
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;sudo apt install libxml2-dev:i386 uuid-dev:i386&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;And used the following commands to compile and install an older version
 of &lt;code&gt;fontconfig&lt;/code&gt; library:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;aclocal&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;I&lt;/span&gt; &lt;span class="n"&gt;m4&lt;/span&gt;
-&lt;span class="n"&gt;autoconf&lt;/span&gt;
-&lt;span class="n"&gt;libtoolize&lt;/span&gt;
-&lt;span class="o"&gt;./&lt;/span&gt;&lt;span class="n"&gt;autogen&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sh&lt;/span&gt;
-&lt;span class="n"&gt;CFLAGS&lt;/span&gt;&lt;span class="o"&gt;=-&lt;/span&gt;&lt;span class="n"&gt;m32&lt;/span&gt; &lt;span class="n"&gt;LDFLAGS&lt;/span&gt;&lt;span class="o"&gt;=-&lt;/span&gt;&lt;span class="n"&gt;L&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;home&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;jan&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;local&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;packages&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;freetype&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;2.4&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;32&lt;/span&gt;&lt;span class="n"&gt;bit&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;lib&lt;/span&gt; &lt;span class="o"&gt;./&lt;/span&gt;&lt;span class="n"&gt;configure&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;prefix&lt;/span&gt;&lt;span class="o"&gt;=/&lt;/span&gt;&lt;span class="n"&gt;home&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;jan&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;local&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;packages&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;fontconfig&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;2.12&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;92&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;32&lt;/span&gt;&lt;span class="n"&gt;bit&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;enable&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;libxml2&lt;/span&gt;
-&lt;span class="n"&gt;make&lt;/span&gt;
-&lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;aclocal -I m4&lt;/span&gt;
+&lt;span class="err"&gt;autoconf&lt;/span&gt;
+&lt;span class="err"&gt;libtoolize&lt;/span&gt;
+&lt;span class="err"&gt;./autogen.sh&lt;/span&gt;
+&lt;span class="err"&gt;CFLAGS=-m32 LDFLAGS=-L/home/jan/local/packages/freetype-2.4.7-32bit/lib ./configure --prefix=/home/jan/local/packages/fontconfig-2.12.92-32bit --enable-libxml2&lt;/span&gt;
+&lt;span class="err"&gt;make&lt;/span&gt;
+&lt;span class="err"&gt;make install&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;h1&gt;Changes to vco&lt;/h1&gt;
 &lt;p&gt;Finally, I needed to change &lt;code&gt;vco&lt;/code&gt; in &lt;code&gt;intelFPGA/19.1/modelsim_ase/bin&lt;/code&gt; folder
@@ -5320,6 +5380,7 @@ to load the freshly-recompiled libraries:&lt;/p&gt;
 &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;           &lt;span class="s s-Atom"&gt;#&lt;/span&gt; &lt;span class="s s-Atom"&gt;added&lt;/span&gt; &lt;span class="s s-Atom"&gt;for&lt;/span&gt; &lt;span class="nv"&gt;Ubuntu&lt;/span&gt; &lt;span class="mf"&gt;19.04&lt;/span&gt;&lt;span class="s s-Atom"&gt;:&lt;/span&gt; &lt;span class="s s-Atom"&gt;if&lt;/span&gt; &lt;span class="s s-Atom"&gt;kernel&lt;/span&gt; &lt;span class="s s-Atom"&gt;version&lt;/span&gt; &lt;span class="mf"&gt;5.&lt;/span&gt;&lt;span class="s s-Atom"&gt;x&lt;/span&gt; &lt;span class="s s-Atom"&gt;then&lt;/span&gt; &lt;span class="s s-Atom"&gt;use&lt;/span&gt; &lt;span class="s s-Atom"&gt;linuxaloem&lt;/span&gt;
 &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;           &lt;span class="mf"&gt;5.&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="s s-Atom"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;         &lt;span class="s s-Atom"&gt;vco=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;linuxaloem&amp;quot;&lt;/span&gt; &lt;span class="p"&gt;;;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;h1&gt;Conclusion&lt;/h1&gt;
 &lt;p&gt;Ta-da, ModelSim now works on Ubuntu 19.04. The font styles are a little bit
@@ -5950,6 +6011,7 @@ Verilog:&lt;/p&gt;
 &lt;span class="k"&gt;end&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;and VHDL:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nc"&gt;proc_smth&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;process&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;clk&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="k"&gt;begin&lt;/span&gt;
@@ -5962,6 +6024,7 @@ Verilog:&lt;/p&gt;
   &lt;span class="k"&gt;end&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="k"&gt;end&lt;/span&gt; &lt;span class="k"&gt;process&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;I would argue that half of the lines in a typical VHDL modules are not needed,
 as demonstrated in previous example. A typical module for me would be some DSP
@@ -6013,24 +6076,25 @@ the DUT and monitor BFM can in parallel monitor the output port of the DUT.&lt;/
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;  &lt;span class="c1"&gt;//==========================================================================&lt;/span&gt;
   &lt;span class="c1"&gt;// step&lt;/span&gt;
 
-  &lt;span class="kd"&gt;val&lt;/span&gt; &lt;span class="n"&gt;rm&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;runtimeMirror&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;getClass&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getClassLoader&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-  &lt;span class="kd"&gt;val&lt;/span&gt; &lt;span class="n"&gt;im&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rm&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reflect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;this&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-  &lt;span class="kd"&gt;val&lt;/span&gt; &lt;span class="n"&gt;members&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;im&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;symbol&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;typeSignature&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;members&lt;/span&gt;
-  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;bfms&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;members&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;_&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;typeSignature&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;:&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;typeOf&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nc"&gt;ChiselBfm&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+  &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;rm&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;runtimeMirror&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;getClass&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getClassLoader&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;im&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reflect&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;members&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;im&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;symbol&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;typeSignature&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;members&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;bfms&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;members&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;filter&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;_&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;typeSignature&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;:&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;typeOf&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;ChiselBfm&lt;/span&gt;&lt;span class="o"&gt;])&lt;/span&gt;
 
-  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;stepSingle&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt; &lt;span class="nc"&gt;Unit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bfm&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="n"&gt;bfms&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-      &lt;span class="n"&gt;im&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reflectField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bfm&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;asTerm&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="k"&gt;asInstanceOf&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nc"&gt;ChiselBfm&lt;/span&gt;&lt;span class="p"&gt;].&lt;/span&gt;&lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="p"&gt;}&lt;/span&gt;
-    &lt;span class="bp"&gt;super&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;step&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-  &lt;span class="p"&gt;}&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;stepSingle&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Unit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bfm&lt;/span&gt; &lt;span class="k"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="n"&gt;bfms&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+      &lt;span class="n"&gt;im&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reflectField&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bfm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;asTerm&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;asInstanceOf&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;ChiselBfm&lt;/span&gt;&lt;span class="o"&gt;].&lt;/span&gt;&lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+    &lt;span class="k"&gt;super&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;step&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
 
-  &lt;span class="k"&gt;override&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;step&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nc"&gt;Int&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt; &lt;span class="nc"&gt;Unit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;_&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="n"&gt;until&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;override&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;step&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Unit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;_&lt;/span&gt; &lt;span class="k"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="n"&gt;until&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
       &lt;span class="n"&gt;stepSingle&lt;/span&gt;
-    &lt;span class="p"&gt;}&lt;/span&gt;
-  &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;Through Scala's &lt;a href="https://www.michaelpollmeier.com/fun-with-scalas-new-reflection-api-2-10"&gt;Reflection API&lt;/a&gt;
 we are able to find all instances of classes which have a trait of &lt;code&gt;ChiselBfm&lt;/code&gt;,
@@ -6066,6 +6130,7 @@ operation of the BFMs.&lt;/p&gt;
 &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;pipeline&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;tester&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;should&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;compare&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;expected&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="ow"&gt;and&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;obtained&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;And this is the display of the waveforms from GTKWave:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="GTKWave display" src="www.j-marjanovic.io/images/chisel_override_clock.png"&gt;&lt;/p&gt;
@@ -6212,10 +6277,11 @@ and Vivado Synthesis
 now support initialization of the register from &lt;code&gt;initial&lt;/code&gt; block.&lt;/p&gt;
 &lt;p&gt;Vivado Synthesis Guidelines go even further and suggest using &lt;code&gt;inital&lt;/code&gt; instead
 of reset:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Avoid operational set/reset logic whenever possible. There may be other,
-less expensive, ways to achieve the desired effect, such as taking
-advantage of the circuit global reset by defining an initial content.
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;Avoid operational set/reset logic whenever possible. There may be other,&lt;/span&gt;
+&lt;span class="err"&gt;less expensive, ways to achieve the desired effect, such as taking&lt;/span&gt;
+&lt;span class="err"&gt;advantage of the circuit global reset by defining an initial content.&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;h2&gt;Tip #18&lt;/h2&gt;
 &lt;p&gt;A small typo on page 81, in SystemVerilog &lt;code&gt;logic&lt;/code&gt; is a 4-state type which
@@ -6240,6 +6306,7 @@ to different delays from IO pins to registers.&lt;/p&gt;
 should be:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;initial&lt;/span&gt; &lt;span class="n"&gt;shift4&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;init2&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="mh"&gt;2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;   &lt;span class="c1"&gt;// result is 8&amp;#39;hE0&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;Note that result after shift operation should be 8'hE0 (-32) instead of 8'h0E.&lt;/p&gt;
 &lt;h2&gt;Tip #27&lt;/h2&gt;
@@ -6346,8 +6413,9 @@ since it often provides a way to find the post-synthesis nets. The &lt;code&gt;k
 attribute could also be combined with &lt;code&gt;debug&lt;/code&gt; attribute for easier identification
 of signals.&lt;/p&gt;
 &lt;p&gt;Verilog example:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;keep&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;true&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mark_debug&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;true&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;wire&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;19&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="n"&gt;signal_to_be_dbged&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c"&gt;(* keep = &amp;quot;true&amp;quot;, mark_debug = &amp;quot;true&amp;quot; *)&lt;/span&gt; &lt;span class="n"&gt;wire&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;19&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="n"&gt;signal_to_be_dbged&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;h2&gt;Tip #90&lt;/h2&gt;
 &lt;p&gt;UCF constants are completely out of date, and were replaced by an equivalent of
@@ -6395,8 +6463,9 @@ provide a graphical way to debug programs. If you want to know more, at the
 bottom of &lt;a href="http://openocd.org/documentation/"&gt;OpenOCD Documentation page&lt;/a&gt; is
 a link to the presentation on FOSDEM 2006.&lt;/p&gt;
 &lt;p&gt;First we need to install all needed tools:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;libtool&lt;/span&gt; &lt;span class="n"&gt;autotools&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt; &lt;span class="n"&gt;automake&lt;/span&gt; &lt;span class="n"&gt;libusb&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;1.0&lt;/span&gt; &lt;span class="n"&gt;libhidapi&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt; &lt;span class="n"&gt;pkg&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt; &lt;span class="n"&gt;git&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;sudo apt-get install libtool autotools-dev automake libusb-1.0 libhidapi-dev pkg-config git&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;Then we get the source code from OpenOCD SourceForge repository. I have used the
 latest available commit in master, which was the one with a git tree-ish value
@@ -6410,43 +6479,47 @@ of &lt;code&gt;12ff09f&lt;/code&gt;:&lt;/p&gt;
 &lt;span class="nl"&gt;cfi&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;Add&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;support&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;strangely&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;endianness&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;broken&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;SoC&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;implementations&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;Perform all needed steps to compile the code (have a look in &lt;code&gt;INSTALL&lt;/code&gt; for
 detailed instructions):&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;cd openocd-code
-aclocal
-./bootstrap
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;cd openocd-code&lt;/span&gt;
+&lt;span class="err"&gt;aclocal&lt;/span&gt;
+&lt;span class="err"&gt;./bootstrap&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;At the end of configure step make sure that support for Altera USB-Blaster II
 and CMSIS-DAP Debugger are configured. The output should look something like
 this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;./configure
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;configure&lt;/span&gt;
 
-...
+&lt;span class="p"&gt;...&lt;/span&gt;
 
-OpenOCD configuration summary
---------------------------------------------------
-MPSSE mode of FTDI based devices        yes (auto)
-Segger J-Link JTAG Programmer           yes (auto)
-ST-Link JTAG Programmer                 yes (auto)
-TI ICDI JTAG Programmer                 yes (auto)
-Keil ULINK JTAG Programmer              yes (auto)
-Altera USB-Blaster II Compatible        yes (auto)
-Versaloon-Link JTAG Programmer          yes (auto)
-OSBDM (JTAG only) Programmer            yes (auto)
-eStick/opendous JTAG Programmer         yes (auto)
-Andes JTAG Programmer                   yes (auto)
-USBProg JTAG Programmer                 no
-Raisonance RLink JTAG Programmer        no
-Olimex ARM-JTAG-EW Programmer           no
-CMSIS-DAP Compliant Debugger            yes (auto)
+&lt;span class="n"&gt;OpenOCD&lt;/span&gt; &lt;span class="n"&gt;configuration&lt;/span&gt; &lt;span class="n"&gt;summary&lt;/span&gt;
+&lt;span class="c1"&gt;--------------------------------------------------&lt;/span&gt;
+&lt;span class="n"&gt;MPSSE&lt;/span&gt; &lt;span class="k"&gt;mode&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="n"&gt;FTDI&lt;/span&gt; &lt;span class="n"&gt;based&lt;/span&gt; &lt;span class="n"&gt;devices&lt;/span&gt;        &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Segger&lt;/span&gt; &lt;span class="n"&gt;J&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Link&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;           &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ST&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Link&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;                 &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;TI&lt;/span&gt; &lt;span class="n"&gt;ICDI&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;                 &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Keil&lt;/span&gt; &lt;span class="n"&gt;ULINK&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;              &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Altera&lt;/span&gt; &lt;span class="n"&gt;USB&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Blaster&lt;/span&gt; &lt;span class="n"&gt;II&lt;/span&gt; &lt;span class="n"&gt;Compatible&lt;/span&gt;        &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Versaloon&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Link&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;          &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;OSBDM&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="k"&gt;only&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;            &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;eStick&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opendous&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;         &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Andes&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;                   &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;USBProg&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;                 &lt;span class="k"&gt;no&lt;/span&gt;
+&lt;span class="n"&gt;Raisonance&lt;/span&gt; &lt;span class="n"&gt;RLink&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;        &lt;span class="k"&gt;no&lt;/span&gt;
+&lt;span class="n"&gt;Olimex&lt;/span&gt; &lt;span class="n"&gt;ARM&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;JTAG&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;EW&lt;/span&gt; &lt;span class="n"&gt;Programmer&lt;/span&gt;           &lt;span class="k"&gt;no&lt;/span&gt;
+&lt;span class="n"&gt;CMSIS&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;DAP&lt;/span&gt; &lt;span class="n"&gt;Compliant&lt;/span&gt; &lt;span class="n"&gt;Debugger&lt;/span&gt;            &lt;span class="n"&gt;yes&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;Then we just need to compile everything and install the openocd binary.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;make
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;make&lt;/span&gt;
 
-sudo make install
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;h2&gt;&lt;code&gt;udev&lt;/code&gt; rules for USB-Blaster&lt;/h2&gt;
 &lt;p&gt;After the OpenOCD is installed, we must take care to set the correct &lt;code&gt;udev&lt;/code&gt;
@@ -6459,54 +6532,58 @@ WITH UBUNTU 14.04&lt;/a&gt;. The USB-Blaster has multiple personalities (one for
 one for ARM JTAG), the udev rule therefore needs to specify both 6010 and
 6810 as the targeted devices.&lt;/p&gt;
 &lt;p&gt;Create /etc/udev/rules.d/51-usbblaster.rules with the following content:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;# &lt;span class="k"&gt;For&lt;/span&gt; &lt;span class="nv"&gt;Altera&lt;/span&gt; &lt;span class="nv"&gt;USB&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;Blaster&lt;/span&gt; &lt;span class="nv"&gt;on&lt;/span&gt; &lt;span class="nv"&gt;SoCkit&lt;/span&gt;
-&lt;span class="nv"&gt;SUBSYSTEM&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;usb&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;,\
-&lt;span class="nv"&gt;ENV&lt;/span&gt;{&lt;span class="nv"&gt;DEVTYPE&lt;/span&gt;}&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;usb_device&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;,\
-&lt;span class="nv"&gt;ATTR&lt;/span&gt;{&lt;span class="nv"&gt;idVendor&lt;/span&gt;}&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;09fb&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;,\
-&lt;span class="nv"&gt;ATTR&lt;/span&gt;{&lt;span class="nv"&gt;idProduct&lt;/span&gt;}&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;6010|6810&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;,\
-&lt;span class="nv"&gt;MODE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;0666&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;,\
-&lt;span class="nv"&gt;NAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;bus/usb/$env{BUSNUM}/$env{DEVNUM}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;,\
-&lt;span class="nv"&gt;RUN&lt;/span&gt;&lt;span class="o"&gt;+=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;/bin/chmod 0666 %c&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;# For Altera USB-Blaster on SoCkit&lt;/span&gt;
+&lt;span class="err"&gt;SUBSYSTEM==&amp;quot;usb&amp;quot;,\&lt;/span&gt;
+&lt;span class="err"&gt;ENV{DEVTYPE}==&amp;quot;usb_device&amp;quot;,\&lt;/span&gt;
+&lt;span class="err"&gt;ATTR{idVendor}==&amp;quot;09fb&amp;quot;,\&lt;/span&gt;
+&lt;span class="err"&gt;ATTR{idProduct}==&amp;quot;6010|6810&amp;quot;,\&lt;/span&gt;
+&lt;span class="err"&gt;MODE=&amp;quot;0666&amp;quot;,\&lt;/span&gt;
+&lt;span class="err"&gt;NAME=&amp;quot;bus/usb/$env{BUSNUM}/$env{DEVNUM}&amp;quot;,\&lt;/span&gt;
+&lt;span class="err"&gt;RUN+=&amp;quot;/bin/chmod 0666 %c&amp;quot;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;&lt;code&gt;udev&lt;/code&gt; rules should be reloaded with the following command to take effect
 immediately:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;udevadm&lt;/span&gt; &lt;span class="n"&gt;control&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;reload&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;sudo udevadm control --reload&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;h2&gt;First checks&lt;/h2&gt;
 &lt;p&gt;Now we can try running Altera &lt;code&gt;jtagconfig&lt;/code&gt; program to check if the permissions
 are OK. When the SoCkit board is attached, the output should look something
 like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;➜  ~ ~/altera/16.0/quartus/bin/jtagconfig                                                                                            
-1) CV SoCKit [1-1.1]                          
-  02D020DD   5CSEBA6(.|ES)/5CSEMA6/..
-  4BA00477   SOCVHPS
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;➜  ~ ~/altera/16.0/quartus/bin/jtagconfig                                                                                            &lt;/span&gt;
+&lt;span class="err"&gt;1) CV SoCKit [1-1.1]                          &lt;/span&gt;
+&lt;span class="err"&gt;  02D020DD   5CSEBA6(.|ES)/5CSEMA6/..&lt;/span&gt;
+&lt;span class="err"&gt;  4BA00477   SOCVHPS&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;Now we can also try running OpenOCD:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;➜&lt;/span&gt;  &lt;span class="o"&gt;~&lt;/span&gt; &lt;span class="n"&gt;openocd&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;interface&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;altera&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;usb&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;blaster2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cfg&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;target&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;altera_fpgasoc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cfg&lt;/span&gt;
-&lt;span class="n"&gt;Open&lt;/span&gt; &lt;span class="n"&gt;On&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Chip&lt;/span&gt; &lt;span class="n"&gt;Debugger&lt;/span&gt; &lt;span class="mf"&gt;0.10&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;00324&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;g12ff09f&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2016&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;06&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;26&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;19&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;19&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;Licensed&lt;/span&gt; &lt;span class="n"&gt;under&lt;/span&gt; &lt;span class="n"&gt;GNU&lt;/span&gt; &lt;span class="n"&gt;GPL&lt;/span&gt; &lt;span class="n"&gt;v2&lt;/span&gt;
-&lt;span class="n"&gt;For&lt;/span&gt; &lt;span class="n"&gt;bug&lt;/span&gt; &lt;span class="n"&gt;reports&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;read&lt;/span&gt;
-&lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;openocd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;org&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;doc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;doxygen&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bugs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;
-&lt;span class="n"&gt;Warn&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Adapter&lt;/span&gt; &lt;span class="n"&gt;driver&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;usb_blaster&amp;#39;&lt;/span&gt; &lt;span class="n"&gt;did&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="n"&gt;declare&lt;/span&gt; &lt;span class="n"&gt;which&lt;/span&gt; &lt;span class="n"&gt;transports&lt;/span&gt; &lt;span class="n"&gt;it&lt;/span&gt; &lt;span class="n"&gt;allows&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;assuming&lt;/span&gt; &lt;span class="n"&gt;legacy&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;only&lt;/span&gt;
-&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;only&lt;/span&gt; &lt;span class="n"&gt;one&lt;/span&gt; &lt;span class="n"&gt;transport&lt;/span&gt; &lt;span class="n"&gt;option&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;autoselect&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;jtag&amp;#39;&lt;/span&gt;
-&lt;span class="n"&gt;adapter&lt;/span&gt; &lt;span class="n"&gt;speed&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;1000&lt;/span&gt; &lt;span class="n"&gt;kHz&lt;/span&gt;
-&lt;span class="n"&gt;cycv_dbginit&lt;/span&gt;
-&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Altera&lt;/span&gt; &lt;span class="n"&gt;USB&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Blaster&lt;/span&gt; &lt;span class="n"&gt;II&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;uninitialized&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;found&lt;/span&gt;
-&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Loading&lt;/span&gt; &lt;span class="n"&gt;firmware&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt;
-&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Waiting&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;renumerate&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt;
-&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Waiting&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;renumerate&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt;
-&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Altera&lt;/span&gt; &lt;span class="n"&gt;USB&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Blaster&lt;/span&gt; &lt;span class="n"&gt;II&lt;/span&gt; &lt;span class="n"&gt;found&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Firm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;span class="n"&gt;rev&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;1.36&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;This&lt;/span&gt; &lt;span class="n"&gt;adapter&lt;/span&gt; &lt;span class="n"&gt;doesn&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;t support configurable speed&lt;/span&gt;
-&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;tap&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;fpgasoc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dap&lt;/span&gt; &lt;span class="n"&gt;tap&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;device&lt;/span&gt; &lt;span class="n"&gt;found&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x4ba00477&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;mfg&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x23b&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ARM&lt;/span&gt; &lt;span class="n"&gt;Ltd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;part&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0xba00&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ver&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x4&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;JTAG&lt;/span&gt; &lt;span class="n"&gt;tap&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;fpgasoc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fpga&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tap&lt;/span&gt; &lt;span class="n"&gt;tap&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;device&lt;/span&gt; &lt;span class="n"&gt;found&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x02d020dd&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;mfg&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x06e&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Altera&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;part&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x2d02&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ver&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;DAP&lt;/span&gt; &lt;span class="n"&gt;transaction&lt;/span&gt; &lt;span class="n"&gt;stalled&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;WAIT&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;slowing&lt;/span&gt; &lt;span class="n"&gt;down&lt;/span&gt;
-&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;DAP&lt;/span&gt; &lt;span class="n"&gt;transaction&lt;/span&gt; &lt;span class="n"&gt;stalled&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;WAIT&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;slowing&lt;/span&gt; &lt;span class="n"&gt;down&lt;/span&gt;
-&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;DAP&lt;/span&gt; &lt;span class="n"&gt;transaction&lt;/span&gt; &lt;span class="n"&gt;stalled&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;WAIT&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;slowing&lt;/span&gt; &lt;span class="n"&gt;down&lt;/span&gt;
-&lt;span class="n"&gt;Info&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;fpgasoc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cpu&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;hardware&lt;/span&gt; &lt;span class="n"&gt;has&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt; &lt;span class="n"&gt;breakpoints&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt; &lt;span class="n"&gt;watchpoints&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;➜  ~ openocd -f interface/altera-usb-blaster2.cfg -f target/altera_fpgasoc.cfg&lt;/span&gt;
+&lt;span class="err"&gt;Open On-Chip Debugger 0.10.0-dev-00324-g12ff09f (2016-06-26-19:19)&lt;/span&gt;
+&lt;span class="err"&gt;Licensed under GNU GPL v2&lt;/span&gt;
+&lt;span class="err"&gt;For bug reports, read&lt;/span&gt;
+&lt;span class="c"&gt;http://openocd.org/doc/doxygen/bugs.html&lt;/span&gt;
+&lt;span class="err"&gt;Warn : Adapter driver &amp;#39;usb_blaster&amp;#39; did not declare which transports it allows; assuming legacy JTAG-only&lt;/span&gt;
+&lt;span class="err"&gt;Info : only one transport option; autoselect &amp;#39;jtag&amp;#39;&lt;/span&gt;
+&lt;span class="err"&gt;adapter speed: 1000 kHz&lt;/span&gt;
+&lt;span class="err"&gt;cycv_dbginit&lt;/span&gt;
+&lt;span class="err"&gt;Info : Altera USB-Blaster II (uninitialized) found&lt;/span&gt;
+&lt;span class="err"&gt;Info : Loading firmware...&lt;/span&gt;
+&lt;span class="err"&gt;Info : Waiting for renumerate...&lt;/span&gt;
+&lt;span class="err"&gt;Info : Waiting for renumerate...&lt;/span&gt;
+&lt;span class="err"&gt;Info : Altera USB-Blaster II found (Firm. rev. = 1.36)&lt;/span&gt;
+&lt;span class="err"&gt;Info : This adapter doesn&amp;#39;t support configurable speed&lt;/span&gt;
+&lt;span class="err"&gt;Info : JTAG tap: fpgasoc.dap tap/device found: 0x4ba00477 (mfg: 0x23b (ARM Ltd.), part: 0xba00, ver: 0x4)&lt;/span&gt;
+&lt;span class="err"&gt;Info : JTAG tap: fpgasoc.fpga.tap tap/device found: 0x02d020dd (mfg: 0x06e (Altera), part: 0x2d02, ver: 0x0)&lt;/span&gt;
+&lt;span class="err"&gt;Info : DAP transaction stalled (WAIT) - slowing down&lt;/span&gt;
+&lt;span class="err"&gt;Info : DAP transaction stalled (WAIT) - slowing down&lt;/span&gt;
+&lt;span class="err"&gt;Info : DAP transaction stalled (WAIT) - slowing down&lt;/span&gt;
+&lt;span class="err"&gt;Info : fpgasoc.cpu.0: hardware has 6 breakpoints, 4 watchpoints&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;This gives us information that ARM core was recognized, this is therefore the
 correct command to use it later with the GDB debugger.&lt;/p&gt;
@@ -6527,20 +6604,21 @@ created file in deploy directory is &lt;code&gt;zimage&lt;/code&gt; file. This i
 with all debugging symbols stripped out. It is optimized to be used in
 embedded environment. We need to find the original &lt;code&gt;vmlinux&lt;/code&gt; image before the
 debugging symbols were stripped out:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;➜  tmp git:(jethro) find . -name vmlinux                                       
-./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/
-linux-cyclone5-standard-build/arch/arm/boot/vmlinux
-./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/
-linux-cyclone5-standard-build/arch/arm/boot/compressed/vmlinux
-./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/
-linux-cyclone5-standard-build/vmlinux
-./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/
-linux-cyclone5-standard-build/arch/arm/boot/vmlinux
-./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/
-linux-cyclone5-standard-build/arch/arm/boot/compressed/vmlinux
-./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/
-linux-cyclone5-standard-build/vmlinux
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;➜  tmp git:(jethro) find . -name vmlinux                                       &lt;/span&gt;
+&lt;span class="err"&gt;./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/&lt;/span&gt;
+&lt;span class="err"&gt;linux-cyclone5-standard-build/arch/arm/boot/vmlinux&lt;/span&gt;
+&lt;span class="err"&gt;./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/&lt;/span&gt;
+&lt;span class="err"&gt;linux-cyclone5-standard-build/arch/arm/boot/compressed/vmlinux&lt;/span&gt;
+&lt;span class="err"&gt;./work/cyclone5-poky-linux-gnueabi/linux-altera/4.3+gitAUTOINC+5938523338-r0/&lt;/span&gt;
+&lt;span class="err"&gt;linux-cyclone5-standard-build/vmlinux&lt;/span&gt;
+&lt;span class="err"&gt;./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/&lt;/span&gt;
+&lt;span class="err"&gt;linux-cyclone5-standard-build/arch/arm/boot/vmlinux&lt;/span&gt;
+&lt;span class="err"&gt;./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/&lt;/span&gt;
+&lt;span class="err"&gt;linux-cyclone5-standard-build/arch/arm/boot/compressed/vmlinux&lt;/span&gt;
+&lt;span class="err"&gt;./work/cyclone5-poky-linux-gnueabi/linux-altera/4.4+gitAUTOINC+969478b841-r0/&lt;/span&gt;
+&lt;span class="err"&gt;linux-cyclone5-standard-build/vmlinux&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;There are various images from various different runs (and different versions
 of the kernel).&lt;/p&gt;
@@ -6648,8 +6726,9 @@ chosen based on a parameter or a macro).&lt;/p&gt;
 &lt;p&gt;This contribution could be summarized as a call to use sensible
 variable/functions/object/methods names. This could be as well extended to
 writing informative comments, and not have comments like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;maxLim&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="ss"&gt;)&lt;/span&gt; &lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="nv"&gt;checks&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nv"&gt;max&lt;/span&gt; &lt;span class="nv"&gt;limit&lt;/span&gt; &lt;span class="nv"&gt;is&lt;/span&gt; &lt;span class="nv"&gt;negative&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;if (maxLim &amp;lt; 0) // checks if max limit is negative&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;h2&gt;(12) Code Is Design by Ryan Brush&lt;/h2&gt;
 &lt;p&gt;The abstract process of making virtual artifacts (software) from nothing
@@ -6747,6 +6826,7 @@ which discouraged me from using it in my parser.&lt;/p&gt;
     &lt;span class="n"&gt;unittest&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;This results are 3 failing tests: test_invalid_slice, test_slicing, and
 test_unpack. test_invalid_slice fails because taking a slice wider than a vector
 width produces fills the missing bits with zero. This is similar to
@@ -6795,6 +6875,7 @@ like:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;apt-get install linux-headers-&lt;span class="k"&gt;$(&lt;/span&gt;uname -r&lt;span class="k"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;The above command will install the headers the headers for the currently running 
 kernel. It copies the header files to /usr/src and creates link in /lib/modules/,
 this gives the user tools needed to compile kernel modules.&lt;/p&gt;
@@ -6806,7 +6887,7 @@ get a kernel image, the &lt;em&gt;kbuild&lt;/em&gt; system did not work. In Thom
 &lt;p&gt;Initially I wanted to get the headers in the same way as I would on Ubuntu, by
 using apt (Advanced Packaging Tool). Searching for available packages did not
 show the package needed (the Raspbian was running the 3.18.7-v7+ kernel).&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;pi@raspberrypi ~ $ &lt;/span&gt;sudo aptitude search linux-headers
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;pi@raspberrypi ~ $&lt;/span&gt; sudo aptitude search linux-headers
 &lt;span class="go"&gt;v   linux-headers                                   -                                                           &lt;/span&gt;
 &lt;span class="go"&gt;p   linux-headers-3.10-3-all                        - All header files for Linux 3.10 (meta-package)            &lt;/span&gt;
 &lt;span class="go"&gt;p   linux-headers-3.10-3-all-armhf                  - All header files for Linux 3.10 (meta-package)            &lt;/span&gt;
@@ -6833,6 +6914,7 @@ show the package needed (the Raspbian was running the 3.18.7-v7+ kernel).&lt;/p&
 &lt;span class="go"&gt;p   linux-headers-rpi-rpfv                          - This metapackage will pull in the headers for the raspbian&lt;/span&gt;
 &lt;span class="go"&gt;p   linux-headers-rpi2-rpfv                         - This metapackage will pull in the headers for the raspbian&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;I tried my luck with &lt;em&gt;linux-headers-rpi2-rpfv&lt;/em&gt; which installed headers for
 kernel 3.18.0. That might sound close enough, but Linux refuses modules which
@@ -6896,6 +6978,7 @@ shows nothing promising:&lt;/p&gt;
 &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt; 4246.573935&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nl"&gt;Code&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;e51bc088&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;e15c0006&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;e2466008&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="n"&gt;a000009&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;e5963014&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;
 &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt; 4246.604593&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c1"&gt;---[ end trace 8e4bd0982f9f1fd0 ]---&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;It basically says that there was an error trying to access the wrong part of the
 memory from the &lt;em&gt;insmod&lt;/em&gt; process.&lt;/p&gt;
@@ -6980,7 +7063,7 @@ in iCEcube2. &lt;/p&gt;
 
 &lt;p&gt;This is the output (well, the real output it is the configured board which blinks the LEDs while
 the DONE led is lit):&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;pi@raspberrypi ~/Jan/ice40/test1 $ &lt;/span&gt;sudo bash conf_FPGA.sh proto1_top_bitmap.bin
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;pi@raspberrypi ~/Jan/ice40/test1 $&lt;/span&gt; sudo bash conf_FPGA.sh proto1_top_bitmap.bin
 &lt;span class="go"&gt;GPIO 25 not exported, trying to export...&lt;/span&gt;
 
 &lt;span class="go"&gt;spidev does not exist&lt;/span&gt;
@@ -7002,6 +7085,7 @@ the DONE led is lit):&lt;/p&gt;
 &lt;span class="go"&gt;Setting output to high&lt;/span&gt;
 &lt;span class="go"&gt;1&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;I find this type of configuration very useful when the FPGA is not the main
 chip in the system (when there is as in the previous example an RPi). The 
@@ -7053,14 +7137,16 @@ when the licence manager was unable to find network adapter MAC address:&lt;/p&g
 &lt;span class="s s-Atom"&gt;available&lt;/span&gt; &lt;span class="s s-Atom"&gt;at&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;www.macrovision.com&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;The problem is that the FLEXnet software searches for the MAC address of the eth*
 interface, while Centos uses completely different naming. Being familiar with the
 problem, I used a trick to create a new interface named eth0 (you should replace
 the x's with desired MAC address):&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;modprobe dummy
-ip link set name eth0 dev dummy0
-ifconfig eth0 hw ether xx:xx:xx:xx:xx:xx
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;modprobe dummy&lt;/span&gt;
+&lt;span class="err"&gt;ip link set name eth0 dev dummy0&lt;/span&gt;
+&lt;span class="err"&gt;ifconfig eth0 hw ether xx:xx:xx:xx:xx:xx&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;After setting everything up, a view on the iCEcube2 showed before me.&lt;/p&gt;
 &lt;p&gt;&lt;img alt="iCEcube2" src="www.j-marjanovic.io/images/icestudio.png"&gt;&lt;/p&gt;
@@ -7076,6 +7162,7 @@ very user friendly approach.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;Note&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;The&lt;/span&gt; &lt;span class="n"&gt;Integrated&lt;/span&gt; &lt;span class="n"&gt;Aldec&lt;/span&gt; &lt;span class="n"&gt;Active&lt;/span&gt; &lt;span class="n"&gt;HDL&lt;/span&gt; &lt;span class="n"&gt;simulation&lt;/span&gt; &lt;span class="n"&gt;software&lt;/span&gt; &lt;span class="n"&gt;and&lt;/span&gt; &lt;span class="n"&gt;iCEcube2&lt;/span&gt; &lt;span class="n"&gt;programming&lt;/span&gt; 
 &lt;span class="n"&gt;tools&lt;/span&gt; &lt;span class="n"&gt;are&lt;/span&gt; &lt;span class="n"&gt;only&lt;/span&gt; &lt;span class="n"&gt;available&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;windows&lt;/span&gt; &lt;span class="n"&gt;platform&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;Well this is it for now, i need to switch to Windows. Merry Christmas to everybody!&lt;/p&gt;
 &lt;hr&gt;

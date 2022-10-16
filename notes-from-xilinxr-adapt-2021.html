@@ -189,7 +189,7 @@
 </ul>
 <h2>Workshop: Vitis AI 101: End-to-End Model Deployment with Vitis AI [Fan Zhang (Xilinx)]</h2>
 <p>https://github.com/fanz-xlnx/Adapt_Workshop_VAI101</p>
-<div class="highlight"><pre><span></span><code><span class="n">ubuntu</span><span class="p">@</span><span class="n">ip</span><span class="o">-***:~</span><span class="n">$</span> <span class="n">lspci</span>
+<div class="highlight"><pre><span></span><code><span class="n">ubuntu</span><span class="p">@</span><span class="n">ip</span><span class="o">-***:~</span><span class="err">$</span> <span class="n">lspci</span>
 <span class="mo">00</span><span class="o">:</span><span class="mf">00.0</span> <span class="n">Host</span> <span class="nl">bridge</span><span class="p">:</span> <span class="n">Intel</span> <span class="n">Corporation</span> <span class="mf">440F</span><span class="n">X</span> <span class="o">-</span> <span class="mf">82441F</span><span class="n">X</span> <span class="n">PMC</span> <span class="p">[</span><span class="n">Natoma</span><span class="p">]</span> <span class="p">(</span><span class="n">rev</span> <span class="mo">02</span><span class="p">)</span>
 <span class="mo">00</span><span class="o">:</span><span class="mf">01.0</span> <span class="n">ISA</span> <span class="nl">bridge</span><span class="p">:</span> <span class="n">Intel</span> <span class="n">Corporation</span> <span class="mi">82371</span><span class="n">SB</span> <span class="n">PIIX3</span> <span class="n">ISA</span> <span class="p">[</span><span class="n">Natoma</span><span class="o">/</span><span class="n">Triton</span> <span class="n">II</span><span class="p">]</span>
 <span class="mo">00</span><span class="o">:</span><span class="mf">01.1</span> <span class="n">IDE</span> <span class="nl">interface</span><span class="p">:</span> <span class="n">Intel</span> <span class="n">Corporation</span> <span class="mi">82371</span><span class="n">SB</span> <span class="n">PIIX3</span> <span class="n">IDE</span> <span class="p">[</span><span class="n">Natoma</span><span class="o">/</span><span class="n">Triton</span> <span class="n">II</span><span class="p">]</span>
@@ -200,39 +200,43 @@
 <span class="mo">00</span><span class="o">:</span><span class="mf">1f.0</span> <span class="n">Unassigned</span> <span class="k">class</span> <span class="p">[</span><span class="n">ff80</span><span class="p">]</span><span class="o">:</span> <span class="n">XenSource</span><span class="p">,</span> <span class="n">Inc</span><span class="p">.</span> <span class="n">Xen</span> <span class="n">Platform</span> <span class="n">Device</span> <span class="p">(</span><span class="n">rev</span> <span class="mo">01</span><span class="p">)</span>
 </code></pre></div>
 
-<div class="highlight"><pre><span></span><code><span class="c">ubuntu@ip</span><span class="nb">-</span><span class="c">***:~$ nvidia</span><span class="nb">-</span><span class="c">smi</span>
-<span class="c">Wed Sep  8 17:20:50 2021</span>
-<span class="nb">+-----------------------------------------------------------------------------+</span><span class="c"></span>
-<span class="c">| NVIDIA</span><span class="nb">-</span><span class="c">SMI 470</span><span class="nt">.</span><span class="c">57</span><span class="nt">.</span><span class="c">02    Driver Version: 470</span><span class="nt">.</span><span class="c">57</span><span class="nt">.</span><span class="c">02    CUDA Version: 11</span><span class="nt">.</span><span class="c">4     |</span>
-<span class="c">|</span><span class="nb">-------------------------------+----------------------+----------------------+</span><span class="c"></span>
-<span class="c">| GPU  Name        Persistence</span><span class="nb">-</span><span class="c">M| Bus</span><span class="nb">-</span><span class="c">Id        Disp</span><span class="nt">.</span><span class="c">A | Volatile Uncorr</span><span class="nt">.</span><span class="c"> ECC |</span>
-<span class="c">| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory</span><span class="nb">-</span><span class="c">Usage | GPU</span><span class="nb">-</span><span class="c">Util  Compute M</span><span class="nt">.</span><span class="c"> |</span>
-<span class="c">|                               |                      |               MIG M</span><span class="nt">.</span><span class="c"> |</span>
-<span class="c">|===============================</span><span class="nb">+</span><span class="c">======================</span><span class="nb">+</span><span class="c">======================|</span>
-<span class="c">|   0  Tesla K80           On   | 00000000:00:1E</span><span class="nt">.</span><span class="c">0 Off |                    0 |</span>
-<span class="c">| N/A   55C    P0   121W / 149W |   4188MiB / 11441MiB |     94%      Default |</span>
-<span class="c">|                               |                      |                  N/A |</span>
-<span class="nb">+-------------------------------+----------------------+----------------------+</span><span class="c"></span>
 
-<span class="nb">+-----------------------------------------------------------------------------+</span><span class="c"></span>
-<span class="c">| Processes:                                                                  |</span>
-<span class="c">|  GPU   GI   CI        PID   Type   Process name                  GPU Memory |</span>
-<span class="c">|        ID   ID                                                   Usage      |</span>
-<span class="c">|=============================================================================|</span>
-<span class="c">|    0   N/A  N/A     19274      C   python                           4185MiB |</span>
-<span class="nb">+-----------------------------------------------------------------------------+</span><span class="c"></span>
+<div class="highlight"><pre><span></span><code><span class="n">ubuntu</span><span class="nv">@ip</span><span class="o">-***</span><span class="err">:</span><span class="o">~</span><span class="err">$</span><span class="w"> </span><span class="n">nvidia</span><span class="o">-</span><span class="n">smi</span><span class="w"></span>
+<span class="n">Wed</span><span class="w"> </span><span class="n">Sep</span><span class="w">  </span><span class="mi">8</span><span class="w"> </span><span class="mi">17</span><span class="err">:</span><span class="mi">20</span><span class="err">:</span><span class="mi">50</span><span class="w"> </span><span class="mi">2021</span><span class="w"></span>
+<span class="o">+</span><span class="c1">-----------------------------------------------------------------------------+</span>
+<span class="o">|</span><span class="w"> </span><span class="n">NVIDIA</span><span class="o">-</span><span class="n">SMI</span><span class="w"> </span><span class="mf">470.57.02</span><span class="w">    </span><span class="n">Driver</span><span class="w"> </span><span class="nl">Version</span><span class="p">:</span><span class="w"> </span><span class="mf">470.57.02</span><span class="w">    </span><span class="n">CUDA</span><span class="w"> </span><span class="nl">Version</span><span class="p">:</span><span class="w"> </span><span class="mf">11.4</span><span class="w">     </span><span class="o">|</span><span class="w"></span>
+<span class="o">|</span><span class="c1">-------------------------------+----------------------+----------------------+</span>
+<span class="o">|</span><span class="w"> </span><span class="n">GPU</span><span class="w">  </span><span class="n">Name</span><span class="w">        </span><span class="n">Persistence</span><span class="o">-</span><span class="n">M</span><span class="o">|</span><span class="w"> </span><span class="n">Bus</span><span class="o">-</span><span class="n">Id</span><span class="w">        </span><span class="n">Disp</span><span class="p">.</span><span class="n">A</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Volatile</span><span class="w"> </span><span class="n">Uncorr</span><span class="p">.</span><span class="w"> </span><span class="n">ECC</span><span class="w"> </span><span class="o">|</span><span class="w"></span>
+<span class="o">|</span><span class="w"> </span><span class="n">Fan</span><span class="w">  </span><span class="n">Temp</span><span class="w">  </span><span class="n">Perf</span><span class="w">  </span><span class="nl">Pwr</span><span class="p">:</span><span class="k">Usage</span><span class="o">/</span><span class="n">Cap</span><span class="o">|</span><span class="w">         </span><span class="n">Memory</span><span class="o">-</span><span class="k">Usage</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">GPU</span><span class="o">-</span><span class="n">Util</span><span class="w">  </span><span class="k">Compute</span><span class="w"> </span><span class="n">M</span><span class="p">.</span><span class="w"> </span><span class="o">|</span><span class="w"></span>
+<span class="o">|</span><span class="w">                               </span><span class="o">|</span><span class="w">                      </span><span class="o">|</span><span class="w">               </span><span class="n">MIG</span><span class="w"> </span><span class="n">M</span><span class="p">.</span><span class="w"> </span><span class="o">|</span><span class="w"></span>
+<span class="o">|===============================+======================+======================|</span><span class="w"></span>
+<span class="o">|</span><span class="w">   </span><span class="mi">0</span><span class="w">  </span><span class="n">Tesla</span><span class="w"> </span><span class="n">K80</span><span class="w">           </span><span class="k">On</span><span class="w">   </span><span class="o">|</span><span class="w"> </span><span class="mi">00000000</span><span class="err">:</span><span class="mi">00</span><span class="err">:</span><span class="mi">1</span><span class="n">E</span><span class="mf">.0</span><span class="w"> </span><span class="k">Off</span><span class="w"> </span><span class="o">|</span><span class="w">                    </span><span class="mi">0</span><span class="w"> </span><span class="o">|</span><span class="w"></span>
+<span class="o">|</span><span class="w"> </span><span class="n">N</span><span class="o">/</span><span class="n">A</span><span class="w">   </span><span class="mi">55</span><span class="n">C</span><span class="w">    </span><span class="n">P0</span><span class="w">   </span><span class="mi">121</span><span class="n">W</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">149</span><span class="n">W</span><span class="w"> </span><span class="o">|</span><span class="w">   </span><span class="mi">4188</span><span class="n">MiB</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">11441</span><span class="n">MiB</span><span class="w"> </span><span class="o">|</span><span class="w">     </span><span class="mi">94</span><span class="o">%</span><span class="w">      </span><span class="k">Default</span><span class="w"> </span><span class="o">|</span><span class="w"></span>
+<span class="o">|</span><span class="w">                               </span><span class="o">|</span><span class="w">                      </span><span class="o">|</span><span class="w">                  </span><span class="n">N</span><span class="o">/</span><span class="n">A</span><span class="w"> </span><span class="o">|</span><span class="w"></span>
+<span class="o">+</span><span class="c1">-------------------------------+----------------------+----------------------+</span>
+
+<span class="o">+</span><span class="c1">-----------------------------------------------------------------------------+</span>
+<span class="o">|</span><span class="w"> </span><span class="nl">Processes</span><span class="p">:</span><span class="w">                                                                  </span><span class="o">|</span><span class="w"></span>
+<span class="o">|</span><span class="w">  </span><span class="n">GPU</span><span class="w">   </span><span class="n">GI</span><span class="w">   </span><span class="n">CI</span><span class="w">        </span><span class="n">PID</span><span class="w">   </span><span class="n">Type</span><span class="w">   </span><span class="n">Process</span><span class="w"> </span><span class="n">name</span><span class="w">                  </span><span class="n">GPU</span><span class="w"> </span><span class="n">Memory</span><span class="w"> </span><span class="o">|</span><span class="w"></span>
+<span class="o">|</span><span class="w">        </span><span class="n">ID</span><span class="w">   </span><span class="n">ID</span><span class="w">                                                   </span><span class="k">Usage</span><span class="w">      </span><span class="o">|</span><span class="w"></span>
+<span class="o">|=============================================================================|</span><span class="w"></span>
+<span class="o">|</span><span class="w">    </span><span class="mi">0</span><span class="w">   </span><span class="n">N</span><span class="o">/</span><span class="n">A</span><span class="w">  </span><span class="n">N</span><span class="o">/</span><span class="n">A</span><span class="w">     </span><span class="mi">19274</span><span class="w">      </span><span class="n">C</span><span class="w">   </span><span class="n">python</span><span class="w">                           </span><span class="mi">4185</span><span class="n">MiB</span><span class="w"> </span><span class="o">|</span><span class="w"></span>
+<span class="o">+</span><span class="c1">-----------------------------------------------------------------------------+</span>
 </code></pre></div>
+
 
 <ul>
 <li><em>IoU</em> = Intersection over Union = Area of Overlap / Area of Union</li>
 <li>XIR format</li>
 <li>KV260 (KRIA)</li>
 </ul>
-<div class="highlight"><pre><span></span><code>xcompiler -t DPUCZDX8G_ISA0_B4096_MAX_BG2 -i quantize_result/ENet_int.xmodel -o compilation_results/KV260/ENet_cityscapes_pt/ENet_cityscapes_pt.xmodel
+<div class="highlight"><pre><span></span><code><span class="err">xcompiler -t DPUCZDX8G_ISA0_B4096_MAX_BG2 -i quantize_result/ENet_int.xmodel -o compilation_results/KV260/ENet_cityscapes_pt/ENet_cityscapes_pt.xmodel</span>
 </code></pre></div>
 
-<div class="highlight"><pre><span></span><code>The compiled xmodel&#39;s md5sum is 4bf46f368e9ff2d51fea136a19270c75
+
+<div class="highlight"><pre><span></span><code><span class="err">The compiled xmodel&#39;s md5sum is 4bf46f368e9ff2d51fea136a19270c75</span>
 </code></pre></div>
+
 
 <h1>Day 3</h1>
 <h2>Expert Panel: Tips and Tricks</h2>
@@ -305,8 +309,10 @@
 <div class="highlight"><pre><span></span><code><span class="cp">#pragma HLS UNROLL factor=N</span>
 </code></pre></div>
 
+
 <div class="highlight"><pre><span></span><code><span class="n">__attribute__</span><span class="p">((</span><span class="n">vector_size</span><span class="p">(</span><span class="mi">64</span><span class="p">)))</span>
 </code></pre></div>
+
 
 <ul>
 <li>Cppcon 2019: Faster Code Through Parallelism on CPU and GPU</li>

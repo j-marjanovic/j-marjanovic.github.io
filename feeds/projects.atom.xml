@@ -42,10 +42,11 @@ and Vivado Synthesis
 now support initialization of the register from &lt;code&gt;initial&lt;/code&gt; block.&lt;/p&gt;
 &lt;p&gt;Vivado Synthesis Guidelines go even further and suggest using &lt;code&gt;inital&lt;/code&gt; instead
 of reset:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Avoid operational set/reset logic whenever possible. There may be other,
-less expensive, ways to achieve the desired effect, such as taking
-advantage of the circuit global reset by defining an initial content.
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;Avoid operational set/reset logic whenever possible. There may be other,&lt;/span&gt;
+&lt;span class="err"&gt;less expensive, ways to achieve the desired effect, such as taking&lt;/span&gt;
+&lt;span class="err"&gt;advantage of the circuit global reset by defining an initial content.&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;h2&gt;Tip #18&lt;/h2&gt;
 &lt;p&gt;A small typo on page 81, in SystemVerilog &lt;code&gt;logic&lt;/code&gt; is a 4-state type which
@@ -70,6 +71,7 @@ to different delays from IO pins to registers.&lt;/p&gt;
 should be:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;initial&lt;/span&gt; &lt;span class="n"&gt;shift4&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;init2&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="mh"&gt;2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;   &lt;span class="c1"&gt;// result is 8&amp;#39;hE0&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;Note that result after shift operation should be 8'hE0 (-32) instead of 8'h0E.&lt;/p&gt;
 &lt;h2&gt;Tip #27&lt;/h2&gt;
@@ -176,8 +178,9 @@ since it often provides a way to find the post-synthesis nets. The &lt;code&gt;k
 attribute could also be combined with &lt;code&gt;debug&lt;/code&gt; attribute for easier identification
 of signals.&lt;/p&gt;
 &lt;p&gt;Verilog example:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;keep&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;true&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mark_debug&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;true&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;wire&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;19&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="n"&gt;signal_to_be_dbged&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c"&gt;(* keep = &amp;quot;true&amp;quot;, mark_debug = &amp;quot;true&amp;quot; *)&lt;/span&gt; &lt;span class="n"&gt;wire&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;19&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="n"&gt;signal_to_be_dbged&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;h2&gt;Tip #90&lt;/h2&gt;
 &lt;p&gt;UCF constants are completely out of date, and were replaced by an equivalent of
@@ -269,6 +272,7 @@ which discouraged me from using it in my parser.&lt;/p&gt;
     &lt;span class="n"&gt;unittest&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;This results are 3 failing tests: test_invalid_slice, test_slicing, and
 test_unpack. test_invalid_slice fails because taking a slice wider than a vector
 width produces fills the missing bits with zero. This is similar to
@@ -317,6 +321,7 @@ like:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;apt-get install linux-headers-&lt;span class="k"&gt;$(&lt;/span&gt;uname -r&lt;span class="k"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;The above command will install the headers the headers for the currently running 
 kernel. It copies the header files to /usr/src and creates link in /lib/modules/,
 this gives the user tools needed to compile kernel modules.&lt;/p&gt;
@@ -328,7 +333,7 @@ get a kernel image, the &lt;em&gt;kbuild&lt;/em&gt; system did not work. In Thom
 &lt;p&gt;Initially I wanted to get the headers in the same way as I would on Ubuntu, by
 using apt (Advanced Packaging Tool). Searching for available packages did not
 show the package needed (the Raspbian was running the 3.18.7-v7+ kernel).&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;pi@raspberrypi ~ $ &lt;/span&gt;sudo aptitude search linux-headers
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;pi@raspberrypi ~ $&lt;/span&gt; sudo aptitude search linux-headers
 &lt;span class="go"&gt;v   linux-headers                                   -                                                           &lt;/span&gt;
 &lt;span class="go"&gt;p   linux-headers-3.10-3-all                        - All header files for Linux 3.10 (meta-package)            &lt;/span&gt;
 &lt;span class="go"&gt;p   linux-headers-3.10-3-all-armhf                  - All header files for Linux 3.10 (meta-package)            &lt;/span&gt;
@@ -355,6 +360,7 @@ show the package needed (the Raspbian was running the 3.18.7-v7+ kernel).&lt;/p&
 &lt;span class="go"&gt;p   linux-headers-rpi-rpfv                          - This metapackage will pull in the headers for the raspbian&lt;/span&gt;
 &lt;span class="go"&gt;p   linux-headers-rpi2-rpfv                         - This metapackage will pull in the headers for the raspbian&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;I tried my luck with &lt;em&gt;linux-headers-rpi2-rpfv&lt;/em&gt; which installed headers for
 kernel 3.18.0. That might sound close enough, but Linux refuses modules which
@@ -418,6 +424,7 @@ shows nothing promising:&lt;/p&gt;
 &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt; 4246.573935&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nl"&gt;Code&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;e51bc088&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;e15c0006&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;e2466008&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="n"&gt;a000009&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;e5963014&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;
 &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt; 4246.604593&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c1"&gt;---[ end trace 8e4bd0982f9f1fd0 ]---&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;It basically says that there was an error trying to access the wrong part of the
 memory from the &lt;em&gt;insmod&lt;/em&gt; process.&lt;/p&gt;
@@ -502,7 +509,7 @@ in iCEcube2. &lt;/p&gt;
 
 &lt;p&gt;This is the output (well, the real output it is the configured board which blinks the LEDs while
 the DONE led is lit):&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;pi@raspberrypi ~/Jan/ice40/test1 $ &lt;/span&gt;sudo bash conf_FPGA.sh proto1_top_bitmap.bin
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;pi@raspberrypi ~/Jan/ice40/test1 $&lt;/span&gt; sudo bash conf_FPGA.sh proto1_top_bitmap.bin
 &lt;span class="go"&gt;GPIO 25 not exported, trying to export...&lt;/span&gt;
 
 &lt;span class="go"&gt;spidev does not exist&lt;/span&gt;
@@ -524,6 +531,7 @@ the DONE led is lit):&lt;/p&gt;
 &lt;span class="go"&gt;Setting output to high&lt;/span&gt;
 &lt;span class="go"&gt;1&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;I find this type of configuration very useful when the FPGA is not the main
 chip in the system (when there is as in the previous example an RPi). The 
@@ -575,14 +583,16 @@ when the licence manager was unable to find network adapter MAC address:&lt;/p&g
 &lt;span class="s s-Atom"&gt;available&lt;/span&gt; &lt;span class="s s-Atom"&gt;at&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;www.macrovision.com&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+
 &lt;p&gt;The problem is that the FLEXnet software searches for the MAC address of the eth*
 interface, while Centos uses completely different naming. Being familiar with the
 problem, I used a trick to create a new interface named eth0 (you should replace
 the x's with desired MAC address):&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;modprobe dummy
-ip link set name eth0 dev dummy0
-ifconfig eth0 hw ether xx:xx:xx:xx:xx:xx
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;modprobe dummy&lt;/span&gt;
+&lt;span class="err"&gt;ip link set name eth0 dev dummy0&lt;/span&gt;
+&lt;span class="err"&gt;ifconfig eth0 hw ether xx:xx:xx:xx:xx:xx&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;After setting everything up, a view on the iCEcube2 showed before me.&lt;/p&gt;
 &lt;p&gt;&lt;img alt="iCEcube2" src="www.j-marjanovic.io/images/icestudio.png"&gt;&lt;/p&gt;
@@ -598,6 +608,7 @@ very user friendly approach.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;Note&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;The&lt;/span&gt; &lt;span class="n"&gt;Integrated&lt;/span&gt; &lt;span class="n"&gt;Aldec&lt;/span&gt; &lt;span class="n"&gt;Active&lt;/span&gt; &lt;span class="n"&gt;HDL&lt;/span&gt; &lt;span class="n"&gt;simulation&lt;/span&gt; &lt;span class="n"&gt;software&lt;/span&gt; &lt;span class="n"&gt;and&lt;/span&gt; &lt;span class="n"&gt;iCEcube2&lt;/span&gt; &lt;span class="n"&gt;programming&lt;/span&gt; 
 &lt;span class="n"&gt;tools&lt;/span&gt; &lt;span class="n"&gt;are&lt;/span&gt; &lt;span class="n"&gt;only&lt;/span&gt; &lt;span class="n"&gt;available&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;windows&lt;/span&gt; &lt;span class="n"&gt;platform&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 
 &lt;p&gt;Well this is it for now, i need to switch to Windows. Merry Christmas to everybody!&lt;/p&gt;
 &lt;hr&gt;

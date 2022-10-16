@@ -146,6 +146,7 @@ pcie:
   status.DL up       = 0
 </code></pre></div>
 
+
 <p>We see that clocks 2 and 3 are both 100 MHz, which indicates that the PCIe clock
 distribution works correctly, and after the reset the link reports:</p>
 <ul>
@@ -181,6 +182,7 @@ same information from the <code>lspci</code> utility:</p>
 &lt;...&gt;
 </code></pre></div>
 
+
 <p>And finally, I can use <code>pcimem</code> to read and write to the registers in the FPGA,
 e.g. read system ID and timestamp and write to a GPIO pin:</p>
 <div class="highlight"><pre><span></span><code>$ sudo ./pcimem /sys/bus/pci/devices/0000:03:00.0/resource0 0x100000 w
@@ -206,6 +208,7 @@ PCI Memory mapped to address 0x7fec6c0cc000.
 Written 0x0001; readback 0x   1
 </code></pre></div>
 
+
 <p>The proverbial "blinky" is actually blinking and so far everything seems to be
 working correctly.</p>
 <h2>First test with Storey Peak</h2>
@@ -226,6 +229,7 @@ pcie:
   status.lane act    = 8
   status.DL up       = 0
 </code></pre></div>
+
 
 <p>Intel® provides good <a href="https://community.intel.com/t5/FPGA-Wiki/FTA-PCI-express/ta-p/735993">troubleshooting resources for the PCIe
 link</a>, and
@@ -295,6 +299,7 @@ supports 2 x8 bifurcation on a x16 slot.</p>
 &lt;...&gt;
 </code></pre></div>
 
+
 <p>And each of them supports a x8 link. It is theoretically possible that one of
 the endpoints is implemented in FPGA logic, but we will later see that this
 is not the case.</p>
@@ -314,6 +319,7 @@ $ sudo lspci -s 87:00 -vv
         LnkSta:    Speed 8GT/s, Width x8, TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
 &lt;...&gt;
 </code></pre></div>
+
 
 <p>Unfortunately the DELL R720 which I use in my homelab does not support PCIe
 bifurcation.</p>
@@ -409,6 +415,7 @@ contains a couple of interesting strings:</p>
 &lt;...&gt;
 5SGSMD5_MS
 </code></pre></div>
+
 
 <p>So far hard work and determination have paid off. It seems that continuing
 to poke around Quartus libraries would be the right way ahead.</p>

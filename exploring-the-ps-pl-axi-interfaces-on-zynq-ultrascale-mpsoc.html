@@ -315,7 +315,7 @@ can be used as a reference on how to use those ports.</p>
 <h2>System ILA waveforms</h2>
 <h3>AXI Proxy</h3>
 <h4>HP port</h4>
-<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~# </span>app-axi-proxy --interface hp --use-osync
+<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~#</span> app-axi-proxy --interface hp --use-osync
 <span class="go">Udmabuf</span>
 <span class="go">  name = axi:udmabuf@0x0</span>
 <span class="go">  virt addr = 0xffff9c0c7000</span>
@@ -345,9 +345,10 @@ can be used as a reference on how to use those ports.</p>
 <span class="go">stats: dur_wr = 36, dur_rd = 70</span>
 </code></pre></div>
 
+
 <p><img alt="AXI Proxy read and write - HP port" src="./images/2021_zynqmp_ports/system_ila/proxy_hp.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"></p>
 <h4>HPC port</h4>
-<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~# </span>app-axi-proxy --interface hpc --axi-cache <span class="m">15</span> --axi-prot <span class="m">2</span> --axi-user <span class="m">1</span>
+<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~#</span> app-axi-proxy --interface hpc --axi-cache <span class="m">15</span> --axi-prot <span class="m">2</span> --axi-user <span class="m">1</span>
 <span class="go">Udmabuf</span>
 <span class="go">  name = axi:udmabuf@0x0</span>
 <span class="go">  virt addr = 0xffff931d8000</span>
@@ -377,9 +378,10 @@ can be used as a reference on how to use those ports.</p>
 <span class="go">stats: dur_wr = 46, dur_rd = 40</span>
 </code></pre></div>
 
+
 <p><img alt="AXI Proxy read and write - HPC port" src="./images/2021_zynqmp_ports/system_ila/proxy_hpc.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"></p>
 <h4>ACP port</h4>
-<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~# </span>app-axi-proxy --interface acp --axi-cache <span class="m">15</span> --axi-prot <span class="m">2</span> --axi-user <span class="m">1</span>
+<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~#</span> app-axi-proxy --interface acp --axi-cache <span class="m">15</span> --axi-prot <span class="m">2</span> --axi-user <span class="m">1</span>
 <span class="go">Udmabuf</span>
 <span class="go">  name = axi:udmabuf@0x0</span>
 <span class="go">  virt addr = 0xffffa1356000</span>
@@ -409,10 +411,11 @@ can be used as a reference on how to use those ports.</p>
 <span class="go">stats: dur_wr = 25, dur_rd = 14</span>
 </code></pre></div>
 
+
 <p><img alt="AXI Proxy read and write - ACP port" src="./images/2021_zynqmp_ports/system_ila/proxy_acp.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"></p>
 <h3></h3>
 <h4>HP port</h4>
-<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~# </span>app-axi-traffic-gen --count <span class="m">32</span> --interface hp --use-osync
+<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~#</span> app-axi-traffic-gen --count <span class="m">32</span> --interface hp --use-osync
 <span class="go">UioDevice{number =  4, name =        AxiTrafficGen, addr = 0xa0040000, size = 65536, note = acp}</span>
 <span class="go">UioDevice{number =  5, name =        AxiTrafficGen, addr = 0xa0050000, size = 65536, note = hp}</span>
 <span class="go">UioDevice{number =  6, name =        AxiTrafficGen, addr = 0xa0060000, size = 65536, note = hpc}</span>
@@ -435,9 +438,10 @@ can be used as a reference on how to use those ports.</p>
 <span class="go">stats: rd cyc = 670, wr cyc = 265, rd_ok = 128</span>
 </code></pre></div>
 
+
 <p><img alt="AXI Traffic Generator write and read - HP port" src="./images/2021_zynqmp_ports/system_ila/tg_hp.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"></p>
 <h4>HPC port</h4>
-<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~# </span>app-axi-traffic-gen --count <span class="m">32</span> --interface hpc --axi-cache <span class="m">15</span> --axi-prot <span class="m">2</span> --axi-user <span class="m">1</span>
+<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~#</span> app-axi-traffic-gen --count <span class="m">32</span> --interface hpc --axi-cache <span class="m">15</span> --axi-prot <span class="m">2</span> --axi-user <span class="m">1</span>
 <span class="go">UioDevice{number =  4, name =        AxiTrafficGen, addr = 0xa0040000, size = 65536, note = acp}</span>
 <span class="go">UioDevice{number =  5, name =        AxiTrafficGen, addr = 0xa0050000, size = 65536, note = hp}</span>
 <span class="go">UioDevice{number =  6, name =        AxiTrafficGen, addr = 0xa0060000, size = 65536, note = hpc}</span>
@@ -460,10 +464,11 @@ can be used as a reference on how to use those ports.</p>
 <span class="go">stats: rd cyc = 391, wr cyc = 756, rd_ok = 128</span>
 </code></pre></div>
 
+
 <p><img alt="AXI Traffic Generator write - HPC port" src="./images/2021_zynqmp_ports/system_ila/tg_hpc_write.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"></p>
 <p><img alt="AXI Traffic Generator reads - HPC port" src="./images/2021_zynqmp_ports/system_ila/tg_hpc_read.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"></p>
 <h4>ACP port</h4>
-<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~# </span>app-axi-traffic-gen --count <span class="m">32</span> --interface acp --axi-cache <span class="m">15</span> --axi-prot <span class="m">2</span> --axi-user <span class="m">1</span>     
+<div class="highlight"><pre><span></span><code><span class="gp">root@u96v2-sbc:~#</span> app-axi-traffic-gen --count <span class="m">32</span> --interface acp --axi-cache <span class="m">15</span> --axi-prot <span class="m">2</span> --axi-user <span class="m">1</span>     
 <span class="go">UioDevice{number =  4, name =        AxiTrafficGen, addr = 0xa0040000, size = 65536, note = acp}</span>
 <span class="go">UioDevice{number =  5, name =        AxiTrafficGen, addr = 0xa0050000, size = 65536, note = hp}</span>
 <span class="go">UioDevice{number =  6, name =        AxiTrafficGen, addr = 0xa0060000, size = 65536, note = hpc}</span>
@@ -485,6 +490,7 @@ can be used as a reference on how to use those ports.</p>
 <span class="go">Memory check (size = 32 bursts) successfully completed</span>
 <span class="go">stats: rd cyc = 140, wr cyc = 248, rd_ok = 128</span>
 </code></pre></div>
+
 
 <p><img alt="AXI Traffic Generator reads - ACP port" src="./images/2021_zynqmp_ports/system_ila/tg_acp.png" style="width:100%; display: block; margin-left: auto; margin-right: auto;"></p>
 <h2>FSBL output</h2>
@@ -519,6 +525,7 @@ can be used as a reference on how to use those ports.</p>
 <span class="go">CCI: shareable override reg - after = 3</span>
 <span class="go">Exit from FSBL </span>
 </code></pre></div>
+
 
 <hr>
 <div style="font-size: 90%;" >

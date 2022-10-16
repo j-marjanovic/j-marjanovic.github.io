@@ -745,14 +745,15 @@ gamma = reward discount</p>
 <li>coverage database</li>
 <li>coverage reporter</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="kd">val</span> <span class="n">cr</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">CoverageReporter</span><span class="p">(</span><span class="n">dut</span><span class="p">)</span>
-  <span class="n">cr</span><span class="p">.</span><span class="n">register</span><span class="p">(</span>
-      <span class="nc">CoverPoints</span><span class="p">(...),</span>
-      <span class="p">...</span>
-  <span class="p">)</span>
-<span class="p">...</span>
-<span class="n">cr</span><span class="p">.</span><span class="n">printReport</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><code><span class="k">val</span> <span class="n">cr</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">CoverageReporter</span><span class="o">(</span><span class="n">dut</span><span class="o">)</span>
+  <span class="n">cr</span><span class="o">.</span><span class="n">register</span><span class="o">(</span>
+      <span class="nc">CoverPoints</span><span class="o">(...),</span>
+      <span class="o">...</span>
+  <span class="o">)</span>
+<span class="o">...</span>
+<span class="n">cr</span><span class="o">.</span><span class="n">printReport</span><span class="o">()</span>
 </code></pre></div>
+
 
 <h3>constraint random verification</h3>
 <ul>
